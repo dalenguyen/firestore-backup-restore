@@ -1,0 +1,20 @@
+{
+  "test" : {
+    "first-key" : {
+      "email"   : "dungnq@itbox4vn.com",
+      "website" : "dalenguyen.me",
+      "custom"  : {
+        "firstName" : "Dale",
+        "lastName"  : "Nguyen"
+      }
+    },
+    "second-key" : {
+      "email"   : "test@dalenguyen.me",
+      "website" : "google.com",
+      "custom"  : {
+        "firstName" : "Harry",
+        "lastName"  : "Potter"
+      }
+    }
+  }
+}
