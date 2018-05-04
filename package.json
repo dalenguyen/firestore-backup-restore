@@ -1,6 +1,6 @@
 {
-  "name": "firestore-backup-restore",
-  "version": "0.1.0",
+  "name": "firestore-export-import",
+  "version": "0.1.1",
   "description": "NPM package for backup and restore Firebase Firestore",
   "main": "lib/index.js",
   "scripts": {
@@ -10,7 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/dalenguyen/firestore-backup-restore.git"
   },
-  "keywords": [],
+  "keywords": [
+    "firebase",
+    "firestore",
+    "backup",
+    "restore",
+    "import",
+    "export" 
+  ],
   "author": "Dale Nguyen <dungnq@itbox4vn.com> (http://dalenguyen.me)",
   "license": "ISC",
   "bugs": {

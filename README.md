@@ -1,12 +1,14 @@
 # firestore-export-import
 NPM package for backup and restore Firebase Firestore
 
+You can export and import data from firestore with sub collection. 
+
 ## Installation 
 
 Install using [__npm__](https://www.npmjs.com/).
 
 ```sh
-npm install -g firestore-export-import
+npm install firestore-export-import
 ```
 
 ## Get Google Cloud Account Credentials from Firebase
@@ -16,6 +18,8 @@ You can __Generate New Private Key__ from Project Settings from [Firebase Consol
 After that you need to copy the __databaseURL__ for initiating the App. 
 
 ## Usage 
+
+You have to import this package in a JavaScript file and work from there.
 
 ### Export data from firestore 
 
@@ -49,7 +53,7 @@ const serviceAccount = require('./serviceAccountKey.json');
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start exporting your data
-let result = firestoreService.restore('test/import-to-firestore.json');
+let result = firestoreService.restore('your-file-path.json');
 ```
 
 The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 
