@@ -1,7 +1,6 @@
-'use strict';
-const admin = require('firebase-admin');
-const restoreService = require('./import.js');
-const backupService = require('./export');
+import * as admin from 'firebase-admin';
+import * as restoreService from './import';
+import * as backupService from './export';
 
 /**
  * Initialize Firebase App
@@ -9,7 +8,7 @@ const backupService = require('./export');
  * @param {any} serviceAccount 
  * @param {any} databaseURL
  */
-exports.initializeApp = function (serviceAccount, databaseURL) {
+export const initializeApp = (serviceAccount: string, databaseURL: string) => {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: databaseURL
@@ -24,7 +23,7 @@ exports.initializeApp = function (serviceAccount, databaseURL) {
  * @param {string} subCollection
  * @return {json}
  */
-exports.backup = function(collectionName, subCollection = ''){    
+export const backup = (collectionName: string, subCollection: string = '') => {    
     return backupService.backup(collectionName, subCollection);
 }
 
@@ -33,6 +32,6 @@ exports.backup = function(collectionName, subCollection = ''){
  * 
  * @param {any} fileName 
  */
-exports.restore = function(fileName){
+export const restore = function(fileName: string){
     restoreService.restore(fileName);
 }

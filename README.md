@@ -36,7 +36,7 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start exporting your data
 let result = firestoreService.backup('collection-name', 'sub-collection-optional');
-result.then(data => console.log(data))
+result.then(data => console.log(JSON.stringify(data)))
 ```
 
 ### Import data to firestore 
@@ -52,7 +52,7 @@ const serviceAccount = require('./serviceAccountKey.json');
 // Initiate Firebase App
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
-// Start exporting your data
+// Start importing your data
 let result = firestoreService.restore('your-file-path.json');
 ```
 
