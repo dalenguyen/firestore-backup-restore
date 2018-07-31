@@ -9,6 +9,7 @@ import * as fs from 'fs';
 export const restore = (fileName: string) => {
 
   const db = admin.firestore();
+  db.settings({ timestampsInSnapshots: true });
 
   fs.readFile(fileName, 'utf8', function (err, data) {
     if (err) {

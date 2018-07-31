@@ -1,6 +1,6 @@
 {
   "name": "firestore-export-import",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "NPM package for backup and restore Firebase Firestore",
   "main": "dist/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "typescript": "^2.8.3"
   },
   "dependencies": {
-    "firebase-admin": "^5.12.0"
+    "firebase-admin": "^5.13.1"
   },
   "engines": {
     "node": ">=7.6.0"
