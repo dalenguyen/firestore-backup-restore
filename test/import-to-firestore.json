@@ -6,6 +6,10 @@
       "custom"  : {
         "firstName" : "Dale",
         "lastName"  : "Nguyen"
+      },
+      "date": {
+        "_seconds":1534046400,
+        "_nanoseconds":0
       }
     },
     "second-key" : {
@@ -14,6 +18,10 @@
       "custom"  : {
         "firstName" : "Harry",
         "lastName"  : "Potter"
+      },
+      "date": {
+        "_seconds":1534262435,
+        "_nanoseconds":0
       }
     }
   }

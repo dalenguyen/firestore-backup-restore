@@ -31,7 +31,7 @@ exports.backup = (collectionName, subCollection = '') => {
  *
  * @param {any} fileName
  */
-exports.restore = function (fileName) {
-    restoreService.restore(fileName);
+exports.restore = function (fileName, dateArray = []) {
+    restoreService.restore(fileName, dateArray);
 };
 //# sourceMappingURL=index.js.map

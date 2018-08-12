@@ -12,7 +12,7 @@ var importData = require('./import-to-firestore.json');
 // })
 
 firestoreService.initializeApp(serviceAccount, 'https://ionic-firestore-dn.firebaseio.com');
-var result = firestoreService.backup('test', 'sub');
-result.then(data => console.log(JSON.stringify(data)))
+// var result = firestoreService.backup('test', 'sub');
+// result.then(data => console.log(JSON.stringify(data)))
 
-// var result = firestoreService.restore('test/import-to-firestore.json');
+var result = firestoreService.restore('test/import-to-firestore.json', ['date']);

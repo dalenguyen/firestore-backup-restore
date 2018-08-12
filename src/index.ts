@@ -32,6 +32,6 @@ export const backup = (collectionName: string, subCollection: string = '') => {
  * 
  * @param {any} fileName 
  */
-export const restore = function(fileName: string){
-    restoreService.restore(fileName);
+export const restore = function(fileName: string, dateArray: Array<string> = []){
+    restoreService.restore(fileName, dateArray);
 }

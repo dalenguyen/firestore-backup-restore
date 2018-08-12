@@ -14,8 +14,9 @@ const fs = require("fs");
  * Restore data to firestore
  *
  * @param {string} fileName
+ * @param {Array<string>} dateArray
  */
-exports.restore = (fileName) => {
+exports.restore = (fileName, dateArray) => {
     const db = admin.firestore();
     db.settings({ timestampsInSnapshots: true });
     fs.readFile(fileName, 'utf8', function (err, data) {
@@ -24,26 +25,23 @@ exports.restore = (fileName) => {
         }
         // Turn string from file to an Array
         let dataArray = JSON.parse(data);
-        udpateCollection(db, dataArray).then(() => {
-            console.log('Successfully import collection!');
-        }).catch(error => {
-            console.log(error);
-        });
+        udpateCollection(db, dataArray, dateArray);
     });
 };
 /**
  * Update data to firestore
  *
  * @param {any} db
- * @param {any} dataArray
+ * @param {Array<any>} dataArray
+ * @param {Array<string>} dateArray
  */
-function udpateCollection(db, dataArray) {
+function udpateCollection(db, dataArray, dateArray) {
     return __awaiter(this, void 0, void 0, function* () {
         for (var index in dataArray) {
             var collectionName = index;
             for (var doc in dataArray[index]) {
                 if (dataArray[index].hasOwnProperty(doc)) {
-                    yield startUpdating(db, collectionName, doc, dataArray[index][doc]);
+                    yield startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray);
                 }
             }
         }
@@ -58,17 +56,36 @@ function udpateCollection(db, dataArray) {
  * @param {any} data
  * @returns
  */
-function startUpdating(db, collectionName, doc, data) {
-    return new Promise(resolve => {
-        db.collection(collectionName).doc(doc)
-            .set(data)
-            .then(() => {
-            console.log(`${doc} is successed adding to firestore!`);
-            resolve('Data wrote!');
-        })
-            .catch(error => {
-            console.log(error);
+function startUpdating(db, collectionName, doc, data, dateArray) {
+    // convert date from unixtimestamp  
+    let parameterValid = true;
+    if (typeof dateArray === 'object' && dateArray.length > 0) {
+        dateArray.map(date => {
+            if (data.hasOwnProperty(date)) {
+                data[date] = new Date(data[date]._seconds * 1000);
+            }
+            else {
+                console.log('Please check your date parameters!!!', dateArray);
+                parameterValid = false;
+            }
         });
-    });
+    }
+    if (parameterValid) {
+        return new Promise(resolve => {
+            db.collection(collectionName).doc(doc)
+                .set(data)
+                .then(() => {
+                console.log(`${doc} is successed adding to firestore!`);
+                resolve('Data wrote!');
+            })
+                .catch(error => {
+                console.log(error);
+            });
+        });
+    }
+    else {
+        console.log(`${doc} is not imported to firestore. Please check your parameters!`);
+        return false;
+    }
 }
 //# sourceMappingURL=import.js.map

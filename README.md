@@ -53,7 +53,8 @@ const serviceAccount = require('./serviceAccountKey.json');
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
-let result = firestoreService.restore('your-file-path.json');
+// The array of date fields is optional
+let result = firestoreService.restore('your-file-path.json', ['date1-field', 'date2-field']);
 ```
 
 The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 
@@ -67,6 +68,10 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
       "custom"  : {
         "firstName" : "Dale",
         "lastName"  : "Nguyen"
+      },
+      "date": {
+        "_seconds":1534046400,
+        "_nanoseconds":0
       }
     },
     "second-key" : {
@@ -75,6 +80,10 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
       "custom"  : {
         "firstName" : "Harry",
         "lastName"  : "Potter"
+      },
+      "date": {
+        "_seconds":1534262435,
+        "_nanoseconds":0
       }
     }
   }
