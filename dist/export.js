@@ -52,33 +52,8 @@ exports.backup = function (collectionName, subCollection = '') {
         });
     });
 };
-/**
- * Backup data many collections
- * @param collectionsName
- * @returns {Promise<any>}
- */
-exports.backups = (collectionsName) => {
-    const data = {};
-    console.log('Geting data from: ', collectionsName);
-    const db = admin.firestore();
-    db.settings({timestampsInSnapshots: true});
-    let deferred = new Promise((resolve, reject) => {
-        const request = [];
-        for (const collectionName of collectionsName) {
-            data[collectionName]= {}
-            request.push(db.collection(collectionName).get());
-        }
-        Promise.all(request).then(listResult => {
-            for (const index in listResult) {
-                listResult[index].forEach(doc => {
-                    data[collectionsName[index]][doc.id] = doc.data();
-                });
-            }
-            resolve(data);
-        });
-    })
-    return deferred;
-};
+
+
 /**
  * Get sub collection from a document if possible
  *
