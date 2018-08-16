@@ -39,6 +39,21 @@ let result = firestoreService.backup('collection-name', 'sub-collection-optional
 result.then(data => console.log(JSON.stringify(data)))
 ```
 
+#### Manny Collections
+
+##### backups(collectionsName)
+
+1. collectionsName: array of collections name.
+
+```
+// list of collections
+const listRequest = ['oauthAccessTokens', 'benefitsByUser', 'oauthClients', 'oauthUsers',
+    'shoppingCartByUser', 'shoppingCartsHistory', 'shoppingCartsLog', 'system', 'widgets'];
+
+// get bakups of all collections
+firestoreService.backups(listRequest).then(data => console.log(JSON.stringify(data)))
+```
+
 ### Import data to firestore 
 
 This code will help you to import data from a JSON file to firestore
