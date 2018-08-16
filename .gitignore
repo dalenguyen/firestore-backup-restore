@@ -59,3 +59,8 @@ typings/
 
 # test folder 
 test/serviceAccountKey.json
+.idea/vcs.xml
+.idea/firestore-backup-restore.iml
+.idea/workspace.xml
+.idea/misc.xml
+.idea/modules.xml
