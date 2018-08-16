@@ -26,7 +26,16 @@ exports.initializeApp = (serviceAccount, databaseURL) => {
 exports.backup = (collectionName, subCollection = '') => {
     return backupService.backup(collectionName, subCollection);
 };
-
+/**
+ * Backups data from firestore
+ *
+ * @param {string} collectionName
+ * @param {string} subCollection
+ * @return {json}
+ */
+exports.backups = (collectionsName) => {
+    return backupService.backups(collectionsName);
+};
 
 /**
  * Restore data to firestore
