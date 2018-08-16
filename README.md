@@ -46,8 +46,11 @@ result.then(data => console.log(JSON.stringify(data)))
 1. collectionsName: array of collections name.
 
 ```
+// list of collections
 const listRequest = ['oauthAccessTokens', 'benefitsByUser', 'oauthClients', 'oauthUsers',
     'shoppingCartByUser', 'shoppingCartsHistory', 'shoppingCartsLog', 'system', 'widgets'];
+    
+// get bakups of all collections
 firestoreService.backups(listRequest).then(data => console.log(JSON.stringify(data)))
 ```
 
