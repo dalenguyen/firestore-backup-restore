@@ -12,9 +12,12 @@ export const initializeApp = (serviceAccount: string, databaseURL: string) => {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         databaseURL: databaseURL
-    })
+    });
+    admin.firestore().settings({ timestampsInSnapshots: true });
     return true;    
 }
+
+export { admin }
 
 /**
  * Backup data from firestore

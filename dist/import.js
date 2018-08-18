@@ -18,7 +18,6 @@ const fs = require("fs");
  */
 exports.restore = (fileName, dateArray) => {
     const db = admin.firestore();
-    db.settings({ timestampsInSnapshots: true });
     fs.readFile(fileName, 'utf8', function (err, data) {
         if (err) {
             return console.log(err);

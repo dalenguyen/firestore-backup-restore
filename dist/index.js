@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
+exports.admin = admin;
 const restoreService = require("./import");
 const backupService = require("./export");
 /**
@@ -14,6 +15,7 @@ exports.initializeApp = (serviceAccount, databaseURL) => {
         credential: admin.credential.cert(serviceAccount),
         databaseURL: databaseURL
     });
+    admin.firestore().settings({ timestampsInSnapshots: true });
     return true;
 };
 /**

@@ -11,7 +11,6 @@ export const backup = function (collectionName: string, subCollection: string = 
     console.log('Geting data from: ', collectionName);
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
-        db.settings({ timestampsInSnapshots: true });
         let data = {};
 
         data[collectionName] = {};
