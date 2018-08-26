@@ -3,6 +3,17 @@ import * as restoreService from './import';
 import * as backupService from './export';
 
 /**
+ * Backups data from firestore
+ *
+ * @param {string} collectionName
+ * @param {string} subCollection
+ * @return {json}
+ */
+export const backups  = (collectionsName) => {
+  return backupService.backups(collectionsName);
+};
+
+/**
  * Initialize Firebase App
  * 
  * @param {any} serviceAccount 
