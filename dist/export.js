@@ -10,13 +10,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const admin = require("firebase-admin");
 /**
+ * Get data from all collections
+ * Suggestion from jcummings2 and leningsv
+ * @param {Array<string>} collectionNameArray
+ */
+exports.getAllCollections = (collectionNameArray) => {
+    const db = admin.firestore();
+    // get all the root-level paths
+    return new Promise((resolve) => {
+        db.getCollections().then((snap) => {
+            let paths = collectionNameArray;
+            if (paths.length === 0) { // get all collections
+                snap.forEach((collection) => paths.push(...collection['_referencePath'].segments));
+            }
+            // fetch in parallel
+            let promises = [];
+            paths.forEach((segment) => {
+                let result = exports.backup(segment);
+                promises.push(result);
+            });
+            // assemble the pieces into one object
+            Promise.all(promises).then((value) => {
+                let all = Object.assign({}, ...value);
+                resolve(all);
+            });
+        });
+    });
+};
+/**
  * Backup data from firestore
  *
  * @param {string} collectionName
  * @param {string} [subCollection='']
  * @returns {Promise<any>}
  */
-exports.backup = function (collectionName, subCollection = '') {
+exports.backup = (collectionName, subCollection = '') => {
     console.log('Geting data from: ', collectionName);
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
@@ -60,14 +88,12 @@ exports.backup = function (collectionName, subCollection = '') {
  * @param {any} collectionName
  * @param {any} subCollection
  */
-function getSubCollection(db, data, dt, collectionName, subCollection) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let [key, value] of Object.entries([dt[collectionName]][0])) {
-            data[collectionName][key]['subCollection'] = {};
-            yield addSubCollection(db, key, data[collectionName][key]['subCollection'], collectionName, subCollection);
-        }
-    });
-}
+const getSubCollection = (db, data, dt, collectionName, subCollection) => __awaiter(this, void 0, void 0, function* () {
+    for (let [key, value] of Object.entries([dt[collectionName]][0])) {
+        data[collectionName][key]['subCollection'] = {};
+        yield addSubCollection(db, key, data[collectionName][key]['subCollection'], collectionName, subCollection);
+    }
+});
 /**
  * Add sub collection to data object if possible
  *
@@ -78,7 +104,7 @@ function getSubCollection(db, data, dt, collectionName, subCollection) {
  * @param {any} subCollection
  * @returns
  */
-function addSubCollection(db, key, subData, collectionName, subCollection) {
+const addSubCollection = (db, key, subData, collectionName, subCollection) => {
     return new Promise((resolve, reject) => {
         db.collection(collectionName).doc(key).collection(subCollection).get()
             .then(snapshot => {
@@ -91,5 +117,5 @@ function addSubCollection(db, key, subData, collectionName, subCollection) {
             console.log(error);
         });
     });
-}
+};
 //# sourceMappingURL=export.js.map

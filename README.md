@@ -35,8 +35,27 @@ const serviceAccount = require('./serviceAccountKey.json');
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start exporting your data
-let result = firestoreService.backup('collection-name', 'sub-collection-optional');
-result.then(data => console.log(JSON.stringify(data)))
+firestoreService
+  .backup('collection-name', 'sub-collection-optional')
+  .then(data => console.log(JSON.stringify(data)))
+```
+
+### Get all collections data
+
+This is a suggestion from [jcummings2](https://github.com/jcummings2) and [leningsv](https://github.com/Leningsv)
+
+The ['collectionName1', 'collectionName2'] is OPTIONAL, you can remove this parameter to get all of the current collections in your firestore.
+
+The result is an object of collection's data.
+
+```
+firestoreService
+  .getAllCollections(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL 
+  .then(collections => {
+    // You can do whatever you want with collections
+    console.log(JSON.stringify(collections));
+  })
+
 ```
 
 ### Import data to firestore 
@@ -54,7 +73,7 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
 // The array of date fields is optional
-let result = firestoreService.restore('your-file-path.json', ['date1-field', 'date2-field']);
+firestoreService.restore('your-file-path.json', ['date1-field', 'date2-field']);
 ```
 
 The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 

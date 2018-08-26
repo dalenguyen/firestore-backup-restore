@@ -15,4 +15,13 @@ firestoreService.initializeApp(serviceAccount, 'https://ionic-firestore-dn.fireb
 // var result = firestoreService.backup('test', 'sub');
 // result.then(data => console.log(JSON.stringify(data)))
 
-var result = firestoreService.restore('test/import-to-firestore.json', ['date']);
+// var result = firestoreService.restore('test/import-to-firestore.json', ['date']);
+
+// firestoreService.getAllCollections(['test', 'users']).then(collections => {
+//     console.log(JSON.stringify(collections));
+// })
+
+// Get all collections
+firestoreService.getAllCollections().then(collections => {
+    console.log(JSON.stringify(collections));
+})

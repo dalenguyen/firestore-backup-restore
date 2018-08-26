@@ -32,7 +32,7 @@ export const restore = (fileName: string, dateArray: Array<string>) => {
  * @param {Array<any>} dataArray 
  * @param {Array<string>} dateArray 
  */
-async function udpateCollection(db, dataArray: Array<any>, dateArray: Array<string>) {
+const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<string>) => {
   for (var index in dataArray) {
     var collectionName = index;
     for (var doc in dataArray[index]) {
@@ -52,7 +52,7 @@ async function udpateCollection(db, dataArray: Array<any>, dateArray: Array<stri
  * @param {any} data 
  * @returns 
  */
-function startUpdating(db, collectionName, doc, data, dateArray) {
+const startUpdating = (db, collectionName, doc, data, dateArray) => {
   // convert date from unixtimestamp  
   let parameterValid = true;
 

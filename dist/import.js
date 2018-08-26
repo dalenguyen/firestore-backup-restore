@@ -34,18 +34,16 @@ exports.restore = (fileName, dateArray) => {
  * @param {Array<any>} dataArray
  * @param {Array<string>} dateArray
  */
-function udpateCollection(db, dataArray, dateArray) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (var index in dataArray) {
-            var collectionName = index;
-            for (var doc in dataArray[index]) {
-                if (dataArray[index].hasOwnProperty(doc)) {
-                    yield startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray);
-                }
+const udpateCollection = (db, dataArray, dateArray) => __awaiter(this, void 0, void 0, function* () {
+    for (var index in dataArray) {
+        var collectionName = index;
+        for (var doc in dataArray[index]) {
+            if (dataArray[index].hasOwnProperty(doc)) {
+                yield startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray);
             }
         }
-    });
-}
+    }
+});
 /**
  * Write data to document
  *
@@ -55,7 +53,7 @@ function udpateCollection(db, dataArray, dateArray) {
  * @param {any} data
  * @returns
  */
-function startUpdating(db, collectionName, doc, data, dateArray) {
+const startUpdating = (db, collectionName, doc, data, dateArray) => {
     // convert date from unixtimestamp  
     let parameterValid = true;
     if (typeof dateArray === 'object' && dateArray.length > 0) {
@@ -86,5 +84,5 @@ function startUpdating(db, collectionName, doc, data, dateArray) {
         console.log(`${doc} is not imported to firestore. Please check your parameters!`);
         return false;
     }
-}
+};
 //# sourceMappingURL=import.js.map
