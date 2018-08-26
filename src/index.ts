@@ -4,10 +4,7 @@ import * as backupService from './export';
 
 /**
  * Backups data from firestore
- *
- * @param {string} collectionName
- * @param {string} subCollection
- * @return {json}
+ * @param collectionsName
  */
 export const backups  = (collectionsName) => {
   return backupService.backups(collectionsName);

@@ -1,9 +1,8 @@
 import * as admin from 'firebase-admin';
 
 /**
- * Backup data many collections
+ *  Backup data many collections
  * @param collectionsName
- * @returns {Promise<any>}
  */
 export const backups = function (collectionsName: string[]) {
   const data = {};
