@@ -50,7 +50,7 @@ The result is an object of collection's data.
 
 ```
 firestoreService
-  .getAllCollections(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL 
+  .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL 
   .then(collections => {
     // You can do whatever you want with collections
     console.log(JSON.stringify(collections));

@@ -40,7 +40,7 @@ exports.restore = (fileName, dateArray = []) => {
  * Get all collections data
  * @param {Array<string>} collectionNameArray
  */
-exports.getAllCollections = (collectionNameArray = []) => {
+exports.backups = (collectionNameArray = []) => {
     return backupService.getAllCollections(collectionNameArray);
 };
 //# sourceMappingURL=index.js.map

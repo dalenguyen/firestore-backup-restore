@@ -43,6 +43,6 @@ export const restore = (fileName: string, dateArray: Array<string> = []) => {
  * Get all collections data
  * @param {Array<string>} collectionNameArray
  */
-export const getAllCollections = (collectionNameArray: Array<string> = []) => {
+export const backups = (collectionNameArray: Array<string> = []) => {
     return backupService.getAllCollections(collectionNameArray);
 }
