@@ -23,11 +23,11 @@ export { admin }
  * Backup data from firestore
  * 
  * @param {string} collectionName
- * @param {string} subCollection
+ * @param {Array<string> = []} subCollections
  * @return {json}
  */
-export const backup = (collectionName: string, subCollection: string = '') => {    
-    return backupService.backup(collectionName, subCollection);
+export const backup = (collectionName: string, subCollections: Array<string> = []) => {    
+    return backupService.backup(collectionName, subCollections);
 }
 
 /**

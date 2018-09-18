@@ -35,10 +35,10 @@ export const getAllCollections = (collectionNameArray): Promise<any> => {
  * Backup data from firestore
  * 
  * @param {string} collectionName 
- * @param {string} [subCollection=''] 
+ * @param {any} [subCollections=[]]
  * @returns {Promise<any>} 
  */
-export const backup = (collectionName: string, subCollection: string = ''): Promise<any> => {
+export const backup = (collectionName: string, subCollections = []): Promise<any> => {
     console.log('Geting data from: ', collectionName);
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
@@ -59,14 +59,21 @@ export const backup = (collectionName: string, subCollection: string = ''): Prom
             })
 
         results.then(dt => {
-            if (subCollection === '') {
+            if (typeof subCollections === 'string') subCollections = [subCollections];
+            if (subCollections.length === 0) {
                 resolve(dt);
             } else {
-                getSubCollection(db, data, dt, collectionName, subCollection).then(() => {
-                    resolve(data)
-                }).catch(error => {
-                    console.log(error);
-                    reject(error);
+                let count = 0;
+                subCollections.forEach(subCollection => {
+                    getSubCollection(db, data, dt, collectionName, subCollection).then(() => {
+                        count++;
+                        if (count === subCollections.length) {
+                            resolve(data)
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                        reject(error);
+                    })
                 })
             }
         }).catch(error => {
@@ -88,8 +95,11 @@ export const backup = (collectionName: string, subCollection: string = ''): Prom
  */
 const getSubCollection = async (db, data, dt, collectionName, subCollection) => {
     for (let [key, value] of Object.entries([dt[collectionName]][0])) {
-        data[collectionName][key]['subCollection'] = {};
-        await addSubCollection(db, key, data[collectionName][key]['subCollection'], collectionName, subCollection);
+        if (data[collectionName][key]['subCollections'] == null) {
+            data[collectionName][key]['subCollections'] = {};
+        }
+        data[collectionName][key]['subCollections'][subCollection] = {};
+        await addSubCollection(db, key, data[collectionName][key]['subCollections'][subCollection], collectionName, subCollection);
     }
 }
 
@@ -109,8 +119,8 @@ const addSubCollection = (db, key, subData, collectionName, subCollection) => {
             .then(snapshot => {
                 snapshot.forEach(subDoc => {
                     subData[subDoc.id] = subDoc.data();
-                    resolve('Added data');
                 })
+                resolve('Added data');
             }).catch(error => {
                 reject(false);
                 console.log(error);

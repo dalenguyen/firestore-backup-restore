@@ -41,10 +41,10 @@ exports.getAllCollections = (collectionNameArray) => {
  * Backup data from firestore
  *
  * @param {string} collectionName
- * @param {string} [subCollection='']
+ * @param {any} [subCollections=[]]
  * @returns {Promise<any>}
  */
-exports.backup = (collectionName, subCollection = '') => {
+exports.backup = (collectionName, subCollections = []) => {
     console.log('Geting data from: ', collectionName);
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
@@ -62,15 +62,23 @@ exports.backup = (collectionName, subCollection = '') => {
             console.log(error);
         });
         results.then(dt => {
-            if (subCollection === '') {
+            if (typeof subCollections === 'string')
+                subCollections = [subCollections];
+            if (subCollections.length === 0) {
                 resolve(dt);
             }
             else {
-                getSubCollection(db, data, dt, collectionName, subCollection).then(() => {
-                    resolve(data);
-                }).catch(error => {
-                    console.log(error);
-                    reject(error);
+                let count = 0;
+                subCollections.forEach(subCollection => {
+                    getSubCollection(db, data, dt, collectionName, subCollection).then(() => {
+                        count++;
+                        if (count === subCollections.length) {
+                            resolve(data);
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                        reject(error);
+                    });
                 });
             }
         }).catch(error => {
@@ -90,8 +98,11 @@ exports.backup = (collectionName, subCollection = '') => {
  */
 const getSubCollection = (db, data, dt, collectionName, subCollection) => __awaiter(this, void 0, void 0, function* () {
     for (let [key, value] of Object.entries([dt[collectionName]][0])) {
-        data[collectionName][key]['subCollection'] = {};
-        yield addSubCollection(db, key, data[collectionName][key]['subCollection'], collectionName, subCollection);
+        if (data[collectionName][key]['subCollections'] == null) {
+            data[collectionName][key]['subCollections'] = {};
+        }
+        data[collectionName][key]['subCollections'][subCollection] = {};
+        yield addSubCollection(db, key, data[collectionName][key]['subCollections'][subCollection], collectionName, subCollection);
     }
 });
 /**
@@ -110,8 +121,8 @@ const addSubCollection = (db, key, subData, collectionName, subCollection) => {
             .then(snapshot => {
             snapshot.forEach(subDoc => {
                 subData[subDoc.id] = subDoc.data();
-                resolve('Added data');
             });
+            resolve('Added data');
         }).catch(error => {
             reject(false);
             console.log(error);
