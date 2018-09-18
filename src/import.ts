@@ -67,6 +67,20 @@ const startUpdating = (db, collectionName, doc, data, dateArray) => {
     });    
   }
 
+  if (data.subCollections) {
+    for (var subCollection in data.subCollections) {
+      for (var subDoc in data.subCollections[subCollection]) {
+        db.collection(collectionName).doc(doc).collection(subCollection).doc(subDoc)
+          .set(data.subCollections[subCollection][subDoc])
+          .catch(error => {
+            console.log(error);
+        });
+      }
+    }
+    // Don't import subcollections as fields
+    delete data.subCollections;
+  }
+
   if (parameterValid) {
     return new Promise(resolve => {
       db.collection(collectionName).doc(doc)
