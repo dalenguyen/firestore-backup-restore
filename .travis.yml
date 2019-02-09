@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+- '8'
+deploy:
+  provider: npm
+  email: dungnq@itbox4vn.com
+  api_key:
+    secure: BSjy5UrLZOgrTnaA9mzufR3WgE2EAl1aeZMi7FAz2ymlTNAd2k4fZ0VgccEaI1g7zNvESwECgY5gpQNuPXuDU2c5kJPRXh1eu7NlLaXHlhc80faVvFEeYqhETuAvP/q9/WjabgjeoZtZT9yx2pC3MSWm65eGuJYWIXxh3uGSmLtj8kbdWoBfBodET3XGb+FNHWDSg/P49oxq/CDAVnCfZg0PlV9CI8YyxyJ3ha/Ws+YXk1O3EOwNwMv0SvKqyy62IO+wipJE+qqtwAQeFmyiWnCuXirdwD9yZclLe3R4w1HqEa5SaHpm6eyYSvzU59ZX6wV4qUSPLPdEGFhDS6NEQaOLyHGmtkq7DCR0/r4kwN5QUMwsmQJMp+LeRRwMRJlsmzM7oakhn1VS7Asnlbi1XxtAktJmgkCLoKUP0U+KuZ838iZkj4NEnGjUIdPEDHU56IycoE4zQSOXQeR55CxtcqvQli3DRk1/uh8cYkK2W3Chi2sfnpuZ45CO4Qn/hgFhIzVzt7p7fW97GZ9AODJFGm4G7RC6tTbYoIPCU1euc4+yUx8FVmVjcwWqM25OmHPNVK1Y+o41MgwWZcITzWxY8Zcgk6mVMq8C3pJ1Lfm03d8qxhd331Y6+vXtiCjKlAT+1Ve4nhGOXJVNNH+rK29qHQuDDbCg/6nyRQS+W3brDAE=
+  on:
+    branch: master
+    # tags: true

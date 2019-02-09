@@ -3,6 +3,8 @@
     "lib": ["es2017"],
     "module": "commonjs",
     "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "outDir": "dist",
     "sourceMap": true,
     "target": "es6"

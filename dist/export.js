@@ -7,8 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const admin = require("firebase-admin");
+const admin = __importStar(require("firebase-admin"));
 /**
  * Get data from all collections
  * Suggestion from jcummings2 and leningsv
@@ -45,7 +52,7 @@ exports.getAllCollections = (collectionNameArray) => {
  * @returns {Promise<any>}
  */
 exports.backup = (collectionName, subCollection = '') => {
-    console.log('Geting data from: ', collectionName);
+    // console.log('Geting data from: ', collectionName);
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
         let data = {};

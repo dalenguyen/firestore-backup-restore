@@ -19,7 +19,7 @@ export const restore = (fileName: string, dateArray: Array<string>) => {
     // Turn string from file to an Array
     let dataArray = JSON.parse(data);
 
-    udpateCollection(db, dataArray, dateArray);
+    return udpateCollection(db, dataArray, dateArray);
 
   })
 
@@ -37,7 +37,7 @@ const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<stri
     var collectionName = index;
     for (var doc in dataArray[index]) {
       if (dataArray[index].hasOwnProperty(doc)) {
-        await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray)
+        await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray);
       }
     }
   }

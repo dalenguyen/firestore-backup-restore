@@ -39,7 +39,7 @@ export const getAllCollections = (collectionNameArray): Promise<any> => {
  * @returns {Promise<any>} 
  */
 export const backup = (collectionName: string, subCollection: string = ''): Promise<any> => {
-    console.log('Geting data from: ', collectionName);
+    // console.log('Geting data from: ', collectionName);
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
         let data = {};
