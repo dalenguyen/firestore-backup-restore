@@ -6,8 +6,9 @@ import * as fs from 'fs';
  * 
  * @param {string} fileName 
  * @param {Array<string>} dateArray
+ * @param {Array<string>} geoArray
  */
-export const restore = (fileName: string, dateArray: Array<string>) => {
+export const restore = (fileName: string, dateArray: Array<string>, geoArray: Array<string>) => {
 
   const db = admin.firestore();
 
@@ -19,7 +20,7 @@ export const restore = (fileName: string, dateArray: Array<string>) => {
     // Turn string from file to an Array
     let dataArray = JSON.parse(data);
 
-    return udpateCollection(db, dataArray, dateArray);
+    return udpateCollection(db, dataArray, dateArray, geoArray);
 
   })
 
@@ -31,28 +32,29 @@ export const restore = (fileName: string, dateArray: Array<string>) => {
  * @param {any} db 
  * @param {Array<any>} dataArray 
  * @param {Array<string>} dateArray 
+ * @param {Array<string>} geoArray 
  */
-const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<string>) => {
+const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<string>, geoArray: Array<string>) => {
   for (var index in dataArray) {
     var collectionName = index;
     for (var doc in dataArray[index]) {
       if (dataArray[index].hasOwnProperty(doc)) {
-        await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray);
+        await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
       }
     }
   }
 }
 
 /**
- * Write data to document
- * 
- * @param {any} db 
- * @param {any} collectionName 
- * @param {any} doc 
- * @param {any} data 
- * @returns 
+ * Write data to database
+ * @param db 
+ * @param collectionName 
+ * @param doc 
+ * @param data 
+ * @param dateArray 
+ * @param geoArray 
  */
-const startUpdating = (db, collectionName, doc, data, dateArray) => {
+const startUpdating = (db, collectionName: string, doc, data, dateArray: Array<string>, geoArray: Array<string>) => {
   // convert date from unixtimestamp  
   let parameterValid = true;
 
@@ -66,6 +68,18 @@ const startUpdating = (db, collectionName, doc, data, dateArray) => {
       }     
     });    
   }
+
+    // Enter geo value
+    if(typeof geoArray !== 'undefined' && geoArray.length > 0) {
+      geoArray.map(geo => {
+        if(data.hasOwnProperty(geo)) {        
+          data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);        
+        } else {
+          console.log('Please check your geo parameters!!!', geoArray);
+          parameterValid = false;
+        }
+      })
+    }
 
   if (parameterValid) {
     return new Promise(resolve => {

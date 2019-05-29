@@ -10,6 +10,10 @@
       "date": {
         "_seconds":1534046400,
         "_nanoseconds":0
+      },
+      "location": {
+        "_latitude": 49.290683,
+        "_longitude": -123.133956
       }
     },
     "second-key" : {
@@ -22,6 +26,10 @@
       "date": {
         "_seconds":1534262435,
         "_nanoseconds":0
+      },
+      "location": {
+        "_latitude": 49.290683,
+        "_longitude": -123.133956
       }
     }
   }

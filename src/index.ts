@@ -32,11 +32,12 @@ export const backup = (collectionName: string, subCollection: string = '') => {
 
 /**
  * Restore data to firestore
- * 
- * @param {any} fileName 
+ * @param fileName 
+ * @param dateArray 
+ * @param geoArray 
  */
-export const restore = (fileName: string, dateArray: Array<string> = []) => {
-    restoreService.restore(fileName, dateArray);
+export const restore = (fileName: string, dateArray: Array<string> = [], geoArray: Array<string> = []) => {
+    restoreService.restore(fileName, dateArray, geoArray);
 }
 
 /**

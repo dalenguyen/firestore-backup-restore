@@ -20,13 +20,16 @@ describe ('initializeApp function test', () => {
     });   
 
     it ('Restore data', async () => {        
-        await firestoreService.restore('test/import-to-firestore.json', ['date']);     
-        const result = await firestoreService.backup('test', 'sub');        
+        await firestoreService.restore('test/import-to-firestore.json', ['date'], ['location']);     
+        // const result = await firestoreService.backup('test', 'sub');        
+        const result = await firestoreService.backup('test');
         expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com');
     });
 
     it ('Get one collection', async () => {        
-        const result = await firestoreService.backup('test', 'sub');        
+        // const result = await firestoreService.backup('test', 'sub');        
+        const result = await firestoreService.backup('test'); 
+        console.log(JSON.stringify(result));
         expect(Object.keys(result).length).is.equal(1);        
     });
 

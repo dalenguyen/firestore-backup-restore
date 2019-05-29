@@ -19,7 +19,7 @@ You can __Generate New Private Key__ from Project Settings from [Firebase Consol
 
 After that you need to copy the __databaseURL__ for initiating the App. 
 
-## Usage 
+## Usage
 
 You have to import this package in a JavaScript file and work from there.
 
@@ -27,8 +27,8 @@ You have to import this package in a JavaScript file and work from there.
 
 You can export collection and sub collection from your data. The sub collection is optional.
 
-```
-// In your index.js 
+```javascript
+// In your index.js
 
 const firestoreService = require('firestore-export-import');
 const serviceAccount = require('./serviceAccountKey.json');
@@ -50,7 +50,7 @@ The ['collectionName1', 'collectionName2'] is OPTIONAL, you can remove this para
 
 The result is an object of collection's data.
 
-```
+```javascript
 firestoreService
   .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL 
   .then(collections => {
@@ -64,8 +64,8 @@ firestoreService
 
 This code will help you to import data from a JSON file to firestore
 
-```
-// In your index.js 
+```javascript
+// In your index.js
 
 const firestoreService = require('firestore-export-import');
 const serviceAccount = require('./serviceAccountKey.json');
@@ -74,13 +74,13 @@ const serviceAccount = require('./serviceAccountKey.json');
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
-// The array of date fields is optional
-firestoreService.restore('your-file-path.json', ['date1-field', 'date2-field']);
+// The array of date and location fields are optional
+firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1', 'location2']);
 ```
 
 The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 
 
-```
+```json
 {
   "test" : {
     "first-key" : {
@@ -93,6 +93,10 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
       "date": {
         "_seconds":1534046400,
         "_nanoseconds":0
+      },
+      "location": {
+        "_latitude": 49.290683,
+        "_longitude": -123.133956
       }
     },
     "second-key" : {
@@ -105,6 +109,10 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
       "date": {
         "_seconds":1534262435,
         "_nanoseconds":0
+      },
+      "location": {
+        "_latitude": 49.290683,
+        "_longitude": -123.133956
       }
     }
   }

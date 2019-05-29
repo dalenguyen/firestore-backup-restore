@@ -22,8 +22,9 @@ const fs = __importStar(require("fs"));
  *
  * @param {string} fileName
  * @param {Array<string>} dateArray
+ * @param {Array<string>} geoArray
  */
-exports.restore = (fileName, dateArray) => {
+exports.restore = (fileName, dateArray, geoArray) => {
     const db = admin.firestore();
     fs.readFile(fileName, 'utf8', function (err, data) {
         if (err) {
@@ -31,7 +32,7 @@ exports.restore = (fileName, dateArray) => {
         }
         // Turn string from file to an Array
         let dataArray = JSON.parse(data);
-        return udpateCollection(db, dataArray, dateArray);
+        return udpateCollection(db, dataArray, dateArray, geoArray);
     });
 };
 /**
@@ -40,27 +41,28 @@ exports.restore = (fileName, dateArray) => {
  * @param {any} db
  * @param {Array<any>} dataArray
  * @param {Array<string>} dateArray
+ * @param {Array<string>} geoArray
  */
-const udpateCollection = (db, dataArray, dateArray) => __awaiter(this, void 0, void 0, function* () {
+const udpateCollection = (db, dataArray, dateArray, geoArray) => __awaiter(this, void 0, void 0, function* () {
     for (var index in dataArray) {
         var collectionName = index;
         for (var doc in dataArray[index]) {
             if (dataArray[index].hasOwnProperty(doc)) {
-                yield startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray);
+                yield startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
             }
         }
     }
 });
 /**
- * Write data to document
- *
- * @param {any} db
- * @param {any} collectionName
- * @param {any} doc
- * @param {any} data
- * @returns
+ * Write data to database
+ * @param db
+ * @param collectionName
+ * @param doc
+ * @param data
+ * @param dateArray
+ * @param geoArray
  */
-const startUpdating = (db, collectionName, doc, data, dateArray) => {
+const startUpdating = (db, collectionName, doc, data, dateArray, geoArray) => {
     // convert date from unixtimestamp  
     let parameterValid = true;
     if (typeof dateArray === 'object' && dateArray.length > 0) {
@@ -70,6 +72,18 @@ const startUpdating = (db, collectionName, doc, data, dateArray) => {
             }
             else {
                 console.log('Please check your date parameters!!!', dateArray);
+                parameterValid = false;
+            }
+        });
+    }
+    // Enter geo value
+    if (typeof geoArray !== 'undefined' && geoArray.length > 0) {
+        geoArray.map(geo => {
+            if (data.hasOwnProperty(geo)) {
+                data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);
+            }
+            else {
+                console.log('Please check your geo parameters!!!', geoArray);
                 parameterValid = false;
             }
         });

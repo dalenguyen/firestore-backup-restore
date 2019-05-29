@@ -37,11 +37,12 @@ exports.backup = (collectionName, subCollection = '') => {
 };
 /**
  * Restore data to firestore
- *
- * @param {any} fileName
+ * @param fileName
+ * @param dateArray
+ * @param geoArray
  */
-exports.restore = (fileName, dateArray = []) => {
-    restoreService.restore(fileName, dateArray);
+exports.restore = (fileName, dateArray = [], geoArray = []) => {
+    restoreService.restore(fileName, dateArray, geoArray);
 };
 /**
  * Get all collections data
