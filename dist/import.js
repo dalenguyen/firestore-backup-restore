@@ -26,13 +26,20 @@ const fs = __importStar(require("fs"));
  */
 exports.restore = (fileName, dateArray, geoArray) => {
     const db = admin.firestore();
-    fs.readFile(fileName, 'utf8', function (err, data) {
-        if (err) {
-            return console.log(err);
-        }
-        // Turn string from file to an Array
-        let dataArray = JSON.parse(data);
-        return udpateCollection(db, dataArray, dateArray, geoArray);
+    return new Promise((resolve, reject) => {
+        fs.readFile(fileName, 'utf8', function (err, data) {
+            if (err) {
+                console.log(err);
+                reject({ status: false, message: err.message });
+            }
+            // Turn string from file to an Array
+            let dataArray = JSON.parse(data);
+            udpateCollection(db, dataArray, dateArray, geoArray).then(() => {
+                resolve({ status: true, message: 'Successfully import collection!' });
+            }).catch(error => {
+                reject({ status: false, message: error.message });
+            });
+        });
     });
 };
 /**

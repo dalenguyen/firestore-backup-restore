@@ -20,7 +20,8 @@ describe ('initializeApp function test', () => {
     });   
 
     it ('Restore data', async () => {        
-        await firestoreService.restore('test/import-to-firestore.json', ['date'], ['location']);     
+        let status = await firestoreService.restore('test/import-to-firestore.json', ['date'], ['location']);        
+        expect(status.status).ok;
         // const result = await firestoreService.backup('test', 'sub');        
         const result = await firestoreService.backup('test');
         expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com');
@@ -28,8 +29,7 @@ describe ('initializeApp function test', () => {
 
     it ('Get one collection', async () => {        
         // const result = await firestoreService.backup('test', 'sub');        
-        const result = await firestoreService.backup('test'); 
-        console.log(JSON.stringify(result));
+        const result = await firestoreService.backup('test');        
         expect(Object.keys(result).length).is.equal(1);        
     });
 

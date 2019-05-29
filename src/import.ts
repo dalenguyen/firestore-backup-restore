@@ -8,20 +8,27 @@ import * as fs from 'fs';
  * @param {Array<string>} dateArray
  * @param {Array<string>} geoArray
  */
-export const restore = (fileName: string, dateArray: Array<string>, geoArray: Array<string>) => {
+export const restore = (fileName: string, dateArray: Array<string>, geoArray: Array<string>): Promise<any> => {
 
   const db = admin.firestore();
 
-  fs.readFile(fileName, 'utf8', function (err, data) {
-    if (err) {
-      return console.log(err);
-    }
+  return new Promise((resolve, reject) => {
+    fs.readFile(fileName, 'utf8', function (err, data) {
+      if (err) {
+        console.log(err)
+        reject({ status: false, message: err.message });
+      }
 
-    // Turn string from file to an Array
-    let dataArray = JSON.parse(data);
+      // Turn string from file to an Array
+      let dataArray = JSON.parse(data);
 
-    return udpateCollection(db, dataArray, dateArray, geoArray);
+      udpateCollection(db, dataArray, dateArray, geoArray).then(() => {
+          resolve({ status: true, message: 'Successfully import collection!' });
+      }).catch(error => {
+          reject({ status: false, message: error.message });
+      });
 
+    })
   })
 
 }

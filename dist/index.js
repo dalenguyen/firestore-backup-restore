@@ -42,7 +42,7 @@ exports.backup = (collectionName, subCollection = '') => {
  * @param geoArray
  */
 exports.restore = (fileName, dateArray = [], geoArray = []) => {
-    restoreService.restore(fileName, dateArray, geoArray);
+    return restoreService.restore(fileName, dateArray, geoArray);
 };
 /**
  * Get all collections data

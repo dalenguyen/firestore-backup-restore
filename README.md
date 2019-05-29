@@ -60,9 +60,11 @@ firestoreService
 
 ```
 
-### Import data to firestore 
+### Import data to firestore
 
-This code will help you to import data from a JSON file to firestore
+This code will help you to import data from a JSON file to firestore. 
+
+This will return a Promise<{status: boolean, message: string}>
 
 ```javascript
 // In your index.js

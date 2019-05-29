@@ -37,7 +37,7 @@ export const backup = (collectionName: string, subCollection: string = '') => {
  * @param geoArray 
  */
 export const restore = (fileName: string, dateArray: Array<string> = [], geoArray: Array<string> = []) => {
-    restoreService.restore(fileName, dateArray, geoArray);
+    return restoreService.restore(fileName, dateArray, geoArray);
 }
 
 /**
