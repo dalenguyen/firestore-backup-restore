@@ -62,9 +62,14 @@ firestoreService
 
 ### Import data to firestore
 
-This code will help you to import data from a JSON file to firestore. 
+This code will help you to import data from a JSON file to firestore. You have two options: 
+
++ Restore from a JSON file from your local machine
++ Restore from a JSON from a HTTP request
 
 This will return a Promise<{status: boolean, message: string}>
+
+#### For local JSON
 
 ```javascript
 // In your index.js
@@ -78,6 +83,15 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 // Start importing your data
 // The array of date and location fields are optional
 firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1', 'location2']);
+```
+
+#### For HTTP Request
+
+```javascript
+import request from 'request-promise';
+...
+const backupData = await request('JSON-URL');        
+const status = await firestoreService.restore(JSON.parse(backupData), ['date'], ['location']); 
 ```
 
 The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 
