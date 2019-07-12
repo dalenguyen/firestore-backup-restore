@@ -62,6 +62,7 @@ export const backup = (collectionName: string, subCollection: string = ''): Prom
             if (subCollection === '') {
                 resolve(dt);
             } else {
+                console.log('Geting sub collection', subCollection)
                 getSubCollection(db, data, dt, collectionName, subCollection).then(() => {
                     resolve(data)
                 }).catch(error => {
@@ -87,33 +88,25 @@ export const backup = (collectionName: string, subCollection: string = ''): Prom
  * @param {any} subCollection 
  */
 const getSubCollection = async (db, data, dt, collectionName, subCollection) => {
-    for (let [key, value] of Object.entries([dt[collectionName]][0])) {
-        data[collectionName][key]['subCollection'] = {};
-        await addSubCollection(db, key, data[collectionName][key]['subCollection'], collectionName, subCollection);
+    for (let [key, value] of Object.entries([dt[collectionName]][0])) {        
+        
+        const subCollectionPath = collectionName + '/' + key + '/' + subCollection;
+        // let subCollectionData = await addSubCollection(subCollectionPath);
+        let subCollectionData = await backup(subCollectionPath)
+
+        if (Object.keys(subCollectionData[subCollectionPath]).length > 0) {
+            data[collectionName][key]['subCollection'] = [];
+            data[collectionName][key]['subCollection'].push(subCollectionData);
+        }                
     }
 }
 
 /**
  * Add sub collection to data object if possible
  * 
- * @param {any} db 
- * @param {any} key 
- * @param {any} subData 
- * @param {any} collectionName 
- * @param {any} subCollection 
+ * @param {string} subCollectionPath
  * @returns 
  */
-const addSubCollection = (db, key, subData, collectionName, subCollection) => {
-    return new Promise((resolve, reject) => {
-        db.collection(collectionName).doc(key).collection(subCollection).get()
-            .then(snapshot => {
-                snapshot.forEach(subDoc => {
-                    subData[subDoc.id] = subDoc.data();
-                    resolve('Added data');
-                })
-            }).catch(error => {
-                reject(false);
-                console.log(error);
-            })
-    })
+const addSubCollection = (subCollectionPath: string) => {
+    return Promise.resolve(backup(subCollectionPath));
 }

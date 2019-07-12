@@ -1,4 +1,5 @@
 # firestore-export-import
+
 [![GitHub version](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore.svg)](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore) [![Build Status](https://travis-ci.org/dalenguyen/firestore-backup-restore.svg?branch=master)](https://travis-ci.org/dalenguyen/firestore-backup-restore)
 
 NPM package for backup and restore Firebase Firestore
@@ -23,7 +24,7 @@ After that you need to copy the __databaseURL__ for initiating the App.
 
 You have to import this package in a JavaScript file and work from there.
 
-### Export data from firestore 
+### Export data from firestore
 
 You can export collection and sub collection from your data. The sub collection is optional.
 
@@ -42,6 +43,8 @@ firestoreService
   .then(data => console.log(JSON.stringify(data)))
 ```
 
+If the sub collection exists, it will be saved under __subCollection__.
+
 ### Get all collections data
 
 This is a suggestion from [jcummings2](https://github.com/jcummings2) and [leningsv](https://github.com/Leningsv)
@@ -52,7 +55,7 @@ The result is an object of collection's data.
 
 ```javascript
 firestoreService
-  .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL 
+  .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
   .then(collections => {
     // You can do whatever you want with collections
     console.log(JSON.stringify(collections));
@@ -90,8 +93,8 @@ firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1'
 ```javascript
 import request from 'request-promise';
 ...
-const backupData = await request('JSON-URL');        
-const status = await firestoreService.restore(JSON.parse(backupData), ['date'], ['location']); 
+const backupData = await request('JSON-URL');
+const status = await firestoreService.restore(JSON.parse(backupData), ['date'], ['location']);
 ```
 
 The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 

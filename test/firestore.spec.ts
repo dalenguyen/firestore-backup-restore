@@ -11,8 +11,16 @@ describe ('initializeApp function test', () => {
         expect(app).to.equal(true);
     });
 
+    it('Get a colection with sub-collection', async () => {
+        const data = await firestoreService.backup('test', 'details');        
+        const subCol = data['test']['first-key']['subCollection'];
+        expect(subCol).is.exist;
+        expect(subCol.length).is.greaterThan(0);
+    });    
+
     it ('Get all collections', async () => {        
-        const all = await firestoreService.backups();        
+        const all = await firestoreService.backups();    
+        console.log(all);    
         expect(Object.keys(all).length).is.greaterThan(0);
     });
 
