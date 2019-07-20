@@ -2,7 +2,8 @@
   "name": "firestore-export-import",
   "version": "0.2.5",
   "description": "NPM package for backup and restore Firebase Firestore",
-  "main": "dist/index",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --timeout 60000 --exit -r ts-node/register test/**/*.spec.ts",
     "build": "tsc && npm run minify",
