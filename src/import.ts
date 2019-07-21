@@ -55,8 +55,15 @@ const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<stri
   for (var index in dataArray) {
     var collectionName = index;
     for (var doc in dataArray[index]) {
-      if (dataArray[index].hasOwnProperty(doc)) {
-        await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
+      if (dataArray[index].hasOwnProperty(doc)) {        
+        if (dataArray[index][doc]['subCollection']) {
+          const subCollections =  dataArray[index][doc]['subCollection'];
+          delete dataArray[index][doc]['subCollection'];
+          await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
+          await udpateCollection(db, subCollections, [], []);
+        } else {
+          await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
+        }
       }
     }
   }
@@ -71,13 +78,14 @@ const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<stri
  * @param dateArray 
  * @param geoArray 
  */
-const startUpdating = (db, collectionName: string, doc, data, dateArray: Array<string>, geoArray: Array<string>) => {
-  // convert date from unixtimestamp  
-  let parameterValid = true;
+const startUpdating = (db, collectionName: string, doc: string, data: object, dateArray: Array<string>, geoArray: Array<string>) => {
+   
+  let parameterValid = true;  
 
   if(typeof dateArray === 'object' && dateArray.length > 0) {        
     dateArray.map(date => {      
       if (data.hasOwnProperty(date)) {
+        // convert date from unixtimestamp 
         data[date] = new Date(data[date]._seconds * 1000);
       } else {
         console.log('Please check your date parameters!!!', dateArray);
@@ -86,17 +94,17 @@ const startUpdating = (db, collectionName: string, doc, data, dateArray: Array<s
     });    
   }
 
-    // Enter geo value
-    if(typeof geoArray !== 'undefined' && geoArray.length > 0) {
-      geoArray.map(geo => {
-        if(data.hasOwnProperty(geo)) {        
-          data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);        
-        } else {
-          console.log('Please check your geo parameters!!!', geoArray);
-          parameterValid = false;
-        }
-      })
-    }
+  // Enter geo value
+  if(typeof geoArray !== 'undefined' && geoArray.length > 0) {
+    geoArray.map(geo => {
+      if(data.hasOwnProperty(geo)) {        
+        data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);        
+      } else {
+        console.log('Please check your geo parameters!!!', geoArray);
+        parameterValid = false;
+      }
+    })
+  }  
 
   if (parameterValid) {
     return new Promise(resolve => {

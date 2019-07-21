@@ -38,8 +38,7 @@ export const getAllCollections = (collectionNameArray): Promise<any> => {
  * @param {string} [subCollection=''] 
  * @returns {Promise<any>} 
  */
-export const backup = (collectionName: string, subCollection: string = ''): Promise<any> => {
-    // console.log('Geting data from: ', collectionName);
+export const backup = (collectionName: string, subCollection: string = ''): Promise<any> => {    
     return new Promise((resolve, reject) => {
         const db = admin.firestore();
         let data = {};
@@ -90,23 +89,11 @@ export const backup = (collectionName: string, subCollection: string = ''): Prom
 const getSubCollection = async (db, data, dt, collectionName, subCollection) => {
     for (let [key, value] of Object.entries([dt[collectionName]][0])) {        
         
-        const subCollectionPath = collectionName + '/' + key + '/' + subCollection;
-        // let subCollectionData = await addSubCollection(subCollectionPath);
+        const subCollectionPath = collectionName + '/' + key + '/' + subCollection;        
         let subCollectionData = await backup(subCollectionPath)
 
         if (Object.keys(subCollectionData[subCollectionPath]).length > 0) {
-            data[collectionName][key]['subCollection'] = [];
-            data[collectionName][key]['subCollection'].push(subCollectionData);
+            data[collectionName][key]['subCollection'] = subCollectionData;
         }                
     }
-}
-
-/**
- * Add sub collection to data object if possible
- * 
- * @param {string} subCollectionPath
- * @returns 
- */
-const addSubCollection = (subCollectionPath: string) => {
-    return Promise.resolve(backup(subCollectionPath));
 }

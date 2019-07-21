@@ -1,46 +1,48 @@
 {
   "test": {
     "first-key": {
-      "email": "dungnq@itbox4vn.com",
       "website": "dalenguyen.me",
-      "custom": {
-        "firstName": "Dale",
-        "lastName": "Nguyen"
-      },
       "date": {
         "_seconds": 1534046400,
         "_nanoseconds": 0
       },
+      "custom": {
+        "lastName": "Nguyen",
+        "firstName": "Dale"
+      },
       "location": {
         "_latitude": 49.290683,
         "_longitude": -123.133956
+      },
+      "email": "dungnq@itbox4vn.com",
+      "subCollection": {
+        "test/first-key/details": {
+          "33J2A10u5902CXagoBP6": {
+            "dogId": "2",
+            "dogName": "hello"
+          },
+          "MSZTWEP7Lewx0Qr1Mu5s": {
+            "dogName": "lala",
+            "dogId": "2"
+          }
+        }
       }
     },
     "second-key": {
-      "email": "test@dalenguyen.me",
       "website": "google.com",
-      "custom": {
-        "firstName": "Harry",
-        "lastName": "Potter"
-      },
       "date": {
         "_seconds": 1534262435,
         "_nanoseconds": 0
       },
+      "custom": {
+        "lastName": "Potter",
+        "firstName": "Harry"
+      },
       "location": {
         "_latitude": 49.290683,
         "_longitude": -123.133956
       },
-      "subCollection": [
-        {
-          "test/first-key/details": {
-            "33J2A10u5902CXagoBP6": {
-              "dogId": "1",
-              "dogName": "Kiki"
-            }
-          }
-        }
-      ]
+      "email": "test@dalenguyen.me"
     }
   }
 }
