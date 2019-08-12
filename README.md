@@ -4,11 +4,11 @@
 
 NPM package for backup and restore Firebase Firestore
 
-You can export and import data from firestore with sub collection. 
+You can export and import data from firestore with sub collection.
 
-## Installation 
+## Installation
 
-Install using [__npm__](https://www.npmjs.com/).
+Install using [**npm**](https://www.npmjs.com/).
 
 ```sh
 npm install firestore-export-import
@@ -16,9 +16,9 @@ npm install firestore-export-import
 
 ## Get Google Cloud Account Credentials from Firebase
 
-You can __Generate New Private Key__ from Project Settings from [Firebase Console](https://console.firebase.google.com).
+You can **Generate New Private Key** from Project Settings from [Firebase Console](https://console.firebase.google.com).
 
-After that you need to copy the __databaseURL__ for initiating the App. 
+After that you need to copy the **databaseURL** for initiating the App.
 
 ## Usage
 
@@ -31,19 +31,17 @@ You can export collection and sub collection from your data. The sub collection 
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const firestoreService = require("firestore-export-import");
+const serviceAccount = require("./serviceAccountKey.json");
 
 // Initiate Firebase App
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start exporting your data
-firestoreService
-  .backup('collection-name', 'sub-collection-optional')
-  .then(data => console.log(JSON.stringify(data)))
+firestoreService.backup("collection-name", "sub-collection-optional").then(data => console.log(JSON.stringify(data)));
 ```
 
-If the sub collection exists, it will be saved under __subCollection__.
+If the sub collection exists, it will be saved under **subCollection**.
 
 ### Get all collections data
 
@@ -55,20 +53,19 @@ The result is an object of collection's data.
 
 ```javascript
 firestoreService
-  .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
+  .backups(["collectionName1", "collectionName2"]) // Array of collection's name is OPTIONAL
   .then(collections => {
     // You can do whatever you want with collections
     console.log(JSON.stringify(collections));
-  })
-
+  });
 ```
 
 ### Import data to firestore
 
-This code will help you to import data from a JSON file to firestore. You have two options: 
+This code will help you to import data from a JSON file to firestore. You have two options:
 
-+ Restore from a JSON file from your local machine
-+ Restore from a JSON from a HTTP request
+- Restore from a JSON file from your local machine
+- Restore from a JSON from a HTTP request
 
 This will return a Promise<{status: boolean, message: string}>
 
@@ -77,15 +74,15 @@ This will return a Promise<{status: boolean, message: string}>
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const firestoreService = require("firestore-export-import");
+const serviceAccount = require("./serviceAccountKey.json");
 
 // Initiate Firebase App
 firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
 // The array of date and location fields are optional
-firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1', 'location2']);
+firestoreService.restore("your-file-path.json", ["date1", "date2"], ["location1", "location2"]);
 ```
 
 #### For HTTP Request
@@ -97,37 +94,37 @@ const backupData = await request('JSON-URL');
 const status = await firestoreService.restore(JSON.parse(backupData), ['date'], ['location']);
 ```
 
-The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 
+The JSON is formated as below. The collection name is **test**. **first-key** and **second-key** are document ids.
 
 ```json
 {
-  "test" : {
-    "first-key" : {
-      "email"   : "dungnq@itbox4vn.com",
-      "website" : "dalenguyen.me",
-      "custom"  : {
-        "firstName" : "Dale",
-        "lastName"  : "Nguyen"
+  "test": {
+    "first-key": {
+      "email": "dungnq@itbox4vn.com",
+      "website": "dalenguyen.me",
+      "custom": {
+        "firstName": "Dale",
+        "lastName": "Nguyen"
       },
       "date": {
-        "_seconds":1534046400,
-        "_nanoseconds":0
+        "_seconds": 1534046400,
+        "_nanoseconds": 0
       },
       "location": {
         "_latitude": 49.290683,
         "_longitude": -123.133956
       }
     },
-    "second-key" : {
-      "email"   : "test@dalenguyen.me",
-      "website" : "google.com",
-      "custom"  : {
-        "firstName" : "Harry",
-        "lastName"  : "Potter"
+    "second-key": {
+      "email": "test@dalenguyen.me",
+      "website": "google.com",
+      "custom": {
+        "firstName": "Harry",
+        "lastName": "Potter"
       },
       "date": {
-        "_seconds":1534262435,
-        "_nanoseconds":0
+        "_seconds": 1534262435,
+        "_nanoseconds": 0
       },
       "location": {
         "_latitude": 49.290683,
@@ -136,6 +133,12 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
     }
   }
 }
+```
+
+### Remove data from firestore
+
+```javascript
+await firestoreService.clean("users");
 ```
 
 ## Contributions
