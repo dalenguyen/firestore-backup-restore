@@ -16,7 +16,7 @@ export const restore = (fileName: string, dateArray: Array<string>, geoArray: Ar
     if (typeof fileName === 'object') {
       let dataArray = fileName;
 
-      udpateCollection(db, dataArray, dateArray, geoArray).then(() => {
+      updateCollection(db, dataArray, dateArray, geoArray).then(() => {
           resolve({ status: true, message: 'Successfully import collection!' });
       }).catch(error => {
           reject({ status: false, message: error.message });
@@ -31,7 +31,7 @@ export const restore = (fileName: string, dateArray: Array<string>, geoArray: Ar
         // Turn string from file to an Array
         let dataArray = JSON.parse(data);
   
-        udpateCollection(db, dataArray, dateArray, geoArray).then(() => {
+        updateCollection(db, dataArray, dateArray, geoArray).then(() => {
             resolve({ status: true, message: 'Successfully import collection!' });
         }).catch(error => {
             reject({ status: false, message: error.message });
@@ -51,7 +51,7 @@ export const restore = (fileName: string, dateArray: Array<string>, geoArray: Ar
  * @param {Array<string>} dateArray 
  * @param {Array<string>} geoArray 
  */
-const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<string>, geoArray: Array<string>) => {
+const updateCollection = async (db, dataArray: Array<any>, dateArray: Array<string>, geoArray: Array<string>) => {
   for (var index in dataArray) {
     var collectionName = index;
     for (var doc in dataArray[index]) {
@@ -60,7 +60,7 @@ const udpateCollection = async (db, dataArray: Array<any>, dateArray: Array<stri
           const subCollections =  dataArray[index][doc]['subCollection'];
           delete dataArray[index][doc]['subCollection'];
           await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
-          await udpateCollection(db, subCollections, [], []);
+          await updateCollection(db, subCollections, [], []);
         } else {
           await startUpdating(db, collectionName, doc, dataArray[index][doc], dateArray, geoArray);
         }

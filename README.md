@@ -1,6 +1,8 @@
 # firestore-export-import
 
-[![GitHub version](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore.svg)](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore) [![Build Status](https://travis-ci.org/dalenguyen/firestore-backup-restore.svg?branch=master)](https://travis-ci.org/dalenguyen/firestore-backup-restore)
+[![GitHub version](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore.svg)](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore) 
+[![Build Status](https://travis-ci.org/dalenguyen/firestore-backup-restore.svg?branch=master)](https://travis-ci.org/dalenguyen/firestore-backup-restore)
+[![David badge](https://david-dm.org/dalenguyen/firestore-backup-restore.svg)](https://david-dm.org/dalenguyen/firestore-backup-restore)
 
 NPM package for backup and restore Firebase Firestore
 
@@ -72,6 +74,12 @@ This code will help you to import data from a JSON file to firestore. You have t
 
 This will return a Promise<{status: boolean, message: string}>
 
+Remember that, this action doesn't remove the collection. It will override or add new data to the collection. If you want to remove the current collection, you should do it from firebase console or using [firebase firestore:delete](https://firebase.google.com/docs/cli)
+
+```sh
+firebase firestore:delete [options] <<path>>
+```
+
 #### For local JSON
 
 ```javascript
@@ -101,38 +109,50 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
 
 ```json
 {
-  "test" : {
-    "first-key" : {
-      "email"   : "dungnq@itbox4vn.com",
-      "website" : "dalenguyen.me",
-      "custom"  : {
-        "firstName" : "Dale",
-        "lastName"  : "Nguyen"
-      },
+  "test": {
+    "first-key": {
+      "website": "dalenguyen.me",
       "date": {
-        "_seconds":1534046400,
-        "_nanoseconds":0
+        "_seconds": 1534046400,
+        "_nanoseconds": 0
+      },
+      "custom": {
+        "lastName": "Nguyen",
+        "firstName": "Dale"
       },
       "location": {
         "_latitude": 49.290683,
         "_longitude": -123.133956
+      },
+      "email": "dungnq@itbox4vn.com",
+      "subCollection": {
+        "test/first-key/details": {
+          "33J2A10u5902CXagoBP6": {
+            "dogId": "2",
+            "dogName": "hello"
+          },
+          "MSZTWEP7Lewx0Qr1Mu5s": {
+            "dogName": "lala",
+            "dogId": "2"
+          }
+        }
       }
     },
-    "second-key" : {
-      "email"   : "test@dalenguyen.me",
-      "website" : "google.com",
-      "custom"  : {
-        "firstName" : "Harry",
-        "lastName"  : "Potter"
-      },
+    "second-key": {
+      "website": "google.com",
       "date": {
-        "_seconds":1534262435,
-        "_nanoseconds":0
+        "_seconds": 1534262435,
+        "_nanoseconds": 0
+      },
+      "custom": {
+        "lastName": "Potter",
+        "firstName": "Harry"
       },
       "location": {
         "_latitude": 49.290683,
         "_longitude": -123.133956
-      }
+      },
+      "email": "test@dalenguyen.me"
     }
   }
 }
