@@ -17,7 +17,7 @@ export const restore = (fileName: string, dateArray: Array<string>, geoArray: Ar
       let dataArray = fileName;
 
       updateCollection(db, dataArray, dateArray, geoArray).then(() => {
-          resolve({ status: true, message: 'Successfully import collection!' });
+          resolve({ status: true, message: 'Collection successfully imported!' });
       }).catch(error => {
           reject({ status: false, message: error.message });
       });
@@ -32,7 +32,7 @@ export const restore = (fileName: string, dateArray: Array<string>, geoArray: Ar
         let dataArray = JSON.parse(data);
   
         updateCollection(db, dataArray, dateArray, geoArray).then(() => {
-            resolve({ status: true, message: 'Successfully import collection!' });
+            resolve({ status: true, message: 'Collection successfully imported!' });
         }).catch(error => {
             reject({ status: false, message: error.message });
         });
@@ -111,15 +111,15 @@ const startUpdating = (db, collectionName: string, doc: string, data: object, da
       db.collection(collectionName).doc(doc)
         .set(data)
         .then(() => {
-          console.log(`${doc} is successed adding to firestore!`);
-          resolve('Data wrote!');
+          console.log(`${doc} was successfully added to firestore!`);
+          resolve('Data written!');
         })
         .catch(error => {
           console.log(error);
         });
     })
   } else {
-    console.log(`${doc} is not imported to firestore. Please check your parameters!`);
+    console.log(`${doc} was not imported to firestore. Please check your parameters!`);
     return false;
   }
 }
