@@ -12,16 +12,24 @@ describe ('initializeApp function test', () => {
     });
 
     it('Get a colection with sub-collection', async () => {
-        const data = await firestoreService.backup('test', 'details');        
-        const subCol = data['test']['first-key']['subCollection'];
-        
-        expect(subCol).is.exist;
-        expect(Object.values(subCol).length).is.greaterThan(0);
+        try {
+            const data = await firestoreService.backup('test', 'details');        
+            const subCol = data['test']['first-key']['subCollection'];
+            
+            expect(subCol).is.exist;
+            expect(Object.values(subCol).length).is.greaterThan(0);
+        } catch (error) {
+            console.log(error)
+        }
     });    
 
     it ('Get all collections', async () => {        
-        const all = await firestoreService.backups();        
-        expect(Object.keys(all).length).is.greaterThan(0);
+        try {
+            const all = await firestoreService.backups();        
+            expect(Object.keys(all).length).is.greaterThan(0);
+        } catch (error) {
+            console.log(error)   
+        }
     });
 
     it ('Get an array of collections', async () => {        

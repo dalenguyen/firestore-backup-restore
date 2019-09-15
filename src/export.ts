@@ -9,12 +9,12 @@ export const getAllCollections = (collectionNameArray): Promise<any> => {
     const db = admin.firestore();
     // get all the root-level paths
     return new Promise((resolve) => {
-        db.getCollections().then((snap) => {
+        db.listCollections().then((snap) => {
             let paths = collectionNameArray;
             
             if(paths.length === 0) { // get all collections
-                snap.forEach((collection) => paths.push(...collection['_referencePath'].segments));            
-            }            
+                snap.forEach((collection) => paths.push(collection.path));            
+            }
             
             // fetch in parallel
             let promises = [];
