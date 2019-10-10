@@ -1,16 +1,20 @@
 import * as admin from 'firebase-admin';
 import * as fs from 'fs';
+import { Firestore } from '@google-cloud/firestore';
 
 /**
  * Restore data to firestore
- * 
- * @param {string} fileName 
+ *
+ * @param {string} fileName
  * @param {Array<string>} dateArray
  * @param {Array<string>} geoArray
+ * @param {Firestore} db
  */
-export const restore = (fileName: string, dateArray: Array<string>, geoArray: Array<string>): Promise<any> => {
+export const restore = (fileName: string, dateArray: Array<string>, geoArray: Array<string>, db: Firestore): Promise<any> => {
 
-  const db = admin.firestore();
+  if (! db) {
+    db = admin.firestore();
+  }
 
   return new Promise((resolve, reject) => {
     if (typeof fileName === 'object') {
@@ -27,35 +31,33 @@ export const restore = (fileName: string, dateArray: Array<string>, geoArray: Ar
           console.log(err)
           reject({ status: false, message: err.message });
         }
-  
         // Turn string from file to an Array
         let dataArray = JSON.parse(data);
-  
         updateCollection(db, dataArray, dateArray, geoArray).then(() => {
             resolve({ status: true, message: 'Collection successfully imported!' });
         }).catch(error => {
             reject({ status: false, message: error.message });
         });
-  
       })
-    }    
+    }
   })
 
 }
 
 /**
  * Update data to firestore
- * 
- * @param {any} db 
- * @param {Array<any>} dataArray 
- * @param {Array<string>} dateArray 
- * @param {Array<string>} geoArray 
+ *
+ * @param {any} db
+ * @param {Array<any>} dataArray
+ * @param {Array<string>} dateArray
+ * @param {Array<string>} geoArray
  */
 const updateCollection = async (db, dataArray: Array<any>, dateArray: Array<string>, geoArray: Array<string>) => {
   for (var index in dataArray) {
+    console.log(`updating collection '${index}'`);
     var collectionName = index;
     for (var doc in dataArray[index]) {
-      if (dataArray[index].hasOwnProperty(doc)) {        
+      if (dataArray[index].hasOwnProperty(doc)) {
         if (dataArray[index][doc]['subCollection']) {
           const subCollections =  dataArray[index][doc]['subCollection'];
           delete dataArray[index][doc]['subCollection'];
@@ -71,47 +73,48 @@ const updateCollection = async (db, dataArray: Array<any>, dateArray: Array<stri
 
 /**
  * Write data to database
- * @param db 
- * @param collectionName 
- * @param doc 
- * @param data 
- * @param dateArray 
- * @param geoArray 
+ * @param db
+ * @param collectionName
+ * @param doc
+ * @param data
+ * @param dateArray
+ * @param geoArray
  */
 const startUpdating = (db, collectionName: string, doc: string, data: object, dateArray: Array<string>, geoArray: Array<string>) => {
-   
-  let parameterValid = true;  
 
-  if(typeof dateArray === 'object' && dateArray.length > 0) {        
-    dateArray.map(date => {      
+  let parameterValid = true;
+
+  if(typeof dateArray === 'object' && dateArray.length > 0) {
+    dateArray.map(date => {
       if (data.hasOwnProperty(date)) {
-        // convert date from unixtimestamp 
+        // convert date from unixtimestamp
         data[date] = new Date(data[date]._seconds * 1000);
       } else {
         console.log('Please check your date parameters!!!', dateArray);
         parameterValid = false;
-      }     
-    });    
+      }
+    });
   }
 
   // Enter geo value
   if(typeof geoArray !== 'undefined' && geoArray.length > 0) {
     geoArray.map(geo => {
-      if(data.hasOwnProperty(geo)) {        
-        data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);        
+      if(data.hasOwnProperty(geo)) {
+        data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);
       } else {
         console.log('Please check your geo parameters!!!', geoArray);
         parameterValid = false;
       }
     })
-  }  
+  }
 
   if (parameterValid) {
+    console.log(`\tstarting to add '${doc}' to firestore!`);
     return new Promise(resolve => {
       db.collection(collectionName).doc(doc)
         .set(data)
         .then(() => {
-          console.log(`${doc} was successfully added to firestore!`);
+          console.log(`\t'${doc}' was successfully added to firestore!`);
           resolve('Data written!');
         })
         .catch(error => {
@@ -119,7 +122,7 @@ const startUpdating = (db, collectionName: string, doc: string, data: object, da
         });
     })
   } else {
-    console.log(`${doc} was not imported to firestore. Please check your parameters!`);
+    console.log(`\t'${doc}' was not imported to firestore. Please check your parameters!`);
     return false;
   }
 }

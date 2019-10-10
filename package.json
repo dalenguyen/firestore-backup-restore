@@ -40,6 +40,8 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
+    "@firebase/testing": "^0.13.4",
+    "firebase": "^7.1.0",
     "firebase-admin": "^8.5.0"
   },
   "engines": {

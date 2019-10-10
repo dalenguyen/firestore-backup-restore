@@ -1,4 +1,6 @@
 import * as admin from 'firebase-admin';
+import * as firebase from '@firebase/testing';
+import { Firestore } from '@google-cloud/firestore';
 /**
  * Initialize Firebase App
  *
@@ -7,6 +9,13 @@ import * as admin from 'firebase-admin';
  */
 export declare const initializeApp: (serviceAccount: string, databaseURL: string) => boolean;
 export { admin };
+/**
+ * Initialize Firebase App
+ *
+ * @param {any} projectId
+ * @param {any} auth
+ */
+export declare const initializeTestApp: (projectId: string, auth: object) => firebase.firestore.Firestore;
 /**
  * Backup data from firestore
  *
@@ -21,7 +30,14 @@ export declare const backup: (collectionName: string, subCollection?: string) =>
  * @param dateArray
  * @param geoArray
  */
-export declare const restore: (fileName: string, dateArray?: string[], geoArray?: string[]) => Promise<any>;
+export declare const restore: (fileName: string, dateArray?: string[], geoArray?: string[], db?: Firestore) => Promise<any>;
+/**
+ * Add fictures data to firestore emulator
+ * @param fileName
+ * @param projectId
+ * @param auth
+ */
+export declare const fixtures: (fileName: string, dateArray: string[], geoArray: string[], db: Firestore) => Promise<any>;
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
