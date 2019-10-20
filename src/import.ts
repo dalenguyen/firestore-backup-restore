@@ -78,9 +78,7 @@ const updateCollection = async (db, dataArray: Array<any>, dateArray: Array<stri
  * @param dateArray 
  * @param geoArray 
  */
-const startUpdating = (db, collectionName: string, doc: string, data: object, dateArray: Array<string>, geoArray: Array<string>) => {
-   
-  let parameterValid = true;  
+const startUpdating = (db, collectionName: string, doc: string, data: object, dateArray: Array<string>, geoArray: Array<string>) => { 
 
   if(typeof dateArray === 'object' && dateArray.length > 0) {        
     dateArray.map(date => {      
@@ -89,7 +87,6 @@ const startUpdating = (db, collectionName: string, doc: string, data: object, da
         data[date] = new Date(data[date]._seconds * 1000);
       } else {
         console.log('Please check your date parameters!!!', dateArray);
-        parameterValid = false;
       }     
     });    
   }
@@ -101,25 +98,20 @@ const startUpdating = (db, collectionName: string, doc: string, data: object, da
         data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);        
       } else {
         console.log('Please check your geo parameters!!!', geoArray);
-        parameterValid = false;
       }
     })
   }  
-
-  if (parameterValid) {
-    return new Promise(resolve => {
-      db.collection(collectionName).doc(doc)
-        .set(data)
-        .then(() => {
-          console.log(`${doc} was successfully added to firestore!`);
-          resolve('Data written!');
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    })
-  } else {
-    console.log(`${doc} was not imported to firestore. Please check your parameters!`);
-    return false;
-  }
+ 
+  return new Promise(resolve => {
+    db.collection(collectionName).doc(doc)
+      .set(data)
+      .then(() => {
+        console.log(`${doc} was successfully added to firestore!`);
+        resolve('Data written!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  })
+ 
 }
