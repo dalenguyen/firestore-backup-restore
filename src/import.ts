@@ -2,6 +2,27 @@ import * as admin from 'firebase-admin';
 import * as fs from 'fs';
 
 /**
+ * Get item from deep level string
+ * 
+ * @param o object
+ * @param s string
+ */
+// const getItemByString = (o, s) => {
+//   s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+//   s = s.replace(/^\./, '');           // strip a leading dot
+//   let a = s.split('.');
+//   for (let i = 0, n = a.length; i < n; ++i) {
+//       const k = a[i];
+//       if (k in o) {
+//           o = o[k];
+//       } else {
+//           return;
+//       }
+//   }
+//   return o;
+// }
+
+/**
  * Restore data to firestore
  * 
  * @param {string} fileName 
@@ -83,20 +104,39 @@ const startUpdating = (db, collectionName: string, doc: string, data: object, da
   let parameterValid = true;  
 
   if(typeof dateArray === 'object' && dateArray.length > 0) {        
-    dateArray.map(date => {      
-      if (data.hasOwnProperty(date)) {
-        // convert date from unixtimestamp 
-        data[date] = new Date(data[date]._seconds * 1000);
+    dateArray.forEach(date => {      
+      const arrDate = date.split('.');
+      if (arrDate.length === 1) {
+        if (data.hasOwnProperty(date)) {
+          // convert date from unixtimestamp 
+          data[date] = new Date(data[date]._seconds * 1000);
+        } else {
+          console.log('Please check your date parameters!!!', date);
+          parameterValid = false;
+        }
+      } else if (arrDate.length === 2) {
+        if (data.hasOwnProperty(arrDate[0])) {
+          const temp = data[arrDate[0]];
+          if (temp.hasOwnProperty([arrDate[1]])) {
+            // convert date from unixtimestamp 
+            data[arrDate[0]][arrDate[1]] = new Date(data[arrDate[0]][arrDate[1]]._seconds * 1000);
+          } else {
+            console.log('Please check your date parameters!!!', date);
+            parameterValid = false;            
+          }          
+        } else {
+          console.log('Please check your date parameters!!!', date);
+          parameterValid = false;
+        }
       } else {
-        console.log('Please check your date parameters!!!', dateArray);
-        parameterValid = false;
-      }     
+        console.error(`The package doesn't support more than two levels: ${date}`)
+      }                 
     });    
   }
 
   // Enter geo value
   if(typeof geoArray !== 'undefined' && geoArray.length > 0) {
-    geoArray.map(geo => {
+    geoArray.forEach(geo => {
       if(data.hasOwnProperty(geo)) {        
         data[geo] = new admin.firestore.GeoPoint(data[geo]._latitude, data[geo]._longitude);        
       } else {
@@ -119,7 +159,7 @@ const startUpdating = (db, collectionName: string, doc: string, data: object, da
         });
     })
   } else {
-    console.log(`${doc} was not imported to firestore. Please check your parameters!`);
+    console.log(`${doc} was not imported to firestore. Please check your parameters or ignore if you don't need to import the property above.`);
     return false;
   }
 }

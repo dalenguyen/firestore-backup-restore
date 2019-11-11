@@ -93,8 +93,10 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
 // The array of date and location fields are optional
-firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1', 'location2']);
+firestoreService.restore('your-file-path.json', ['date1', 'date2.date3'], ['location1', 'location2']);
 ```
+
+* Note that the date array only support two levels now. If you pass ['date1.date2.date3'], it won't work.
 
 #### For HTTP Request
 

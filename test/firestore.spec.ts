@@ -38,11 +38,12 @@ describe ('initializeApp function test', () => {
     });   
 
     it ('Restore data', async () => {        
-        let status = await firestoreService.restore('test/import-to-firestore.json', ['date'], ['location']);        
+        let status = await firestoreService.restore('test/import-to-firestore.json', ['date', 'schedule.time', 'more.than.two'], ['location']);        
         expect(status.status).ok;
              
         const result = await firestoreService.backup('test');
         expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com');
+        expect(result.test['first-key'].schedule.time._seconds).equals(1534046400)
     });
 
     it ('Restore data from API', async () => {
@@ -55,5 +56,4 @@ describe ('initializeApp function test', () => {
         const result = await firestoreService.backup('test');        
         expect(Object.keys(result).length).is.equal(1);        
     });    
-
 })
