@@ -1,4 +1,10 @@
 /**
+ * Get item from deep level string
+ *
+ * @param o object
+ * @param s string
+ */
+/**
  * Restore data to firestore
  *
  * @param {string} fileName
