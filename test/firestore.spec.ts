@@ -38,7 +38,7 @@ describe ('initializeApp function test', () => {
     });   
 
     it ('Restore data', async () => {        
-        let status = await firestoreService.restore('test/import-to-firestore.json', ['date', 'schedule.time', 'more.than.two'], ['location']);        
+        let status = await firestoreService.restore('test/import-to-firestore.json', ['date', 'schedule.time', 'three.level.time'], ['location']);        
         expect(status.status).ok;
              
         const result = await firestoreService.backup('test');

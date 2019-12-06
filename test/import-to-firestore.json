@@ -12,6 +12,14 @@
           "_nanoseconds": 0
         }
       },
+      "three": {
+        "level": {
+          "time": {
+            "_seconds": 1534046400,
+            "_nanoseconds": 0
+          }
+        }
+      },
       "custom": {
         "lastName": "Nguyen",
         "firstName": "Dale"

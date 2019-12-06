@@ -10,6 +10,9 @@
 
 ---
 
+## [0.3.1] - 2019-11-11
+#### - :bug:  [Bug Fix]
+- Allow multi level time #33
 
 ## [0.3.0] - 2019-11-11
 #### - :nail_care:  [Polish]

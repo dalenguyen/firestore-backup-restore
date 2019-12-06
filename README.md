@@ -118,6 +118,12 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
         "_seconds": 1534046400,
         "_nanoseconds": 0
       },
+      "schedule": {
+        "time": {
+          "_seconds": 1534046400,
+          "_nanoseconds": 0
+        }
+      },
       "custom": {
         "lastName": "Nguyen",
         "firstName": "Dale"
