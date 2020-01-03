@@ -8,7 +8,6 @@ export declare const getAllCollections: (collectionNameArray: any) => Promise<an
  * Backup data from firestore
  *
  * @param {string} collectionName
- * @param {string} [subCollection='']
  * @returns {Promise<any>}
  */
-export declare const backup: (collectionName: string, subCollection?: string) => Promise<any>;
+export declare const backup: (collectionName: string) => Promise<any>;

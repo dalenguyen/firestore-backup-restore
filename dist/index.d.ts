@@ -11,10 +11,9 @@ export { admin };
  * Backup data from firestore
  *
  * @param {string} collectionName
- * @param {string} subCollection
  * @return {json}
  */
-export declare const backup: (collectionName: string, subCollection?: string) => Promise<any>;
+export declare const backup: (collectionName: string) => Promise<any>;
 /**
  * Restore data to firestore
  * @param fileName
