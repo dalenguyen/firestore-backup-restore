@@ -169,7 +169,7 @@ const startUpdating = (
         db.collection(collectionName)
           .add(data)
           .then((docRef) => {
-            console.log(`${docRef.id} was successfully added to firestore!`);
+            console.log(`${docRef.id || doc} was successfully added to firestore!`);
             resolve(docRef.id);
           })
           .catch(error => {
@@ -181,7 +181,7 @@ const startUpdating = (
           .doc(doc)
           .set(data)
           .then((docRef) => {
-            console.log(`${docRef.id} was successfully added to firestore!`);
+            console.log(`${docRef.id || doc} was successfully added to firestore!`);
             resolve(docRef.id);
           })
           .catch(error => {
