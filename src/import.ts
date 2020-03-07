@@ -66,7 +66,7 @@ export const restore = (
           });
       });
     }
-  });
+  }).catch(error => console.error(error));
 };
 
 /**
@@ -87,24 +87,34 @@ const updateCollection = async (
     var collectionName = index;
     for (var doc in dataArray[index]) {
       if (dataArray[index].hasOwnProperty(doc)) {
-        let id = Array.isArray(dataArray[index]) ? 'auto' : doc;
+
+        let docId = Array.isArray(dataArray[index]) ? 'auto' : doc;
+
         if (dataArray[index][doc]["subCollection"]) {
           const subCollections = dataArray[index][doc]["subCollection"];
           delete dataArray[index][doc]["subCollection"];
-          await startUpdating(
+          let docRefId = await startUpdating(
             db,
             collectionName,
-            id,
+            docId,
             dataArray[index][doc],
             dateArray,
             geoArray
           );
+
+          for (const key in subCollections) {
+            if (subCollections.hasOwnProperty(key)) {
+              subCollections[`${collectionName}/${docRefId}/${key}`] = subCollections[key];
+              delete subCollections[key];
+            }
+          }
+
           await updateCollection(db, subCollections, [], []);
         } else {
           await startUpdating(
             db,
             collectionName,
-            id,
+            docId,
             dataArray[index][doc],
             dateArray,
             geoArray
@@ -158,9 +168,9 @@ const startUpdating = (
       if (doc === 'auto') {
         db.collection(collectionName)
           .add(data)
-          .then(() => {
-            console.log(`${doc} was successfully added to firestore!`);
-            resolve("Data written!");
+          .then((docRef) => {
+            console.log(`${docRef.id} was successfully added to firestore!`);
+            resolve(docRef.id);
           })
           .catch(error => {
             console.log(error);
@@ -170,16 +180,18 @@ const startUpdating = (
         db.collection(collectionName)
           .doc(doc)
           .set(data)
-          .then(() => {
-            console.log(`${doc} was successfully added to firestore!`);
-            resolve("Data written!");
+          .then((docRef) => {
+            console.log(`${docRef.id} was successfully added to firestore!`);
+            resolve(docRef.id);
           })
           .catch(error => {
             console.log(error);
           });
       }
-      resolve(true);
-    });
+    })
+      .catch((error) => {
+        console.error(error);
+      });
   } else {
     console.log(
       `${doc} was not imported to firestore. Please check your parameters or ignore if you don't need to import the property above.`
