@@ -45,7 +45,7 @@ export const restore = (
           reject({ status: false, message: error.message });
         });
     } else {
-      fs.readFile(fileName, "utf8", function(err, data) {
+      fs.readFile(fileName, "utf8", function (err, data) {
         if (err) {
           console.log(err);
           reject({ status: false, message: err.message });
@@ -87,13 +87,14 @@ const updateCollection = async (
     var collectionName = index;
     for (var doc in dataArray[index]) {
       if (dataArray[index].hasOwnProperty(doc)) {
+        let id = Array.isArray(dataArray[index]) ? 'auto' : doc;
         if (dataArray[index][doc]["subCollection"]) {
           const subCollections = dataArray[index][doc]["subCollection"];
           delete dataArray[index][doc]["subCollection"];
           await startUpdating(
             db,
             collectionName,
-            doc,
+            id,
             dataArray[index][doc],
             dateArray,
             geoArray
@@ -103,7 +104,7 @@ const updateCollection = async (
           await startUpdating(
             db,
             collectionName,
-            doc,
+            id,
             dataArray[index][doc],
             dateArray,
             geoArray
@@ -134,7 +135,7 @@ const startUpdating = (
   let parameterValid = true;
 
   if (typeof dateArray === "object" && dateArray.length > 0) {
-    updateTime(dateArray, data);    
+    updateTime(dateArray, data);
   }
 
   // Enter geo value
@@ -154,16 +155,30 @@ const startUpdating = (
 
   if (parameterValid) {
     return new Promise(resolve => {
-      db.collection(collectionName)
-        .doc(doc)
-        .set(data)
-        .then(() => {
-          console.log(`${doc} was successfully added to firestore!`);
-          resolve("Data written!");
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      if (doc === 'auto') {
+        db.collection(collectionName)
+          .add(data)
+          .then(() => {
+            console.log(`${doc} was successfully added to firestore!`);
+            resolve("Data written!");
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      else {
+        db.collection(collectionName)
+          .doc(doc)
+          .set(data)
+          .then(() => {
+            console.log(`${doc} was successfully added to firestore!`);
+            resolve("Data written!");
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      resolve(true);
     });
   } else {
     console.log(
