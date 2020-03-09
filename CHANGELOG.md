@@ -11,6 +11,12 @@
 
 ---
 
+## [0.3.3] - 2020-01-03
+
+#### - :nail_care: [Polish]
+
+- Update new packages
+
 ## [0.3.2] - 2020-01-03
 
 #### - :rocket: [New Feature]
