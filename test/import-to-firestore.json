@@ -29,6 +29,7 @@
         "_longitude": -123.133956
       },
       "email": "dungnq@itbox4vn.com",
+      "secondRef": "test/second-key",
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {

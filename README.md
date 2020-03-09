@@ -14,6 +14,8 @@ Install using [**npm**](https://www.npmjs.com/).
 
 ```sh
 npm install firestore-export-import
+OR
+yarn add firestore-export-import
 ```
 
 ## Get Google Cloud Account Credentials from Firebase
@@ -81,6 +83,19 @@ firebase firestore:delete [options] <<path>>
 
 #### For local JSON
 
+Usually the date, location & reference is not converted correctly when you backup the Firestore database. In order to import correctly, you have to pass to parameters for the options:
+
+```javascript
+// Import options
+const optons = {
+  dates: ['date1', 'date1.date2', 'date1.date2.date3'],
+  geos: ['location1', 'location2'],
+  refs: ['refKey']
+};
+```
+
+After that, the data will be converted based on their types.
+
 ```javascript
 // In your index.js
 
@@ -92,14 +107,12 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
 // The array of date and location fields are optional
-firestoreService.restore(
-  'your-file-path.json',
-  ['date1', 'date2.date3'],
-  ['location1', 'location2']
-);
+firestoreService.restore('your-file-path.json', {
+  dates: ['date1', 'date1.date2', 'date1.date2.date3'],
+  geos: ['location1', 'location2'],
+  refs: ['refKey']
+});
 ```
-
-- Note that the date array only support two levels now. If you pass ['date1.date2.date3'], it won't work.
 
 #### For HTTP Request
 
@@ -107,7 +120,10 @@ firestoreService.restore(
 import request from 'request-promise';
 ...
 const backupData = await request('JSON-URL');
-const status = await firestoreService.restore(JSON.parse(backupData), ['date'], ['location']);
+const status = await firestoreService.restore(JSON.parse(backupData), {
+  dates: ['date'],
+  geos: ['location']
+});
 ```
 
 The JSON is formated as below. The collection name is **test**. **first-key** and **second-key** are document ids.
@@ -127,6 +143,14 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
           "_nanoseconds": 0
         }
       },
+      "three": {
+        "level": {
+          "time": {
+            "_seconds": 1534046400,
+            "_nanoseconds": 0
+          }
+        }
+      },
       "custom": {
         "lastName": "Nguyen",
         "firstName": "Dale"
@@ -136,6 +160,7 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
         "_longitude": -123.133956
       },
       "email": "dungnq@itbox4vn.com",
+      "secondRef": "test/second-key",
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {

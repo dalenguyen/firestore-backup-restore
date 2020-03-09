@@ -44,23 +44,27 @@ describe('initializeApp function test', () => {
   it('Restore data', async () => {
     let status = await firestoreService.restore(
       'test/import-to-firestore.json',
-      ['date', 'schedule.time', 'three.level.time'],
-      ['location']
+      {
+        dates: ['date', 'schedule.time', 'three.level.time'],
+        geos: ['location'],
+        refs: ['secondRef']
+      }
     );
     expect(status.status).ok;
 
     const result = await firestoreService.backup('test');
+
     expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com');
     expect(result.test['first-key'].schedule.time._seconds).equals(1534046400);
+    expect(typeof result.test['first-key'].secondRef).is.equal('object');
   });
 
   it('Restore data from API', async () => {
     const backupData = await request(backupAPI);
-    const status = await firestoreService.restore(
-      JSON.parse(backupData),
-      ['date'],
-      ['location']
-    );
+    const status = await firestoreService.restore(JSON.parse(backupData), {
+      dates: ['date'],
+      geos: ['location']
+    });
     expect(status.status).ok;
   });
 
