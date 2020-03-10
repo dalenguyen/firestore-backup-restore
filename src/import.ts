@@ -124,6 +124,7 @@ const updateCollection = async (
  * @param dateArray
  * @param geoArray
  */
+
 const startUpdating = (
   db,
   collectionName: string,
@@ -131,7 +132,6 @@ const startUpdating = (
   data: object,
   options: IImportOptions
 ) => {
-  let parameterValid = true;
 
   // Update date value
   if (options.dates && options.dates.length > 0) {
@@ -156,13 +156,12 @@ const startUpdating = (
           data[geo]._longitude
         );
       } else {
-        console.log('Please check your geo parameters!!!', options.geos);
+        console.warn('Please check your geo parameters!!!', options.geos);
         parameterValid = false;
       }
     });
   }
 
-  if (parameterValid) {
     return new Promise(resolve => {
       db.collection(collectionName)
         .doc(doc)
@@ -175,10 +174,4 @@ const startUpdating = (
           console.log(error);
         });
     });
-  } else {
-    console.log(
-      `${doc} was not imported to firestore. Please check your parameters or ignore if you don't need to import the property above.`
-    );
-    return false;
-  }
 };
