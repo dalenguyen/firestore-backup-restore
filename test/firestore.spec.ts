@@ -15,16 +15,13 @@ describe('initializeApp function test', () => {
     expect(app).to.equal(true);
   });
 
-  it('Get a colection with sub-collection', async () => {
-    try {
-      const data = await firestoreService.backup('test');
-      const subCol = data['test']['first-key']['subCollection'];
-
-      expect(subCol).is.exist;
-      expect(Object.values(subCol).length).is.greaterThan(0);
-    } catch (error) {
-      console.log(error);
-    }
+  it('Restore data from API', async () => {
+    const backupData = await request(backupAPI);
+    const status = await firestoreService.restore(JSON.parse(backupData), {
+      dates: ['date'],
+      geos: ['location']
+    });
+    expect(status.status).ok;
   });
 
   it('Get all collections', async () => {
@@ -41,7 +38,7 @@ describe('initializeApp function test', () => {
     expect(Object.keys(all).length).is.equal(2);
   });
 
-  it('Restore data', async () => {
+  it('Restore data with document id', async () => {
     let status = await firestoreService.restore(
       'test/import-to-firestore.json',
       {
@@ -57,15 +54,30 @@ describe('initializeApp function test', () => {
     expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com');
     expect(result.test['first-key'].schedule.time._seconds).equals(1534046400);
     expect(typeof result.test['first-key'].secondRef).is.equal('object');
+    expect(
+      result.test['first-key'].subCollection['test/first-key/details'][
+        '33J2A10u5902CXagoBP6'
+      ].dogName
+    ).is.equal('hello');
   });
 
-  it('Restore data from API', async () => {
-    const backupData = await request(backupAPI);
-    const status = await firestoreService.restore(JSON.parse(backupData), {
-      dates: ['date'],
-      geos: ['location']
-    });
+  it('Restore data as an array without document id', async () => {
+    let status = await firestoreService.restore(
+      'test/import-array-to-firestore.json'
+    );
     expect(status.status).ok;
+  });
+
+  it('Get a colection with sub-collection', async () => {
+    try {
+      const data = await firestoreService.backup('test');
+      const subCol = data['test']['first-key']['subCollection'];
+
+      expect(subCol).is.exist;
+      expect(Object.values(subCol).length).is.greaterThan(0);
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   it('Get one collection', async () => {

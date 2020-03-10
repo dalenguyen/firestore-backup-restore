@@ -25,6 +25,7 @@
 #### - :rocket: [New Feature]
 
 - Added support reference type
+- Added upload array of document feature (without predefined document id)
 
 ## [0.3.2] - 2020-01-03
 

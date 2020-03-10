@@ -66,7 +66,7 @@ firestoreService
   });
 ```
 
-### Import data to firestore
+### Import data to firestore (Predefined Document Id)
 
 This code will help you to import data from a JSON file to firestore. You have two options:
 
@@ -191,6 +191,30 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
       "email": "test@dalenguyen.me"
     }
   }
+}
+```
+
+### Import data to firestore (auto generate document id)
+
+It works the same way as above. However the structure of JSON file is different. It's an array of documents.
+
+```json
+// import-array-to-firestore.json
+{
+  "test": [
+    {
+      "name": "Dale Nguyen",
+      "email": "dale@dalenguyen.me"
+    },
+    {
+      "name": "Yen Nguyen",
+      "email": "yenchan@gmail.com"
+    },
+    {
+      "name": "Harry Potter",
+      "email": "harry@potter.me"
+    }
+  ]
 }
 ```
 
