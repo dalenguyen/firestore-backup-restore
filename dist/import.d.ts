@@ -1,8 +1,12 @@
+export interface IImportOptions {
+    dates?: string[];
+    geos?: string[];
+    refs?: string[];
+}
 /**
  * Restore data to firestore
  *
  * @param {string} fileName
- * @param {Array<string>} dateArray
- * @param {Array<string>} geoArray
+ * @param {IImportOptions} options
  */
-export declare const restore: (fileName: string, dateArray: string[], geoArray: string[]) => Promise<any>;
+export declare const restore: (fileName: string, options: IImportOptions) => Promise<any>;

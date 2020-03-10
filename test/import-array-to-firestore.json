@@ -1,0 +1,16 @@
+{
+  "test": [
+    {
+      "name": "Dale Nguyen",
+      "email": "dale@dalenguyen.me"
+    },
+    {
+      "name": "Yen Nguyen",
+      "email": "yenchan@gmail.com"
+    },
+    {
+      "name": "Harry Potter",
+      "email": "harry@potter.me"
+    }
+  ]
+}

@@ -9,11 +9,13 @@ import * as backupService from './export';
  * @param {any} databaseURL
  */
 export const initializeApp = (serviceAccount: string, databaseURL: string) => {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: databaseURL
-  });
-  admin.firestore().settings({ timestampsInSnapshots: true });
+  if (admin.apps.length === 0) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: databaseURL
+    });
+    admin.firestore().settings({ timestampsInSnapshots: true });
+  }
   return true;
 };
 
@@ -32,15 +34,13 @@ export const backup = (collectionName: string) => {
 /**
  * Restore data to firestore
  * @param fileName
- * @param dateArray
- * @param geoArray
+ * @param options
  */
 export const restore = (
   fileName: string,
-  dateArray: Array<string> = [],
-  geoArray: Array<string> = []
+  options: restoreService.IImportOptions = {}
 ) => {
-  return restoreService.restore(fileName, dateArray, geoArray);
+  return restoreService.restore(fileName, options);
 };
 
 /**
