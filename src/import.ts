@@ -1,5 +1,6 @@
-import * as admin from 'firebase-admin';
 import * as fs from 'fs';
+import { v1 as uuidv1 } from 'uuid';
+import * as admin from 'firebase-admin';
 
 export interface IImportOptions {
   dates?: string[];
@@ -70,7 +71,7 @@ export const restore = (
           });
       });
     }
-  });
+  }).catch(error => console.error(error));
 };
 
 /**
@@ -84,28 +85,31 @@ export const restore = (
 const updateCollection = async (
   db,
   dataArray: Array<any>,
-  options: IImportOptions
+  options: IImportOptions = {}
 ) => {
   for (var index in dataArray) {
     var collectionName = index;
     for (var doc in dataArray[index]) {
       if (dataArray[index].hasOwnProperty(doc)) {
+        // asign document id for array type
+        let docId = Array.isArray(dataArray[index]) ? uuidv1() : doc;
         if (dataArray[index][doc]['subCollection']) {
-          const subCollections = dataArray[index][doc]['subCollection'];
+          const subCollections = dataArray[index][docId]['subCollection'];
           delete dataArray[index][doc]['subCollection'];
           await startUpdating(
             db,
             collectionName,
-            doc,
+            docId,
             dataArray[index][doc],
             options
           );
-          await updateCollection(db, subCollections, {});
+          // Update sub collection
+          await updateCollection(db, subCollections);
         } else {
           await startUpdating(
             db,
             collectionName,
-            doc,
+            docId,
             dataArray[index][doc],
             options
           );
@@ -119,7 +123,7 @@ const updateCollection = async (
  * Write data to database
  * @param db
  * @param collectionName
- * @param doc
+ * @param docId
  * @param data
  * @param dateArray
  * @param geoArray
@@ -128,11 +132,10 @@ const updateCollection = async (
 const startUpdating = (
   db,
   collectionName: string,
-  doc: string,
+  docId: string,
   data: object,
   options: IImportOptions
 ) => {
-
   // Update date value
   if (options.dates && options.dates.length > 0) {
     updateTime(options.dates, data);
@@ -157,21 +160,27 @@ const startUpdating = (
         );
       } else {
         console.warn('Please check your geo parameters!!!', options.geos);
-        parameterValid = false;
       }
     });
   }
 
-    return new Promise(resolve => {
-      db.collection(collectionName)
-        .doc(doc)
-        .set(data)
-        .then(() => {
-          console.log(`${doc} was successfully added to firestore!`);
-          resolve('Data written!');
-        })
-        .catch(error => {
-          console.log(error);
+  return new Promise((resolve, reject) => {
+    db.collection(collectionName)
+      .doc(docId)
+      .set(data)
+      .then(() => {
+        console.log(`${docId} was successfully added to firestore!`);
+        resolve({
+          status: true,
+          message: `${docId} was successfully added to firestore!`
         });
-    });
+      })
+      .catch(error => {
+        console.log(error);
+        reject({
+          status: false,
+          message: error.message
+        });
+      });
+  });
 };
