@@ -4,46 +4,49 @@ import * as backupService from './export';
 
 /**
  * Initialize Firebase App
- * 
- * @param {any} serviceAccount 
+ *
+ * @param {any} serviceAccount
  * @param {any} databaseURL
  */
 export const initializeApp = (serviceAccount: string, databaseURL: string) => {
+  if (admin.apps.length === 0) {
     admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: databaseURL
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: databaseURL
     });
     admin.firestore().settings({ timestampsInSnapshots: true });
-    return true;    
-}
+  }
+  return true;
+};
 
-export { admin }
+export { admin };
 
 /**
  * Backup data from firestore
- * 
+ *
  * @param {string} collectionName
- * @param {string} subCollection
  * @return {json}
  */
-export const backup = (collectionName: string, subCollection: string = '') => {    
-    return backupService.backup(collectionName, subCollection);
-}
+export const backup = (collectionName: string) => {
+  return backupService.backup(collectionName);
+};
 
 /**
  * Restore data to firestore
- * @param fileName 
- * @param dateArray 
- * @param geoArray 
+ * @param fileName
+ * @param options
  */
-export const restore = (fileName: string, dateArray: Array<string> = [], geoArray: Array<string> = []) => {
-    return restoreService.restore(fileName, dateArray, geoArray);
-}
+export const restore = (
+  fileName: string,
+  options: restoreService.IImportOptions = {}
+) => {
+  return restoreService.restore(fileName, options);
+};
 
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
  */
 export const backups = (collectionNameArray: Array<string> = []) => {
-    return backupService.getAllCollections(collectionNameArray);
-}
+  return backupService.getAllCollections(collectionNameArray);
+};

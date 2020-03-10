@@ -6,6 +6,20 @@
         "_seconds": 1534046400,
         "_nanoseconds": 0
       },
+      "schedule": {
+        "time": {
+          "_seconds": 1534046400,
+          "_nanoseconds": 0
+        }
+      },
+      "three": {
+        "level": {
+          "time": {
+            "_seconds": 1534046400,
+            "_nanoseconds": 0
+          }
+        }
+      },
       "custom": {
         "lastName": "Nguyen",
         "firstName": "Dale"
@@ -15,6 +29,7 @@
         "_longitude": -123.133956
       },
       "email": "dungnq@itbox4vn.com",
+      "secondRef": "test/second-key",
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {

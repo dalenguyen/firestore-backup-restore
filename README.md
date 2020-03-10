@@ -1,26 +1,28 @@
 # firestore-export-import
 
-[![GitHub version](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore.svg)](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore) 
+[![GitHub version](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore.svg)](https://badge.fury.io/gh/dalenguyen%2Ffirestore-backup-restore)
 [![Build Status](https://travis-ci.org/dalenguyen/firestore-backup-restore.svg?branch=master)](https://travis-ci.org/dalenguyen/firestore-backup-restore)
 [![David badge](https://david-dm.org/dalenguyen/firestore-backup-restore.svg)](https://david-dm.org/dalenguyen/firestore-backup-restore)
 
 NPM package for backup and restore Firebase Firestore
 
-You can export and import data from firestore with sub collection. 
+You can export and import data from firestore with sub collection.
 
-## Installation 
+## Installation
 
-Install using [__npm__](https://www.npmjs.com/).
+Install using [**npm**](https://www.npmjs.com/).
 
 ```sh
 npm install firestore-export-import
+OR
+yarn add firestore-export-import
 ```
 
 ## Get Google Cloud Account Credentials from Firebase
 
-You can __Generate New Private Key__ from Project Settings from [Firebase Console](https://console.firebase.google.com).
+You can **Generate New Private Key** from Project Settings from [Firebase Console](https://console.firebase.google.com).
 
-After that you need to copy the __databaseURL__ for initiating the App. 
+After that you need to copy the **databaseURL** for initiating the App.
 
 ## Usage
 
@@ -41,11 +43,11 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start exporting your data
 firestoreService
-  .backup('collection-name', 'sub-collection-optional')
-  .then(data => console.log(JSON.stringify(data)))
+  .backup('collection-name')
+  .then(data => console.log(JSON.stringify(data)));
 ```
 
-If the sub collection exists, it will be saved under __subCollection__.
+Sub collections will be added under **'subCollection'** object.
 
 ### Get all collections data
 
@@ -61,16 +63,15 @@ firestoreService
   .then(collections => {
     // You can do whatever you want with collections
     console.log(JSON.stringify(collections));
-  })
-
+  });
 ```
 
 ### Import data to firestore
 
-This code will help you to import data from a JSON file to firestore. You have two options: 
+This code will help you to import data from a JSON file to firestore. You have two options:
 
-+ Restore from a JSON file from your local machine
-+ Restore from a JSON from a HTTP request
+- Restore from a JSON file from your local machine
+- Restore from a JSON from a HTTP request
 
 This will return a Promise<{status: boolean, message: string}>
 
@@ -81,6 +82,19 @@ firebase firestore:delete [options] <<path>>
 ```
 
 #### For local JSON
+
+Usually the date, location & reference is not converted correctly when you backup the Firestore database. In order to import correctly, you have to pass to parameters for the options:
+
+```javascript
+// Import options
+const optons = {
+  dates: ['date1', 'date1.date2', 'date1.date2.date3'],
+  geos: ['location1', 'location2'],
+  refs: ['refKey']
+};
+```
+
+After that, the data will be converted based on their types.
 
 ```javascript
 // In your index.js
@@ -93,7 +107,11 @@ firestoreService.initializeApp(serviceAccount, databaseURL);
 
 // Start importing your data
 // The array of date and location fields are optional
-firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1', 'location2']);
+firestoreService.restore('your-file-path.json', {
+  dates: ['date1', 'date1.date2', 'date1.date2.date3'],
+  geos: ['location1', 'location2'],
+  refs: ['refKey']
+});
 ```
 
 #### For HTTP Request
@@ -102,10 +120,13 @@ firestoreService.restore('your-file-path.json', ['date1', 'date2'], ['location1'
 import request from 'request-promise';
 ...
 const backupData = await request('JSON-URL');
-const status = await firestoreService.restore(JSON.parse(backupData), ['date'], ['location']);
+const status = await firestoreService.restore(JSON.parse(backupData), {
+  dates: ['date'],
+  geos: ['location']
+});
 ```
 
-The JSON is formated as below. The collection name is __test__. __first-key__ and __second-key__ are document ids. 
+The JSON is formated as below. The collection name is **test**. **first-key** and **second-key** are document ids.
 
 ```json
 {
@@ -116,6 +137,20 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
         "_seconds": 1534046400,
         "_nanoseconds": 0
       },
+      "schedule": {
+        "time": {
+          "_seconds": 1534046400,
+          "_nanoseconds": 0
+        }
+      },
+      "three": {
+        "level": {
+          "time": {
+            "_seconds": 1534046400,
+            "_nanoseconds": 0
+          }
+        }
+      },
       "custom": {
         "lastName": "Nguyen",
         "firstName": "Dale"
@@ -125,6 +160,7 @@ The JSON is formated as below. The collection name is __test__. __first-key__ an
         "_longitude": -123.133956
       },
       "email": "dungnq@itbox4vn.com",
+      "secondRef": "test/second-key",
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {
