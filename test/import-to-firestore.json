@@ -30,6 +30,7 @@
       },
       "email": "dungnq@itbox4vn.com",
       "secondRef": "test/second-key",
+      "arrayRef": ["test/second-key", "test/second-key"],
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {
