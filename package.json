@@ -33,6 +33,7 @@
     "@types/node": "^13.9.1",
     "chai": "^4.2.0",
     "jsmin": "^1.0.1",
+    "minimist": "^1.2.5",
     "mocha": "^7.1.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
@@ -41,6 +42,9 @@
   },
   "dependencies": {
     "firebase-admin": "^8.10.0"
+  },
+  "resolutions": {
+    "minimist": "1.2.5"
   },
   "engines": {
     "node": ">=7.6.0"

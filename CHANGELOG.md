@@ -16,6 +16,7 @@
 #### - :nail_care: [Polish]
 
 - Update new packages
+- Fixed security package: minimist
 
 #### - :rocket: [New Feature]
 
