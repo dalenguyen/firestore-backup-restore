@@ -11,6 +11,17 @@
 
 ---
 
+## [0.3.4] - 2020-03-17
+
+#### - :nail_care: [Polish]
+
+- Update new packages
+
+#### - :rocket: [New Feature]
+
+- Supported import array of references
+- Supported multi sub collections
+
 ## [0.3.3] - 2020-03-10
 
 #### - :nail_care: [Polish]

@@ -2,7 +2,19 @@
   "test": [
     {
       "name": "Dale Nguyen",
-      "email": "dale@dalenguyen.me"
+      "email": "dale@dalenguyen.me",
+      "subCollection": {
+        "details": [
+          {
+            "dogId": "2",
+            "dogName": "hello"
+          },
+          {
+            "dogName": "lala",
+            "dogId": "2"
+          }
+        ]
+      }
     },
     {
       "name": "Yen Nguyen",

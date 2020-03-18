@@ -35,16 +35,16 @@ You can export collection and sub collection from your data. The sub collection 
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const firestoreService = require('firestore-export-import')
+const serviceAccount = require('./serviceAccountKey.json')
 
 // Initiate Firebase App
-firestoreService.initializeApp(serviceAccount, databaseURL);
+firestoreService.initializeApp(serviceAccount, databaseURL)
 
 // Start exporting your data
 firestoreService
   .backup('collection-name')
-  .then(data => console.log(JSON.stringify(data)));
+  .then(data => console.log(JSON.stringify(data)))
 ```
 
 Sub collections will be added under **'subCollection'** object.
@@ -62,8 +62,8 @@ firestoreService
   .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
   .then(collections => {
     // You can do whatever you want with collections
-    console.log(JSON.stringify(collections));
-  });
+    console.log(JSON.stringify(collections))
+  })
 ```
 
 ### Import data to firestore (Predefined Document Id)
@@ -91,7 +91,7 @@ const optons = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location1', 'location2'],
   refs: ['refKey']
-};
+}
 ```
 
 After that, the data will be converted based on their types.
@@ -99,19 +99,19 @@ After that, the data will be converted based on their types.
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const firestoreService = require('firestore-export-import')
+const serviceAccount = require('./serviceAccountKey.json')
 
 // Initiate Firebase App
-firestoreService.initializeApp(serviceAccount, databaseURL);
+firestoreService.initializeApp(serviceAccount, databaseURL)
 
 // Start importing your data
-// The array of date and location fields are optional
+// The array of date, location and reference fields are optional
 firestoreService.restore('your-file-path.json', {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location1', 'location2'],
-  refs: ['refKey']
-});
+  refs: ['refKey', 'arrayRef']
+})
 ```
 
 #### For HTTP Request
@@ -161,6 +161,7 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
       },
       "email": "dungnq@itbox4vn.com",
       "secondRef": "test/second-key",
+      "arrayRef": ["test/second-key", "test/second-key"],
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {
@@ -204,7 +205,19 @@ It works the same way as above. However the structure of JSON file is different.
   "test": [
     {
       "name": "Dale Nguyen",
-      "email": "dale@dalenguyen.me"
+      "email": "dale@dalenguyen.me",
+      "subCollection": {
+        "details": [
+          {
+            "dogId": "2",
+            "dogName": "hello"
+          },
+          {
+            "dogName": "lala",
+            "dogId": "2"
+          }
+        ]
+      }
     },
     {
       "name": "Yen Nguyen",
