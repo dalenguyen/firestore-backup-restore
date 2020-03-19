@@ -172,12 +172,20 @@ const startUpdating = (
   if (options.geos && options.geos.length > 0) {
     options.geos.forEach(geo => {
       if (data.hasOwnProperty(geo)) {
-        data[geo] = new admin.firestore.GeoPoint(
-          data[geo]._latitude,
-          data[geo]._longitude
-        )
-      } else {
-        console.warn('Please check your geo parameters!!!', options.geos)
+        // array of geo locations
+        if (Array.isArray(data[geo])) {
+          data[geo] = data[geo].map(geoValues => {
+            return new admin.firestore.GeoPoint(
+              geoValues._latitude,
+              geoValues._longitude
+            )
+          })
+        } else {
+          data[geo] = new admin.firestore.GeoPoint(
+            data[geo]._latitude,
+            data[geo]._longitude
+          )
+        }
       }
     })
   }

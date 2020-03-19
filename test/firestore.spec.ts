@@ -43,7 +43,7 @@ describe('initializeApp function test', () => {
       'test/import-to-firestore.json',
       {
         dates: ['date', 'schedule.time', 'three.level.time'],
-        geos: ['location'],
+        geos: ['location', 'locations'],
         refs: ['secondRef', 'arrayRef']
       }
     )
@@ -54,6 +54,10 @@ describe('initializeApp function test', () => {
     expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com')
     expect(result.test['first-key'].schedule.time._seconds).equals(1534046400)
     expect(typeof result.test['first-key'].secondRef).is.equal('object')
+    // locations
+    expect(result.test['first-key'].location._latitude).equal(49.290683)
+    expect(result.test['first-key'].locations[0]._latitude).equal(50.290683)
+    expect(result.test['first-key'].locations[1]._latitude).equal(51.290683)
     expect(
       result.test['first-key'].subCollection['test/first-key/details'][
         '33J2A10u5902CXagoBP6'
