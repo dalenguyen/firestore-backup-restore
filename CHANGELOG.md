@@ -11,6 +11,12 @@
 
 ---
 
+## [0.4.0] - 2020-03-19
+
+#### - :rocket: [New Feature]
+
+- Supported import array of locations
+
 ## [0.3.4] - 2020-03-17
 
 #### - :nail_care: [Polish]

@@ -89,7 +89,7 @@ Usually the date, location & reference is not converted correctly when you backu
 // Import options
 const optons = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
-  geos: ['location1', 'location2'],
+  geos: ['location', 'locations'],
   refs: ['refKey']
 }
 ```
@@ -109,7 +109,7 @@ firestoreService.initializeApp(serviceAccount, databaseURL)
 // The array of date, location and reference fields are optional
 firestoreService.restore('your-file-path.json', {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
-  geos: ['location1', 'location2'],
+  geos: ['location', 'locations'],
   refs: ['refKey', 'arrayRef']
 })
 ```
@@ -159,6 +159,16 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
         "_latitude": 49.290683,
         "_longitude": -123.133956
       },
+      "locations": [
+        {
+          "_latitude": 50.290683,
+          "_longitude": -123.133956
+        },
+        {
+          "_latitude": 51.290683,
+          "_longitude": -123.133956
+        }
+      ],
       "email": "dungnq@itbox4vn.com",
       "secondRef": "test/second-key",
       "arrayRef": ["test/second-key", "test/second-key"],

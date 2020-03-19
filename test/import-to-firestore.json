@@ -28,6 +28,16 @@
         "_latitude": 49.290683,
         "_longitude": -123.133956
       },
+      "locations": [
+        {
+          "_latitude": 50.290683,
+          "_longitude": -123.133956
+        },
+        {
+          "_latitude": 51.290683,
+          "_longitude": -123.133956
+        }
+      ],
       "email": "dungnq@itbox4vn.com",
       "secondRef": "test/second-key",
       "arrayRef": ["test/second-key", "test/second-key"],
