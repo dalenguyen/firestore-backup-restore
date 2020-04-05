@@ -11,6 +11,13 @@
 
 ---
 
+## [0.5.0] - 2020-04-05
+
+#### - :nail_care: [Polish]
+
+- Updated new pacakges
+- Added name parameter when initializing app #27
+
 ## [0.4.0] - 2020-03-19
 
 #### - :rocket: [New Feature]

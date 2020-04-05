@@ -5,8 +5,9 @@ import * as restoreService from './import';
  *
  * @param {any} serviceAccount
  * @param {any} databaseURL
+ * @param {string} name
  */
-export declare const initializeApp: (serviceAccount: string, databaseURL: string) => boolean;
+export declare const initializeApp: (serviceAccount: string, databaseURL: string, name?: string) => boolean;
 export { admin };
 /**
  * Backup data from firestore
