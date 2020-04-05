@@ -35,16 +35,18 @@ You can export collection and sub collection from your data. The sub collection 
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import')
-const serviceAccount = require('./serviceAccountKey.json')
+const firestoreService = require('firestore-export-import');
+const serviceAccount = require('./serviceAccountKey.json');
 
 // Initiate Firebase App
-firestoreService.initializeApp(serviceAccount, databaseURL)
+// appName is optional, you can obmit it.
+const appName = '[DEFAULT]';
+firestoreService.initializeApp(serviceAccount, databaseURL, appName);
 
 // Start exporting your data
 firestoreService
   .backup('collection-name')
-  .then(data => console.log(JSON.stringify(data)))
+  .then((data) => console.log(JSON.stringify(data)));
 ```
 
 Sub collections will be added under **'subCollection'** object.
@@ -60,10 +62,10 @@ The result is an object of collection's data.
 ```javascript
 firestoreService
   .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
-  .then(collections => {
+  .then((collections) => {
     // You can do whatever you want with collections
-    console.log(JSON.stringify(collections))
-  })
+    console.log(JSON.stringify(collections));
+  });
 ```
 
 ### Import data to firestore (Predefined Document Id)
@@ -90,8 +92,8 @@ Usually the date, location & reference is not converted correctly when you backu
 const optons = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
-  refs: ['refKey']
-}
+  refs: ['refKey'],
+};
 ```
 
 After that, the data will be converted based on their types.
@@ -99,19 +101,21 @@ After that, the data will be converted based on their types.
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import')
-const serviceAccount = require('./serviceAccountKey.json')
+const firestoreService = require('firestore-export-import');
+const serviceAccount = require('./serviceAccountKey.json');
 
 // Initiate Firebase App
-firestoreService.initializeApp(serviceAccount, databaseURL)
+// appName is optional, you can obmit it.
+const appName = '[DEFAULT]';
+firestoreService.initializeApp(serviceAccount, databaseURL, appName);
 
 // Start importing your data
 // The array of date, location and reference fields are optional
 firestoreService.restore('your-file-path.json', {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
-  refs: ['refKey', 'arrayRef']
-})
+  refs: ['refKey', 'arrayRef'],
+});
 ```
 
 #### For HTTP Request

@@ -7,13 +7,24 @@ import * as backupService from './export';
  *
  * @param {any} serviceAccount
  * @param {any} databaseURL
+ * @param {string} name
  */
-export const initializeApp = (serviceAccount: string, databaseURL: string) => {
-  if (admin.apps.length === 0) {
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      databaseURL: databaseURL
-    });
+export const initializeApp = (
+  serviceAccount: string,
+  databaseURL: string,
+  name = '[DEFAULT]'
+) => {
+  if (
+    admin.apps.length === 0 ||
+    (admin.apps.length > 0 && admin.app().name !== name)
+  ) {
+    admin.initializeApp(
+      {
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: databaseURL,
+      },
+      name
+    );
     admin.firestore().settings({ timestampsInSnapshots: true });
   }
   return true;
