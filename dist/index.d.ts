@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import * as restoreService from './import';
+import { IImportOptions } from './helper';
 /**
  * Initialize Firebase App
  *
@@ -21,7 +21,7 @@ export declare const backup: (collectionName: string) => Promise<any>;
  * @param fileName
  * @param options
  */
-export declare const restore: (fileName: string, options?: restoreService.IImportOptions) => Promise<any>;
+export declare const restore: (fileName: string, options?: IImportOptions) => Promise<any>;
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
