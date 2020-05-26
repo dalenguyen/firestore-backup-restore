@@ -28,6 +28,12 @@
         "_latitude": 49.290683,
         "_longitude": -123.133956
       },
+      "locationNested": {
+        "geopoint": {
+          "_latitude": 49.290683,
+          "_longitude": -123.133956
+        }
+      },
       "locations": [
         {
           "_latitude": 50.290683,
@@ -41,6 +47,9 @@
       "email": "dungnq@itbox4vn.com",
       "secondRef": "test/second-key",
       "arrayRef": ["test/second-key", "test/second-key"],
+      "nestedRef": {
+        "secondRef": "test/second-key"
+      },
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {

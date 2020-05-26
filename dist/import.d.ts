@@ -1,9 +1,4 @@
-export interface IImportOptions {
-    dates?: string[];
-    geos?: string[];
-    refs?: string[];
-    nested?: boolean;
-}
+import { IImportOptions } from './helper';
 /**
  * Restore data to firestore
  *

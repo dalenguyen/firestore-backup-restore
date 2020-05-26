@@ -11,6 +11,13 @@
 
 ---
 
+## [0.6.0] - 2020-05-26
+
+#### - :nail_care: [Polish]
+
+- Updated new pacakges
+- Added support for nested geo #47
+
 ## [0.5.0] - 2020-04-05
 
 #### - :nail_care: [Polish]

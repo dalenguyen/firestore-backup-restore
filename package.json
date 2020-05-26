@@ -1,10 +1,11 @@
 {
   "name": "firestore-export-import",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "NPM package for backup and restore Firebase Firestore",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "watch": "tsc -w",
     "test": "mocha --timeout 60000 --exit -r ts-node/register test/**/*.spec.ts",
     "build": "tsc --skipLibCheck && npm run minify",
     "minify": "jsmin -o dist/index.js dist/index.js && jsmin -o dist/import.js dist/import.js && jsmin -o dist/export.js dist/export.js"
