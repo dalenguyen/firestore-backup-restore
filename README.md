@@ -85,7 +85,7 @@ firebase firestore:delete [options] <<path>>
 
 #### For local JSON
 
-Usually the date, location & reference is not converted correctly when you backup the Firestore database. In order to import correctly, you have to pass to parameters for the options:
+Usually the date, location & reference are not converted correctly when you backup the Firestore database. In order to import correctly, you have to pass to parameters for the options:
 
 ```javascript
 // Import options
@@ -93,6 +93,7 @@ const options = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
   refs: ['refKey'],
+  nested: true // look up the data keys also in nested maps
 };
 ```
 

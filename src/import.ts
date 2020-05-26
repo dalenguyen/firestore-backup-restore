@@ -1,27 +1,7 @@
 import * as fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
 import * as admin from 'firebase-admin'
-
-export interface IImportOptions {
-  dates?: string[]
-  geos?: string[]
-  refs?: string[]
-}
-
-/**
- * Convert time array in document object
- * @param dateArray
- * @param documentObj
- */
-const updateTime = (dateArray, documentObj): void => {
-  dateArray.forEach(c => {
-    c.split('.').reduce((acc, cur, i, a) => {
-      if (!a[i + 1] && acc[cur] && acc[cur]._seconds) {
-        acc[cur] = new Date(acc[cur]._seconds * 1000)
-      } else return acc[cur] || {}
-    }, documentObj)
-  })
-}
+import { makeTime, traverseObjects, IImportOptions } from './helper'
 
 /**
  * Restore data to firestore
@@ -43,14 +23,14 @@ export const restore = (
         .then(() => {
           resolve({
             status: true,
-            message: 'Collection successfully imported!'
+            message: 'Collection successfully imported!',
           })
         })
         .catch(error => {
           reject({ status: false, message: error.message })
         })
     } else {
-      fs.readFile(fileName, 'utf8', function(err, data) {
+      fs.readFile(fileName, 'utf8', function (err, data) {
         if (err) {
           console.log(err)
           reject({ status: false, message: err.message })
@@ -63,7 +43,7 @@ export const restore = (
           .then(() => {
             resolve({
               status: true,
-              message: 'Collection successfully imported!'
+              message: 'Collection successfully imported!',
             })
           })
           .catch(error => {
@@ -151,7 +131,26 @@ const startUpdating = (
 ) => {
   // Update date value
   if (options.dates && options.dates.length > 0) {
-    updateTime(options.dates, data)
+    options.dates.forEach(date => {
+      if (data.hasOwnProperty(date)) {
+        // check type of the date
+        if (Array.isArray(data[date])) {
+          data[date] = data[date].map(d => makeTime(d))
+        } else {
+          data[date] = makeTime(data[date])
+        }
+      }
+
+      // Check for nested date
+      if (date.indexOf('.') > -1) {
+        traverseObjects(data, value => {
+          if (!value.hasOwnProperty('_seconds')) {
+            return null
+          }
+          return makeTime(value)
+        })
+      }
+    })
   }
 
   // reference key
@@ -170,22 +169,37 @@ const startUpdating = (
 
   // Enter geo value
   if (options.geos && options.geos.length > 0) {
+    const makeGeoPoint = (geoValues: {
+      _latitude: number
+      _longitude: number
+    }) => {
+      if (!geoValues._latitude || !geoValues._longitude) {
+        return null
+      }
+
+      return new admin.firestore.GeoPoint(
+        geoValues._latitude,
+        geoValues._longitude
+      )
+    }
+
     options.geos.forEach(geo => {
       if (data.hasOwnProperty(geo)) {
         // array of geo locations
         if (Array.isArray(data[geo])) {
-          data[geo] = data[geo].map(geoValues => {
-            return new admin.firestore.GeoPoint(
-              geoValues._latitude,
-              geoValues._longitude
-            )
-          })
+          data[geo] = data[geo].map(geoValues => makeGeoPoint(geoValues))
         } else {
-          data[geo] = new admin.firestore.GeoPoint(
-            data[geo]._latitude,
-            data[geo]._longitude
-          )
+          data[geo] = makeGeoPoint(data[geo])
         }
+      }
+
+      if (geo.indexOf('.') > -1) {
+        traverseObjects(data, value => {
+          if (!value.hasOwnProperty('_latitude')) {
+            return null
+          }
+          return makeGeoPoint(value)
+        })
       }
     })
   }
@@ -198,14 +212,14 @@ const startUpdating = (
         console.log(`${docId} was successfully added to firestore!`)
         resolve({
           status: true,
-          message: `${docId} was successfully added to firestore!`
+          message: `${docId} was successfully added to firestore!`,
         })
       })
       .catch(error => {
         console.log(error)
         reject({
           status: false,
-          message: error.message
+          message: error.message,
         })
       })
   })
