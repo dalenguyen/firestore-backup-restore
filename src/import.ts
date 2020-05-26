@@ -6,21 +6,18 @@ export interface IImportOptions {
   dates?: string[]
   geos?: string[]
   refs?: string[]
+  nested?: boolean
 }
 
 /**
- * Convert time array in document object
- * @param dateArray
- * @param documentObj
+ * Convert time array in a Date object
+ * @param firebaseTimestamp
  */
-const updateTime = (dateArray, documentObj): void => {
-  dateArray.forEach(c => {
-    c.split('.').reduce((acc, cur, i, a) => {
-      if (!a[i + 1] && acc[cur] && acc[cur]._seconds) {
-        acc[cur] = new Date(acc[cur]._seconds * 1000)
-      } else return acc[cur] || {}
-    }, documentObj)
-  })
+const makeTime = (firebaseTimestamp: {_seconds: number, _nanoseconds: number}): Date => {
+  if (!firebaseTimestamp._seconds) {
+    return null;
+  }
+  return new Date(firebaseTimestamp._seconds * 1000);
 }
 
 /**
@@ -151,7 +148,27 @@ const startUpdating = (
 ) => {
   // Update date value
   if (options.dates && options.dates.length > 0) {
-    updateTime(options.dates, data)
+      options.dates.forEach(date => {
+        if (data.hasOwnProperty(date)) {
+          // check type of the date
+          if (Array.isArray(data[date])) {
+              data[date] = data[date].map(d =>  makeTime(d))
+          } else {
+              data[date] = makeTime(data[date])
+          }
+        }
+
+        if (options.nested) {
+           traverseObjects(data, (value) => {
+              if (!value.hasOwnProperty(date)) {
+                return null;
+              }
+
+              value[date] = makeTime(value[date]);
+              return value;
+            });
+        }
+      });
   }
 
   // reference key
@@ -165,27 +182,52 @@ const startUpdating = (
           data[ref] = db.doc(data[ref])
         }
       }
+
+      if (options.nested) {
+        traverseObjects(data, (value) => {
+          if (!value.hasOwnProperty(ref)) {
+            return null;
+          }
+
+          value[ref] = db.doc(data[ref]);
+          return value;
+        });
+      }
     })
   }
 
   // Enter geo value
   if (options.geos && options.geos.length > 0) {
+    const makeGeoPoint = (geoValues: {_latitude: number, _longitude: number}) => {
+      if (!geoValues._latitude || !geoValues._longitude) {
+        return null;
+      }
+
+      return new admin.firestore.GeoPoint(
+          geoValues._latitude,
+          geoValues._longitude
+      );
+    };
+
     options.geos.forEach(geo => {
       if (data.hasOwnProperty(geo)) {
         // array of geo locations
         if (Array.isArray(data[geo])) {
-          data[geo] = data[geo].map(geoValues => {
-            return new admin.firestore.GeoPoint(
-              geoValues._latitude,
-              geoValues._longitude
-            )
-          })
+          data[geo] = data[geo].map(geoValues => makeGeoPoint(geoValues))
         } else {
-          data[geo] = new admin.firestore.GeoPoint(
-            data[geo]._latitude,
-            data[geo]._longitude
-          )
+          data[geo] = makeGeoPoint(data[geo])
         }
+      }
+
+      if (options.nested) {
+        traverseObjects(data, (value) => {
+          if (!value.hasOwnProperty(geo)) {
+            return null;
+          }
+
+          value[geo] = makeGeoPoint(value[geo]);
+          return value;
+        });
       }
     })
   }
@@ -209,4 +251,34 @@ const startUpdating = (
         })
       })
   })
+}
+
+/**
+ * Check if the parameter is an Object
+ * @param test
+ */
+const isObject = (test: any) => {
+  return test?.constructor === Object;
+}
+
+/**
+ * Traverse given data, until there is no sub node anymore
+ * Executes the callback function for every sub node found
+ * @param data
+ * @param callback
+ */
+const traverseObjects = (data: any, callback: Function) => {
+  for (const [key, value] of Object.entries(data)) {
+    if (!isObject(value)) {
+      continue;
+    }
+
+    const checkResult: any = callback(value)
+    if (checkResult) {
+      data[key] = checkResult;
+      continue;
+    }
+
+    traverseObjects(data[key], callback);
+  }
 }

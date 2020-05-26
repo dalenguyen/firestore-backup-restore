@@ -2,6 +2,7 @@ export interface IImportOptions {
     dates?: string[];
     geos?: string[];
     refs?: string[];
+    nested?: boolean;
 }
 /**
  * Restore data to firestore
