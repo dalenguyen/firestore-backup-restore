@@ -59,3 +59,4 @@ typings/
 
 # test folder 
 test/serviceAccountKey.json
+.idea
