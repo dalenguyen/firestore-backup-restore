@@ -13,7 +13,7 @@ export const makeTime = (firebaseTimestamp: {
   _seconds: number
   _nanoseconds: number
 }): Date => {
-  if (!firebaseTimestamp._seconds) {
+  if (!firebaseTimestamp || !firebaseTimestamp._seconds) {
     return null
   }
   return new Date(firebaseTimestamp._seconds * 1000)
