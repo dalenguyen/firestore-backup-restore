@@ -1,0 +1,12 @@
+{
+  "name": "firestore-export-import",
+  "platforms": ["Node", "Admin"],
+  "content": "README.md",
+  "related": ["dalenguyen/firestore-import-export"],
+  "tabs": [
+    {
+      "title": "NPM",
+      "href": "https://www.npmjs.com/package/firestore-export-import"
+    }
+  ]
+}
