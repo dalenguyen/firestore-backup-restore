@@ -60,6 +60,16 @@
             "dogName": "lala",
             "dogId": "2"
           }
+        },
+        "test/first-key/contacts": {
+          "33J2A10u5902CXagoBP6": {
+            "contactId": "1",
+            "name": "Dale Nguyen"
+          },
+          "MSZTWEP7Lewx0Qr1Mu5s": {
+            "contactId": "2",
+            "name": "Yen Nguyen"
+          }
         }
       }
     },

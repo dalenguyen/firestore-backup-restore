@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.traverseObjects = exports.makeTime = void 0;
 /**
  * Convert time array in a Date object
  * @param firebaseTimestamp
  */
 exports.makeTime = function (firebaseTimestamp) {
-    if (!firebaseTimestamp._seconds) {
+    if (!firebaseTimestamp || !firebaseTimestamp._seconds) {
         return null;
     }
     return new Date(firebaseTimestamp._seconds * 1000);
