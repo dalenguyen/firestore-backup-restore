@@ -39,6 +39,12 @@ export const getAllCollections = (collectionNameArray): Promise<any> => {
  * @returns {Promise<any>}
  */
 export const backup = async (collectionName: string): Promise<any> => {
+
+  function addElement(ElementList: Object, element: Object) {
+    let newList = Object.assign(ElementList, element)
+    return newList
+  }
+
   try {
     const db = admin.firestore();
     let data = {};
@@ -50,12 +56,13 @@ export const backup = async (collectionName: string): Promise<any> => {
       const subCollections = await doc.ref.listCollections();
 
       data[collectionName][doc.id] = doc.data();
+      data[collectionName][doc.id]['subCollection'] = {};
 
       for (const subCol of subCollections) {
         const subColData = await backup(
           `${collectionName}/${doc.id}/${subCol.id}`
         );
-        data[collectionName][doc.id]['subCollection'] = subColData;
+        data[collectionName][doc.id]['subCollection'] = addElement(data[collectionName][doc.id]['subCollection'], subColData);
       }
     }
 

@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @param firebaseTimestamp
  */
 exports.makeTime = function (firebaseTimestamp) {
-    if (!firebaseTimestamp._seconds) {
+    if (!firebaseTimestamp || !firebaseTimestamp._seconds) {
         return null;
     }
     return new Date(firebaseTimestamp._seconds * 1000);

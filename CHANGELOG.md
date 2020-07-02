@@ -11,6 +11,17 @@
 
 ---
 
+## ## [0.6.1] - 2020-07-02
+
+#### - :bug: [Bug Fix]
+
+- Allowed null dates (#56)
+- Added export multiple sub collections (#57)
+
+#### - :nail_care: [Polish]
+
+- Added contributing file
+
 ## [0.6.0] - 2020-05-26
 
 #### - :nail_care: [Polish]

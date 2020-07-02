@@ -93,7 +93,7 @@ const options = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
   refs: ['refKey'],
-  nested: true // look up the data keys also in nested maps
+  nested: true, // look up the data keys also in nested maps
 };
 ```
 
@@ -164,6 +164,12 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
         "_latitude": 49.290683,
         "_longitude": -123.133956
       },
+      "locationNested": {
+        "geopoint": {
+          "_latitude": 49.290683,
+          "_longitude": -123.133956
+        }
+      },
       "locations": [
         {
           "_latitude": 50.290683,
@@ -177,6 +183,9 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
       "email": "dungnq@itbox4vn.com",
       "secondRef": "test/second-key",
       "arrayRef": ["test/second-key", "test/second-key"],
+      "nestedRef": {
+        "secondRef": "test/second-key"
+      },
       "subCollection": {
         "test/first-key/details": {
           "33J2A10u5902CXagoBP6": {
@@ -186,6 +195,16 @@ The JSON is formated as below. The collection name is **test**. **first-key** an
           "MSZTWEP7Lewx0Qr1Mu5s": {
             "dogName": "lala",
             "dogId": "2"
+          }
+        },
+        "test/first-key/contacts": {
+          "33J2A10u5902CXagoBP6": {
+            "contactId": "1",
+            "name": "Dale Nguyen"
+          },
+          "MSZTWEP7Lewx0Qr1Mu5s": {
+            "contactId": "2",
+            "name": "Yen Nguyen"
           }
         }
       }
