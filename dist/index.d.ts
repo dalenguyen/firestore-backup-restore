@@ -27,4 +27,4 @@ export declare const restore: (fileName: string, options?: IImportOptions) => Pr
  * @param {Array<string>} collectionNameArray
  * @param {number} [docsFromEachCollection]
  */
-export declare const backups: (collectionNameArray?: string[], docsFromEachCollection?: number) => Promise<any>;
+export declare const backups: (collectionNameArray?: Array<string>, docsFromEachCollection?: number) => Promise<any>;

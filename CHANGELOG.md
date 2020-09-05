@@ -17,6 +17,11 @@
 
 - Support exporting single document from each collection (#63) - Thank @benwinding
 
+#### - :nail_care: [Polish]
+
+- Updated packages
+- Minified helper functions
+
 ## ## [0.6.1] - 2020-07-02
 
 #### - :bug: [Bug Fix]
