@@ -55,7 +55,8 @@ export const restore = (fileName: string, options: IImportOptions = {}) => {
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
+ * @param {number} [docsFromEachCollection]
  */
-export const backups = (collectionNameArray: Array<string> = []) => {
-  return backupService.getAllCollections(collectionNameArray)
+export const backups = (collectionNameArray: Array<string> = [], docsFromEachCollection?: number) => {
+  return backupService.getAllCollections(collectionNameArray, docsFromEachCollection)
 }
