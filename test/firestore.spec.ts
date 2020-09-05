@@ -90,7 +90,7 @@ describe('initializeApp function test', () => {
     }
   });
 
-  it('Import single document from all collections', async () => {
+  it('Export single document from all collections', async () => {
     try {
       const data = await firestoreService.backups(['test'], 1);
       expect(Object.values(data['test']).length).equals(1); // 1 document
