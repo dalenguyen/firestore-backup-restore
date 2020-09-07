@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
 import * as admin from 'firebase-admin'
-import { makeTime, traverseObjects, IImportOptions } from './helper'
+import { makeTime, traverseObjects, IImportOptions, parseAndConvertDates } from './helper'
 
 /**
  * Restore data to firestore
@@ -151,6 +151,10 @@ const startUpdating = (
         })
       }
     })
+  }
+
+  if (options.autoParseDates) {
+    parseAndConvertDates(data);
   }
 
   // reference key
