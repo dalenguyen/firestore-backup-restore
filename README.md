@@ -93,7 +93,17 @@ const options = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
   refs: ['refKey'],
-  nested: true, // look up the data keys also in nested maps
+};
+```
+
+If you don't want to specify `dates`, you can use another parameter in order to transform fields to date auttomatically.
+
+```javascript
+// Import options with auto parse date
+const options = {
+  autoParseDates: true // use this one in stead of dates: [...]
+  geos: ['location', 'locations'],
+  refs: ['refKey'],
 };
 ```
 
@@ -101,7 +111,6 @@ After that, the data will be converted based on their types.
 
 ```javascript
 // In your index.js
-
 const firestoreService = require('firestore-export-import');
 const serviceAccount = require('./serviceAccountKey.json');
 

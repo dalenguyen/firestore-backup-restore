@@ -39,11 +39,44 @@ describe('initializeApp function test', () => {
     expect(Object.keys(all).length).is.equal(2);
   });
 
-  it('Restore data with document id', async () => {
+  it('Restore data with document id - without autoParseDates', async () => {
     let status = await firestoreService.restore(
       'test/import-to-firestore.json',
       {
         dates: ['date', 'schedule.time', 'three.level.time'],
+        geos: ['location', 'locations', 'locationNested.geopoints'],
+        refs: ['secondRef', 'arrayRef', 'nestedRef.secondRef'],
+      }
+    );
+    expect(status.status).ok;
+
+    const result = await firestoreService.backup('test');
+
+    expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com');
+    expect(result.test['first-key'].schedule.time._seconds).equals(1534046400);
+    expect(result.test['first-key'].three.level.time._seconds).equals(
+      1534046400
+    );
+    expect(typeof result.test['first-key'].secondRef).is.equal('object');
+    // locations
+    expect(result.test['first-key'].location._latitude).equal(49.290683);
+    expect(result.test['first-key'].locations[0]._latitude).equal(50.290683);
+    expect(result.test['first-key'].locations[1]._latitude).equal(51.290683);
+    expect(result.test['first-key'].locationNested.geopoint._latitude).equal(
+      49.290683
+    );
+    expect(
+      result.test['first-key'].subCollection['test/first-key/details'][
+        '33J2A10u5902CXagoBP6'
+      ].dogName
+    ).is.equal('hello');
+  });
+
+  it('Restore data with document id - with autoParseDates', async () => {
+    let status = await firestoreService.restore(
+      'test/import-to-firestore.json',
+      {
+        autoParseDates: true,
         geos: ['location', 'locations', 'locationNested.geopoints'],
         refs: ['secondRef', 'arrayRef', 'nestedRef.secondRef'],
       }
@@ -122,8 +155,8 @@ describe('initializeApp function test', () => {
           date: {
             _seconds: 1534046400,
             _nanoseconds: 0,
-          }
-        }
+          },
+        },
       },
     };
     parseAndConvertDates(data);
@@ -137,7 +170,7 @@ describe('initializeApp function test', () => {
         {
           _seconds: 1534046400,
           _nanoseconds: 0,
-        }
+        },
       ],
     };
     parseAndConvertDates(data);
