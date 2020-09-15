@@ -1,5 +1,6 @@
 export interface IImportOptions {
   dates?: string[]
+  autoParseDates?: boolean
   geos?: string[]
   refs?: string[]
 }
@@ -28,6 +29,14 @@ const isObject = (test: any) => {
 }
 
 /**
+ * Check if the parameter is an Object
+ * @param test
+ */
+const isArray = (test: any) => {
+  return Array.isArray(test)
+}
+
+/**
  * Traverse given data, until there is no sub node anymore
  * Executes the callback function for every sub node found
  * @param data
@@ -35,7 +44,7 @@ const isObject = (test: any) => {
  */
 export const traverseObjects = (data: any, callback: Function) => {
   for (const [key, value] of Object.entries(data)) {
-    if (!isObject(value)) {
+    if (!isObject(value) && !isArray(value)) {
       continue
     }
 
@@ -47,4 +56,17 @@ export const traverseObjects = (data: any, callback: Function) => {
 
     traverseObjects(data[key], callback)
   }
+}
+
+export function parseAndConvertDates(data: object) {
+  traverseObjects(data, value => {
+    const isTimeStamp =
+      typeof value === "object" &&
+      value.hasOwnProperty("_seconds") &&
+      value.hasOwnProperty("_nanoseconds");
+    if (isTimeStamp) {
+      return makeTime(value);
+    }
+    return null;
+  })
 }

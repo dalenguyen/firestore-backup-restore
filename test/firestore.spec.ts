@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import request from 'request-promise';
 import * as firestoreService from '../dist';
+import { parseAndConvertDates } from '../src/helper';
 import { serviceAccount } from './serviceAccount';
 
 const app = firestoreService.initializeApp(
@@ -97,5 +98,75 @@ describe('initializeApp function test', () => {
     } catch (error) {
       console.log(error);
     }
+  });
+
+  it('Test auto parse dates option - simple', async () => {
+    const data = {
+      date: {
+        _seconds: 1534046400,
+        _nanoseconds: 0,
+      },
+    };
+    parseAndConvertDates(data);
+    expect(data.date).to.be.an.instanceOf(Date);
+  });
+
+  it('Test auto parse dates option - nested', async () => {
+    const data = {
+      date: {
+        _seconds: 1534046400,
+        _nanoseconds: 0,
+      },
+      obj: {
+        anotherObj: {
+          date: {
+            _seconds: 1534046400,
+            _nanoseconds: 0,
+          }
+        }
+      },
+    };
+    parseAndConvertDates(data);
+    expect(data.date).to.be.an.instanceOf(Date);
+    expect(data.obj.anotherObj.date).to.be.an.instanceOf(Date);
+  });
+
+  it('Test auto parse dates option - nested arrays', async () => {
+    const data = {
+      arr: [
+        {
+          _seconds: 1534046400,
+          _nanoseconds: 0,
+        }
+      ],
+    };
+    parseAndConvertDates(data);
+    expect(data.arr[0]).to.be.an.instanceOf(Date);
+  });
+
+  it('Test auto parse dates option - nested array objects', async () => {
+    const data = {
+      arr: [
+        {
+          obj: {
+            date: {
+              _seconds: 1534046400,
+              _nanoseconds: 0,
+            },
+          },
+        },
+        {
+          obj: {
+            date: {
+              _seconds: 1534046400,
+              _nanoseconds: 0,
+            },
+          },
+        },
+      ],
+    };
+    parseAndConvertDates(data);
+    expect(data.arr[0].obj.date).to.be.an.instanceOf(Date);
+    expect(data.arr[1].obj.date).to.be.an.instanceOf(Date);
   });
 });
