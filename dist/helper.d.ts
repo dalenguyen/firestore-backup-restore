@@ -1,5 +1,6 @@
 export interface IImportOptions {
     dates?: string[];
+    autoParseDates?: boolean;
     geos?: string[];
     refs?: string[];
 }
@@ -18,3 +19,4 @@ export declare const makeTime: (firebaseTimestamp: {
  * @param callback
  */
 export declare const traverseObjects: (data: any, callback: Function) => void;
+export declare function parseAndConvertDates(data: object): void;

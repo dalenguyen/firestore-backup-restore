@@ -11,6 +11,16 @@
 
 ---
 
+## ## [0.8.0] - 2020-09-15
+
+#### - :rocket: [New Feature]
+
+- Added Automatic Timestamp Parsing (Thank @benwinding)
+
+#### - :nail_care: [Polish]
+
+- Updated firebase-admin packages (9.2.0)
+
 ## ## [0.7.0] - 2020-09-04
 
 #### - :rocket: [New Feature]

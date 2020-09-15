@@ -19,6 +19,7 @@ _f.push(_g);_h=0;_j.label=8;case 8:if(!(_h<_f.length))return[3,11];subIndex=_f[_
 else{data[date]=helper_1.makeTime(data[date]);}}
 if(date.indexOf('.')>-1){helper_1.traverseObjects(data,function(value){if(!value.hasOwnProperty('_seconds')){return null;}
 return helper_1.makeTime(value);});}});}
+if(options.autoParseDates){helper_1.parseAndConvertDates(data);}
 if(options.refs&&options.refs.length>0){options.refs.forEach(function(ref){if(data.hasOwnProperty(ref)){if(Array.isArray(data[ref])){data[ref]=data[ref].map(function(ref){return db.doc(ref);});}
 else{data[ref]=db.doc(data[ref]);}}});}
 if(options.geos&&options.geos.length>0){var makeGeoPoint_1=function(geoValues){if(!geoValues._latitude||!geoValues._longitude){return null;}
