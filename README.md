@@ -39,9 +39,7 @@ const firestoreService = require('firestore-export-import');
 const serviceAccount = require('./serviceAccountKey.json');
 
 // Initiate Firebase App
-// appName is optional, you can omit it.
-const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+firestoreService.initializeApp(serviceAccount);
 
 // Start exporting your data
 firestoreService
@@ -115,9 +113,7 @@ const firestoreService = require('firestore-export-import');
 const serviceAccount = require('./serviceAccountKey.json');
 
 // Initiate Firebase App
-// appName is optional, you can obmit it.
-const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+firestoreService.initializeApp(serviceAccount);
 
 // Start importing your data
 // The array of date, location and reference fields are optional
