@@ -81,7 +81,8 @@ export const backup = async (
       for (const subCol of subCollections) {
         const subColData = await backup(
           `${collectionName}/${doc.id}/${subCol.id}`,
-          docsFromEachCollection
+          docsFromEachCollection,
+          refKeys
         );
         data[collectionName][doc.id]['subCollection'] = addElement(
           data[collectionName][doc.id]['subCollection'],
