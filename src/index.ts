@@ -1,7 +1,7 @@
-import * as admin from 'firebase-admin'
-import * as restoreService from './import'
-import * as backupService from './export'
-import { IImportOptions } from './helper'
+import * as admin from 'firebase-admin';
+import * as restoreService from './import';
+import * as backupService from './export';
+import { IImportOptions } from './helper';
 
 /**
  * Initialize Firebase App
@@ -22,16 +22,16 @@ export const initializeApp = (
     admin.initializeApp(
       {
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: databaseURL,
+        databaseURL: databaseURL
       },
       name
-    )
-    admin.firestore().settings({ timestampsInSnapshots: true })
+    );
+    admin.firestore().settings({ timestampsInSnapshots: true });
   }
-  return true
-}
+  return true;
+};
 
-export { admin }
+export { admin };
 
 /**
  * Backup data from firestore
@@ -39,9 +39,9 @@ export { admin }
  * @param {string} collectionName
  * @return {json}
  */
-export const backup = (collectionName: string) => {
-  return backupService.backup(collectionName)
-}
+export const backup = (collectionName: string, refKeys?: string[]) => {
+  return backupService.backup(collectionName, undefined, refKeys);
+};
 
 /**
  * Restore data to firestore
@@ -49,14 +49,22 @@ export const backup = (collectionName: string) => {
  * @param options
  */
 export const restore = (fileName: string, options: IImportOptions = {}) => {
-  return restoreService.restore(fileName, options)
-}
+  return restoreService.restore(fileName, options);
+};
 
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
  * @param {number} [docsFromEachCollection]
  */
-export const backups = (collectionNameArray: Array<string> = [], docsFromEachCollection?: number) => {
-  return backupService.getAllCollections(collectionNameArray, docsFromEachCollection)
-}
+export const backups = (
+  collectionNameArray: Array<string> = [],
+  docsFromEachCollection?: number,
+  refKeys?: string[]
+) => {
+  return backupService.getAllCollections(
+    collectionNameArray,
+    docsFromEachCollection,
+    refKeys
+  );
+};

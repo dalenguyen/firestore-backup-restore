@@ -7,7 +7,8 @@ import * as admin from 'firebase-admin';
  */
 export const getAllCollections = async (
   collectionNameArray: string[],
-  docsFromEachCollection?: number
+  docsFromEachCollection?: number,
+  refKeys?: string[]
 ): Promise<any> => {
   const db = admin.firestore();
   // get all the root-level paths
@@ -16,13 +17,13 @@ export const getAllCollections = async (
 
   if (paths.length === 0) {
     // get all collections
-    snap.forEach((collection) => paths.push(collection.path));
+    snap.forEach(collection => paths.push(collection.path));
   }
 
   // fetch in parallel
   const promises: Promise<any>[] = [];
-  paths.forEach((segment) => {
-    const result = backup(segment, docsFromEachCollection);
+  paths.forEach(segment => {
+    const result = backup(segment, docsFromEachCollection, refKeys);
     promises.push(result);
   });
   // assemble the pieces into one object
@@ -37,11 +38,14 @@ export const getAllCollections = async (
  * @param {string} collectionName
  * @returns {Promise<any>}
  */
-export const backup = async (collectionName: string, docsFromEachCollection?: number): Promise<any> => {
-
-  function addElement(ElementList: Object, element: Object) {
-    let newList = Object.assign(ElementList, element)
-    return newList
+export const backup = async (
+  collectionName: string,
+  docsFromEachCollection?: number,
+  refKeys?: string[]
+): Promise<any> => {
+  function addElement (ElementList: Object, element: Object) {
+    let newList = Object.assign(ElementList, element);
+    return newList;
   }
 
   try {
@@ -59,6 +63,19 @@ export const backup = async (collectionName: string, docsFromEachCollection?: nu
       const subCollections = await doc.ref.listCollections();
 
       data[collectionName][doc.id] = doc.data();
+
+      if (refKeys) {
+        for (const refKey of refKeys) {
+          if (
+            data[collectionName][doc.id][refKey] &&
+            typeof data[collectionName][doc.id][refKey].path === 'string'
+          ) {
+            data[collectionName][doc.id][refKey] =
+              data[collectionName][doc.id][refKey].path;
+          }
+        }
+      }
+
       data[collectionName][doc.id]['subCollection'] = {};
 
       for (const subCol of subCollections) {
@@ -66,7 +83,10 @@ export const backup = async (collectionName: string, docsFromEachCollection?: nu
           `${collectionName}/${doc.id}/${subCol.id}`,
           docsFromEachCollection
         );
-        data[collectionName][doc.id]['subCollection'] = addElement(data[collectionName][doc.id]['subCollection'], subColData);
+        data[collectionName][doc.id]['subCollection'] = addElement(
+          data[collectionName][doc.id]['subCollection'],
+          subColData
+        );
       }
     }
 

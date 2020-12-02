@@ -60,3 +60,4 @@ typings/
 # test folder 
 test/serviceAccountKey.json
 .idea
+.DS_Store

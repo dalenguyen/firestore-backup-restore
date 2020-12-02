@@ -15,7 +15,7 @@ export { admin };
  * @param {string} collectionName
  * @return {json}
  */
-export declare const backup: (collectionName: string) => Promise<any>;
+export declare const backup: (collectionName: string, refKeys?: string[]) => Promise<any>;
 /**
  * Restore data to firestore
  * @param fileName
@@ -27,4 +27,4 @@ export declare const restore: (fileName: string, options?: IImportOptions) => Pr
  * @param {Array<string>} collectionNameArray
  * @param {number} [docsFromEachCollection]
  */
-export declare const backups: (collectionNameArray?: Array<string>, docsFromEachCollection?: number) => Promise<any>;
+export declare const backups: (collectionNameArray?: Array<string>, docsFromEachCollection?: number, refKeys?: string[]) => Promise<any>;
