@@ -1,5 +1,5 @@
 {
-  "name": "firestore-export-import",
+  "name": "@russellr922/firestore-export-import",
   "version": "0.8.0",
   "description": "NPM package for backup and restore Firebase Firestore",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dalenguyen/firestore-backup-restore.git"
+    "url": "git+https://github.com/russellr922/firestore-backup-restore.git"
   },
   "keywords": [
     "firebase",

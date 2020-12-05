@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/dalenguyen/firestore-backup-restore.svg?branch=master)](https://travis-ci.org/dalenguyen/firestore-backup-restore)
 [![David badge](https://david-dm.org/dalenguyen/firestore-backup-restore.svg)](https://david-dm.org/dalenguyen/firestore-backup-restore)
 
-NPM package for backup and restore Firebase Firestore
+NPM package for backup and restore Firebase Firestore (FORKED to fix ref handling)
 
 You can export and import data from firestore with sub collection.
 

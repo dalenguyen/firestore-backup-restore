@@ -48,6 +48,13 @@ export const backup = async (
     return newList;
   }
 
+  function getPath (obj?: { path?: string }) {
+    if (obj && typeof obj.path === 'string') {
+      return obj.path;
+    }
+    return obj;
+  }
+
   try {
     const db = admin.firestore();
     let data = {};
@@ -66,12 +73,18 @@ export const backup = async (
 
       if (refKeys) {
         for (const refKey of refKeys) {
-          if (
-            data[collectionName][doc.id][refKey] &&
-            typeof data[collectionName][doc.id][refKey].path === 'string'
-          ) {
-            data[collectionName][doc.id][refKey] =
-              data[collectionName][doc.id][refKey].path;
+          if (data[collectionName][doc.id][refKey]) {
+            if (Array.isArray(data[collectionName][doc.id][refKey])) {
+              for (let val of data[collectionName][doc.id][refKey]) {
+                // mutates by reference.
+                val = getPath(val);
+              }
+            } else if (
+              typeof data[collectionName][doc.id][refKey].path === 'string'
+            ) {
+              data[collectionName][doc.id][refKey] =
+                data[collectionName][doc.id][refKey].path;
+            }
           }
         }
       }
