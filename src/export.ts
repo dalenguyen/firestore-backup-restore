@@ -76,8 +76,7 @@ export const backup = async (
           if (data[collectionName][doc.id][refKey]) {
             if (Array.isArray(data[collectionName][doc.id][refKey])) {
               for (let val of data[collectionName][doc.id][refKey]) {
-                // mutates by reference.
-                val = getPath(val);
+                data[collectionName][doc.id][refKey] = getPath(val);
               }
             } else if (
               typeof data[collectionName][doc.id][refKey].path === 'string'
