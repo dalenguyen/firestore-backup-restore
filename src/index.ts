@@ -1,7 +1,7 @@
-import * as admin from 'firebase-admin';
-import * as restoreService from './import';
-import * as backupService from './export';
-import { IImportOptions } from './helper';
+import * as admin from 'firebase-admin'
+import * as restoreService from './import'
+import * as backupService from './export'
+import { IImportOptions } from './helper'
 
 /**
  * Initialize Firebase App
@@ -25,13 +25,13 @@ export const initializeApp = (
         databaseURL: databaseURL
       },
       name
-    );
-    admin.firestore().settings({ timestampsInSnapshots: true });
+    )
+    admin.firestore().settings({ timestampsInSnapshots: true })
   }
-  return true;
-};
+  return true
+}
 
-export { admin };
+export { admin }
 
 /**
  * Backup data from firestore
@@ -40,8 +40,8 @@ export { admin };
  * @return {json}
  */
 export const backup = (collectionName: string, refKeys?: string[]) => {
-  return backupService.backup(collectionName, undefined, refKeys);
-};
+  return backupService.backup(collectionName, undefined, refKeys)
+}
 
 /**
  * Restore data to firestore
@@ -49,8 +49,8 @@ export const backup = (collectionName: string, refKeys?: string[]) => {
  * @param options
  */
 export const restore = (fileName: string, options: IImportOptions = {}) => {
-  return restoreService.restore(fileName, options);
-};
+  return restoreService.restore(fileName, options)
+}
 
 /**
  * Get all collections data
@@ -66,5 +66,5 @@ export const backups = (
     collectionNameArray,
     docsFromEachCollection,
     refKeys
-  );
-};
+  )
+}
