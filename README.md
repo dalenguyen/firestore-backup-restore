@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/dalenguyen/firestore-backup-restore.svg?branch=master)](https://travis-ci.org/dalenguyen/firestore-backup-restore)
 [![David badge](https://david-dm.org/dalenguyen/firestore-backup-restore.svg)](https://david-dm.org/dalenguyen/firestore-backup-restore)
 
-NPM package for backup and restore Firebase Firestore (FORKED to fix ref handling)
+NPM package for backup and restore Firebase Firestore
 
 You can export and import data from firestore with sub collection.
 
@@ -35,18 +35,16 @@ You can export collection and sub collection from your data. The sub collection 
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const { backup, backups, initializeApp } = require("firestore-export-import")
+const serviceAccount = require("./serviceAccountKey.json")
 
 // Initiate Firebase App
 // appName is optional, you can omit it.
-const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+const appName = "[DEFAULT]"
+initializeApp(serviceAccount, databaseURL, appName)
 
 // Start exporting your data
-firestoreService
-  .backup('collection-name')
-  .then((data) => console.log(JSON.stringify(data)));
+backup("collection-name").then((data) => console.log(JSON.stringify(data)))
 ```
 
 Sub collections will be added under **'subCollection'** object.
@@ -60,12 +58,11 @@ The ['collectionName1', 'collectionName2'] is OPTIONAL, you can remove this para
 The result is an object of collection's data.
 
 ```javascript
-firestoreService
-  .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
+backups(["collectionName1", "collectionName2"]) // Array of collection's name is OPTIONAL
   .then((collections) => {
     // You can do whatever you want with collections
-    console.log(JSON.stringify(collections));
-  });
+    console.log(JSON.stringify(collections))
+  })
 ```
 
 ### Import data to firestore (Predefined Document Id)
@@ -90,10 +87,10 @@ Usually the date, location & reference are not converted correctly when you back
 ```javascript
 // Import options
 const options = {
-  dates: ['date1', 'date1.date2', 'date1.date2.date3'],
-  geos: ['location', 'locations'],
-  refs: ['refKey'],
-};
+  dates: ["date1", "date1.date2", "date1.date2.date3"],
+  geos: ["location", "locations"],
+  refs: ["refKey"],
+}
 ```
 
 If you don't want to specify `dates`, you can use another parameter in order to transform fields to date auttomatically.
@@ -111,21 +108,21 @@ After that, the data will be converted based on their types.
 
 ```javascript
 // In your index.js
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const { initializeApp, restore } = require("firestore-export-import")
+const serviceAccount = require("./serviceAccountKey.json")
 
 // Initiate Firebase App
 // appName is optional, you can obmit it.
-const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+const appName = "[DEFAULT]"
+initializeApp(serviceAccount, databaseURL, appName)
 
 // Start importing your data
 // The array of date, location and reference fields are optional
-firestoreService.restore('your-file-path.json', {
-  dates: ['date1', 'date1.date2', 'date1.date2.date3'],
-  geos: ['location', 'locations'],
-  refs: ['refKey', 'arrayRef'],
-});
+restore("your-file-path.json", {
+  dates: ["date1", "date1.date2", "date1.date2.date3"],
+  geos: ["location", "locations"],
+  refs: ["refKey", "arrayRef"],
+})
 ```
 
 #### For HTTP Request
@@ -134,7 +131,7 @@ firestoreService.restore('your-file-path.json', {
 import request from 'request-promise';
 ...
 const backupData = await request('JSON-URL');
-const status = await firestoreService.restore(JSON.parse(backupData), {
+const status = await restore(JSON.parse(backupData), {
   dates: ['date'],
   geos: ['location']
 });
