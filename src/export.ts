@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin'
+import { IExportOptions } from './helper'
 
 /**
  * Get data from all collections
@@ -7,8 +8,7 @@ import * as admin from 'firebase-admin'
  */
 export const getAllCollections = async (
   collectionNameArray: string[],
-  docsFromEachCollection?: number,
-  refKeys?: string[]
+  options?: IExportOptions
 ): Promise<any> => {
   const db = admin.firestore()
   // get all the root-level paths
@@ -17,13 +17,13 @@ export const getAllCollections = async (
 
   if (paths.length === 0) {
     // get all collections
-    snap.forEach(collection => paths.push(collection.path))
+    snap.forEach((collection) => paths.push(collection.path))
   }
 
   // fetch in parallel
   const promises: Promise<any>[] = []
-  paths.forEach(segment => {
-    const result = backup(segment, docsFromEachCollection, refKeys)
+  paths.forEach((segment) => {
+    const result = backup(segment, options)
     promises.push(result)
   })
   // assemble the pieces into one object
@@ -40,15 +40,14 @@ export const getAllCollections = async (
  */
 export const backup = async (
   collectionName: string,
-  docsFromEachCollection?: number,
-  refKeys?: string[]
+  options?: IExportOptions
 ): Promise<any> => {
-  function addElement (ElementList: Object, element: Object) {
+  function addElement(ElementList: Object, element: Object) {
     let newList = Object.assign(ElementList, element)
     return newList
   }
 
-  function getPath (obj?: { path?: string }) {
+  function getPath(obj?: { path?: string }) {
     if (obj && typeof obj.path === 'string') {
       return obj.path
     }
@@ -62,8 +61,8 @@ export const backup = async (
 
     const documents = await db.collection(collectionName).get()
     const docs =
-      docsFromEachCollection > 0
-        ? documents.docs.slice(0, docsFromEachCollection)
+      options?.docsFromEachCollection > 0
+        ? documents.docs.slice(0, options?.docsFromEachCollection)
         : documents.docs
 
     for (const doc of docs) {
@@ -71,8 +70,8 @@ export const backup = async (
 
       data[collectionName][doc.id] = doc.data()
 
-      if (refKeys) {
-        for (const refKey of refKeys) {
+      if (options?.refs) {
+        for (const refKey of options?.refs) {
           if (data[collectionName][doc.id][refKey]) {
             if (Array.isArray(data[collectionName][doc.id][refKey])) {
               for (let val of data[collectionName][doc.id][refKey]) {
@@ -93,8 +92,7 @@ export const backup = async (
       for (const subCol of subCollections) {
         const subColData = await backup(
           `${collectionName}/${doc.id}/${subCol.id}`,
-          docsFromEachCollection,
-          refKeys
+          options
         )
         data[collectionName][doc.id]['subCollection'] = addElement(
           data[collectionName][doc.id]['subCollection'],

@@ -1,21 +1,21 @@
 import * as admin from 'firebase-admin';
-import { IImportOptions } from './helper';
+import { IExportOptions, IImportOptions } from './helper';
 /**
  * Initialize Firebase App
  *
- * @param {any} serviceAccount
- * @param {any} databaseURL
+ * @param {object} serviceAccount
  * @param {string} name
  */
-export declare const initializeApp: (serviceAccount: string, databaseURL: string, name?: string) => boolean;
+export declare const initializeApp: (serviceAccount: object, name?: string) => boolean;
 export { admin };
 /**
  * Backup data from firestore
  *
  * @param {string} collectionName
+ * @param {IExportOptions} options
  * @return {json}
  */
-export declare const backup: (collectionName: string, refKeys?: string[]) => Promise<any>;
+export declare const backup: (collectionName: string, options?: IExportOptions) => Promise<any>;
 /**
  * Restore data to firestore
  * @param fileName
@@ -25,6 +25,6 @@ export declare const restore: (fileName: string, options?: IImportOptions) => Pr
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
- * @param {number} [docsFromEachCollection]
+ * @param {IExportOptions} options
  */
-export declare const backups: (collectionNameArray?: Array<string>, docsFromEachCollection?: number, refKeys?: string[]) => Promise<any>;
+export declare const backups: (collectionNameArray?: Array<string>, options?: IExportOptions) => Promise<any>;

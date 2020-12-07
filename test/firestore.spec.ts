@@ -4,7 +4,7 @@ import { parseAndConvertDates } from '../src/helper'
 import { serviceAccount } from './serviceAccount'
 import { backup, backups, initializeApp, restore } from '../dist'
 
-const app = initializeApp(serviceAccount, serviceAccount.databaseUrl)
+const app = initializeApp(serviceAccount)
 const backupAPI =
   'https://firebasestorage.googleapis.com/v0/b/firbase-function-helper-qa.appspot.com/o/import-to-firestore.json?alt=media&token=a0530902-8983-45a4-90c2-72c345c7a3d5'
 
@@ -34,6 +34,12 @@ describe('initializeApp function test', () => {
   it('Get an array of collections', async () => {
     const all = await backups(['test', 'users'])
     expect(Object.keys(all).length).is.equal(2)
+  })
+
+  it('Backup with refernce key', async () => {
+    const users = await backup('users', { refs: ['ref'] })
+    expect(JSON.stringify(users)).contains('test/first-key')
+    expect(Object.keys(users).length).is.equal(1)
   })
 
   it('Restore data with document id - without autoParseDates', async () => {
@@ -115,7 +121,7 @@ describe('initializeApp function test', () => {
 
   it('Export single document from all collections', async () => {
     try {
-      const data = await backups(['test'], 1)
+      const data = await backups(['test'], { docsFromEachCollection: 1 })
       expect(Object.values(data['test']).length).equals(1) // 1 document
     } catch (error) {
       console.log(error)

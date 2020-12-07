@@ -1,20 +1,15 @@
 import * as admin from 'firebase-admin'
 import * as restoreService from './import'
 import * as backupService from './export'
-import { IImportOptions } from './helper'
+import { IExportOptions, IImportOptions } from './helper'
 
 /**
  * Initialize Firebase App
  *
- * @param {any} serviceAccount
- * @param {any} databaseURL
+ * @param {object} serviceAccount
  * @param {string} name
  */
-export const initializeApp = (
-  serviceAccount: string,
-  databaseURL: string,
-  name = '[DEFAULT]'
-) => {
+export const initializeApp = (serviceAccount: object, name = '[DEFAULT]') => {
   if (
     admin.apps.length === 0 ||
     (admin.apps.length > 0 && admin.app().name !== name)
@@ -22,7 +17,7 @@ export const initializeApp = (
     admin.initializeApp(
       {
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: databaseURL
+        databaseURL: serviceAccount['databaseURL'],
       },
       name
     )
@@ -37,10 +32,11 @@ export { admin }
  * Backup data from firestore
  *
  * @param {string} collectionName
+ * @param {IExportOptions} options
  * @return {json}
  */
-export const backup = (collectionName: string, refKeys?: string[]) => {
-  return backupService.backup(collectionName, undefined, refKeys)
+export const backup = (collectionName: string, options?: IExportOptions) => {
+  return backupService.backup(collectionName, options)
 }
 
 /**
@@ -55,16 +51,11 @@ export const restore = (fileName: string, options: IImportOptions = {}) => {
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
- * @param {number} [docsFromEachCollection]
+ * @param {IExportOptions} options
  */
 export const backups = (
   collectionNameArray: Array<string> = [],
-  docsFromEachCollection?: number,
-  refKeys?: string[]
+  options?: IExportOptions
 ) => {
-  return backupService.getAllCollections(
-    collectionNameArray,
-    docsFromEachCollection,
-    refKeys
-  )
+  return backupService.getAllCollections(collectionNameArray, options)
 }

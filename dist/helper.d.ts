@@ -4,6 +4,10 @@ export interface IImportOptions {
     geos?: string[];
     refs?: string[];
 }
+export interface IExportOptions {
+    docsFromEachCollection?: number;
+    refs?: string[];
+}
 /**
  * Convert time array in a Date object
  * @param firebaseTimestamp

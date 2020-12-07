@@ -17,6 +17,11 @@
 
 - Added support for reference path (Thank @russellr922)
 
+#### - :boom: [Breaking Change]
+
+- Removed databaseURL from parameter when initalizeApp
+- Moved docsFromEachCollection to export options
+
 #### - :nail_care: [Polish]
 
 - Updated packages
