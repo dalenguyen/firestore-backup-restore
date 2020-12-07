@@ -32,21 +32,31 @@ You have to import this package in a JavaScript file and work from there.
 
 You can export collection and sub collection from your data. The sub collection is optional.
 
+Export options - OPTIONAL
+
+```javascript
+// Export options
+const options = {
+  docsFromEachCollection: 10, // limit number of documents when exporting
+  refs: ['refKey'], // reference Path
+}
+```
+
 ```javascript
 // In your index.js
 
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const { backup, backups, initializeApp } = require('firestore-export-import')
+const serviceAccount = require('./serviceAccountKey.json')
 
 // Initiate Firebase App
 // appName is optional, you can omit it.
-const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+const appName = '[DEFAULT]'
+initializeApp(serviceAccount, appName)
 
 // Start exporting your data
-firestoreService
-  .backup('collection-name')
-  .then((data) => console.log(JSON.stringify(data)));
+backup('collection-name', options).then((data) =>
+  console.log(JSON.stringify(data))
+)
 ```
 
 Sub collections will be added under **'subCollection'** object.
@@ -60,12 +70,11 @@ The ['collectionName1', 'collectionName2'] is OPTIONAL, you can remove this para
 The result is an object of collection's data.
 
 ```javascript
-firestoreService
-  .backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
+backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
   .then((collections) => {
     // You can do whatever you want with collections
-    console.log(JSON.stringify(collections));
-  });
+    console.log(JSON.stringify(collections))
+  })
 ```
 
 ### Import data to firestore (Predefined Document Id)
@@ -93,7 +102,7 @@ const options = {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
   refs: ['refKey'],
-};
+}
 ```
 
 If you don't want to specify `dates`, you can use another parameter in order to transform fields to date auttomatically.
@@ -111,21 +120,21 @@ After that, the data will be converted based on their types.
 
 ```javascript
 // In your index.js
-const firestoreService = require('firestore-export-import');
-const serviceAccount = require('./serviceAccountKey.json');
+const { initializeApp, restore } = require('firestore-export-import')
+const serviceAccount = require('./serviceAccountKey.json')
 
 // Initiate Firebase App
 // appName is optional, you can obmit it.
-const appName = '[DEFAULT]';
-firestoreService.initializeApp(serviceAccount, databaseURL, appName);
+const appName = '[DEFAULT]'
+initializeApp(serviceAccount, databaseURL, appName)
 
 // Start importing your data
 // The array of date, location and reference fields are optional
-firestoreService.restore('your-file-path.json', {
+restore('your-file-path.json', {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
   refs: ['refKey', 'arrayRef'],
-});
+})
 ```
 
 #### For HTTP Request
@@ -134,7 +143,7 @@ firestoreService.restore('your-file-path.json', {
 import request from 'request-promise';
 ...
 const backupData = await request('JSON-URL');
-const status = await firestoreService.restore(JSON.parse(backupData), {
+const status = await restore(JSON.parse(backupData), {
   dates: ['date'],
   geos: ['location']
 });

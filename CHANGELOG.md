@@ -11,7 +11,22 @@
 
 ---
 
-## ## [0.8.0] - 2020-09-15
+## [0.9.0] - 2020-12-06
+
+#### - :rocket: [New Feature]
+
+- Added support for reference path (Thank @russellr922)
+
+#### - :boom: [Breaking Change]
+
+- Removed databaseURL from parameter when initalizeApp
+- Moved docsFromEachCollection to export options
+
+#### - :nail_care: [Polish]
+
+- Updated packages
+
+## [0.8.0] - 2020-09-15
 
 #### - :rocket: [New Feature]
 

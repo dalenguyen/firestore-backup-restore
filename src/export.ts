@@ -1,4 +1,5 @@
-import * as admin from 'firebase-admin';
+import * as admin from 'firebase-admin'
+import { IExportOptions } from './helper'
 
 /**
  * Get data from all collections
@@ -7,29 +8,29 @@ import * as admin from 'firebase-admin';
  */
 export const getAllCollections = async (
   collectionNameArray: string[],
-  docsFromEachCollection?: number
+  options?: IExportOptions
 ): Promise<any> => {
-  const db = admin.firestore();
+  const db = admin.firestore()
   // get all the root-level paths
-  const snap = await db.listCollections();
-  let paths = collectionNameArray;
+  const snap = await db.listCollections()
+  let paths = collectionNameArray
 
   if (paths.length === 0) {
     // get all collections
-    snap.forEach((collection) => paths.push(collection.path));
+    snap.forEach((collection) => paths.push(collection.path))
   }
 
   // fetch in parallel
-  const promises: Promise<any>[] = [];
+  const promises: Promise<any>[] = []
   paths.forEach((segment) => {
-    const result = backup(segment, docsFromEachCollection);
-    promises.push(result);
-  });
+    const result = backup(segment, options)
+    promises.push(result)
+  })
   // assemble the pieces into one object
-  const value = await Promise.all(promises);
-  const all = Object.assign({}, ...value);
-  return all;
-};
+  const value = await Promise.all(promises)
+  const all = Object.assign({}, ...value)
+  return all
+}
 
 /**
  * Backup data from firestore
@@ -37,42 +38,72 @@ export const getAllCollections = async (
  * @param {string} collectionName
  * @returns {Promise<any>}
  */
-export const backup = async (collectionName: string, docsFromEachCollection?: number): Promise<any> => {
-
+export const backup = async (
+  collectionName: string,
+  options?: IExportOptions
+): Promise<any> => {
   function addElement(ElementList: Object, element: Object) {
     let newList = Object.assign(ElementList, element)
     return newList
   }
 
-  try {
-    const db = admin.firestore();
-    let data = {};
-    data[collectionName] = {};
+  function getPath(obj?: { path?: string }) {
+    if (obj && typeof obj.path === 'string') {
+      return obj.path
+    }
+    return obj
+  }
 
-    const documents = await db.collection(collectionName).get();
+  try {
+    const db = admin.firestore()
+    let data = {}
+    data[collectionName] = {}
+
+    const documents = await db.collection(collectionName).get()
     const docs =
-      docsFromEachCollection > 0
-        ? documents.docs.slice(0, docsFromEachCollection)
-        : documents.docs;
+      options?.docsFromEachCollection > 0
+        ? documents.docs.slice(0, options?.docsFromEachCollection)
+        : documents.docs
 
     for (const doc of docs) {
-      const subCollections = await doc.ref.listCollections();
+      const subCollections = await doc.ref.listCollections()
 
-      data[collectionName][doc.id] = doc.data();
-      data[collectionName][doc.id]['subCollection'] = {};
+      data[collectionName][doc.id] = doc.data()
+
+      if (options?.refs) {
+        for (const refKey of options?.refs) {
+          if (data[collectionName][doc.id][refKey]) {
+            if (Array.isArray(data[collectionName][doc.id][refKey])) {
+              for (let val of data[collectionName][doc.id][refKey]) {
+                data[collectionName][doc.id][refKey] = getPath(val)
+              }
+            } else if (
+              typeof data[collectionName][doc.id][refKey].path === 'string'
+            ) {
+              data[collectionName][doc.id][refKey] =
+                data[collectionName][doc.id][refKey].path
+            }
+          }
+        }
+      }
+
+      data[collectionName][doc.id]['subCollection'] = {}
 
       for (const subCol of subCollections) {
         const subColData = await backup(
           `${collectionName}/${doc.id}/${subCol.id}`,
-          docsFromEachCollection
-        );
-        data[collectionName][doc.id]['subCollection'] = addElement(data[collectionName][doc.id]['subCollection'], subColData);
+          options
+        )
+        data[collectionName][doc.id]['subCollection'] = addElement(
+          data[collectionName][doc.id]['subCollection'],
+          subColData
+        )
       }
     }
 
-    return data;
+    return data
   } catch (error) {
-    console.error(error);
-    throw new Error(error);
+    console.error(error)
+    throw new Error(error)
   }
-};
+}

@@ -5,6 +5,11 @@ export interface IImportOptions {
   refs?: string[]
 }
 
+export interface IExportOptions {
+  docsFromEachCollection?: number
+  refs?: string[]
+}
+
 /**
  * Convert time array in a Date object
  * @param firebaseTimestamp
@@ -59,14 +64,14 @@ export const traverseObjects = (data: any, callback: Function) => {
 }
 
 export function parseAndConvertDates(data: object) {
-  traverseObjects(data, value => {
+  traverseObjects(data, (value) => {
     const isTimeStamp =
-      typeof value === "object" &&
-      value.hasOwnProperty("_seconds") &&
-      value.hasOwnProperty("_nanoseconds");
+      typeof value === 'object' &&
+      value.hasOwnProperty('_seconds') &&
+      value.hasOwnProperty('_nanoseconds')
     if (isTimeStamp) {
-      return makeTime(value);
+      return makeTime(value)
     }
-    return null;
+    return null
   })
 }
