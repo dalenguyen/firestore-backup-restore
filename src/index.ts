@@ -22,7 +22,7 @@ export const initializeApp = (
     admin.initializeApp(
       {
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: databaseURL,
+        databaseURL: databaseURL
       },
       name
     )
@@ -39,8 +39,8 @@ export { admin }
  * @param {string} collectionName
  * @return {json}
  */
-export const backup = (collectionName: string) => {
-  return backupService.backup(collectionName)
+export const backup = (collectionName: string, refKeys?: string[]) => {
+  return backupService.backup(collectionName, undefined, refKeys)
 }
 
 /**
@@ -57,6 +57,14 @@ export const restore = (fileName: string, options: IImportOptions = {}) => {
  * @param {Array<string>} collectionNameArray
  * @param {number} [docsFromEachCollection]
  */
-export const backups = (collectionNameArray: Array<string> = [], docsFromEachCollection?: number) => {
-  return backupService.getAllCollections(collectionNameArray, docsFromEachCollection)
+export const backups = (
+  collectionNameArray: Array<string> = [],
+  docsFromEachCollection?: number,
+  refKeys?: string[]
+) => {
+  return backupService.getAllCollections(
+    collectionNameArray,
+    docsFromEachCollection,
+    refKeys
+  )
 }

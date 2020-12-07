@@ -1,7 +1,12 @@
 import * as fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
 import * as admin from 'firebase-admin'
-import { makeTime, traverseObjects, IImportOptions, parseAndConvertDates } from './helper'
+import {
+  makeTime,
+  traverseObjects,
+  IImportOptions,
+  parseAndConvertDates
+} from './helper'
 
 /**
  * Restore data to firestore
@@ -23,7 +28,7 @@ export const restore = (
         .then(() => {
           resolve({
             status: true,
-            message: 'Collection successfully imported!',
+            message: 'Collection successfully imported!'
           })
         })
         .catch(error => {
@@ -43,7 +48,7 @@ export const restore = (
           .then(() => {
             resolve({
               status: true,
-              message: 'Collection successfully imported!',
+              message: 'Collection successfully imported!'
             })
           })
           .catch(error => {
@@ -154,7 +159,7 @@ const startUpdating = (
   }
 
   if (options.autoParseDates) {
-    parseAndConvertDates(data);
+    parseAndConvertDates(data)
   }
 
   // reference key
@@ -216,14 +221,14 @@ const startUpdating = (
         console.log(`${docId} was successfully added to firestore!`)
         resolve({
           status: true,
-          message: `${docId} was successfully added to firestore!`,
+          message: `${docId} was successfully added to firestore!`
         })
       })
       .catch(error => {
         console.log(error)
         reject({
           status: false,
-          message: error.message,
+          message: error.message
         })
       })
   })
