@@ -105,7 +105,7 @@ const options = {
 }
 ```
 
-If you don't want to specify `dates`, you can use another parameter in order to transform fields to date auttomatically.
+If you don't want to specify `dates`, you can use another parameter in order to transform fields to date automatically.
 
 ```javascript
 // Import options with auto parse date
