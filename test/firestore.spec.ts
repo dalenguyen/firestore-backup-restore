@@ -40,7 +40,7 @@ describe('initializeApp function test', () => {
     const users = await backup('users', {
       refs: ['ref', 'map.first-ref', 'path.invalid'],
     })
-    console.log(JSON.stringify(users))
+    // console.log(JSON.stringify(users))
     expect(JSON.stringify(users)).contains('test/first-key')
     expect(JSON.stringify(users)).contains('test/second-key')
     expect(Object.keys(users).length).is.equal(1)

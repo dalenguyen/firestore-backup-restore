@@ -38,8 +38,6 @@ export const makeTime = (firebaseTimestamp: {
 }
 
 export const getPath = (obj?: { path?: string }) => {
-  console.log('Path', obj.path)
-
   if (obj && typeof obj.path === 'string') {
     return obj.path
   }
