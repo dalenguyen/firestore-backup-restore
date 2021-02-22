@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin'
-import { IExportOptions } from './helper'
+import { getPath, IExportOptions, traverseObjects } from './helper'
 
 /**
  * Get data from all collections
@@ -47,13 +47,6 @@ export const backup = async (
     return newList
   }
 
-  function getPath(obj?: { path?: string }) {
-    if (obj && typeof obj.path === 'string') {
-      return obj.path
-    }
-    return obj
-  }
-
   try {
     const db = admin.firestore()
     let data = {}
@@ -72,16 +65,25 @@ export const backup = async (
 
       if (options?.refs) {
         for (const refKey of options?.refs) {
-          if (data[collectionName][doc.id][refKey]) {
-            if (Array.isArray(data[collectionName][doc.id][refKey])) {
-              for (let val of data[collectionName][doc.id][refKey]) {
-                data[collectionName][doc.id][refKey] = getPath(val)
+          if (refKey.indexOf('.') > -1) {
+            traverseObjects(data, (value) => {
+              if (value.constructor?.name !== 'DocumentReference') {
+                return null
               }
-            } else if (
-              typeof data[collectionName][doc.id][refKey].path === 'string'
-            ) {
-              data[collectionName][doc.id][refKey] =
-                data[collectionName][doc.id][refKey].path
+              return getPath(value)
+            })
+          } else {
+            if (data[collectionName][doc.id][refKey]) {
+              if (Array.isArray(data[collectionName][doc.id][refKey])) {
+                for (let val of data[collectionName][doc.id][refKey]) {
+                  data[collectionName][doc.id][refKey] = getPath(val)
+                }
+              } else if (
+                typeof data[collectionName][doc.id][refKey].path === 'string'
+              ) {
+                data[collectionName][doc.id][refKey] =
+                  data[collectionName][doc.id][refKey].path
+              }
             }
           }
         }

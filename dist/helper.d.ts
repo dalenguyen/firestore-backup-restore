@@ -8,6 +8,10 @@ export interface IExportOptions {
     docsFromEachCollection?: number;
     refs?: string[];
 }
+export declare const makeGeoPoint: (geoValues: {
+    _latitude: number;
+    _longitude: number;
+}) => FirebaseFirestore.GeoPoint;
 /**
  * Convert time array in a Date object
  * @param firebaseTimestamp
@@ -16,6 +20,11 @@ export declare const makeTime: (firebaseTimestamp: {
     _seconds: number;
     _nanoseconds: number;
 }) => Date;
+export declare const getPath: (obj?: {
+    path?: string;
+}) => string | {
+    path?: string;
+};
 /**
  * Traverse given data, until there is no sub node anymore
  * Executes the callback function for every sub node found
@@ -23,4 +32,4 @@ export declare const makeTime: (firebaseTimestamp: {
  * @param callback
  */
 export declare const traverseObjects: (data: any, callback: Function) => void;
-export declare function parseAndConvertDates(data: object): void;
+export declare const parseAndConvertDates: (data: object) => void;
