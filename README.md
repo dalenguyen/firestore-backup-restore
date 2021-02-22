@@ -38,7 +38,7 @@ Export options - OPTIONAL
 // Export options
 const options = {
   docsFromEachCollection: 10, // limit number of documents when exporting
-  refs: ['refKey'], // reference Path
+  refs: ['refKey', 'deep.level.key'], // reference Path
 }
 ```
 
