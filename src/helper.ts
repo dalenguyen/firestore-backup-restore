@@ -1,3 +1,4 @@
+import * as admin from 'firebase-admin'
 export interface IImportOptions {
   dates?: string[]
   autoParseDates?: boolean
@@ -8,6 +9,17 @@ export interface IImportOptions {
 export interface IExportOptions {
   docsFromEachCollection?: number
   refs?: string[]
+}
+
+export const makeGeoPoint = (geoValues: {
+  _latitude: number
+  _longitude: number
+}) => {
+  if (!geoValues._latitude || !geoValues._longitude) {
+    return null
+  }
+
+  return new admin.firestore.GeoPoint(geoValues._latitude, geoValues._longitude)
 }
 
 /**
@@ -23,6 +35,15 @@ export const makeTime = (firebaseTimestamp: {
     return null
   }
   return new Date(firebaseTimestamp._seconds * 1000)
+}
+
+export const getPath = (obj?: { path?: string }) => {
+  console.log('Path', obj.path)
+
+  if (obj && typeof obj.path === 'string') {
+    return obj.path
+  }
+  return obj
 }
 
 /**
@@ -49,7 +70,11 @@ const isArray = (test: any) => {
  */
 export const traverseObjects = (data: any, callback: Function) => {
   for (const [key, value] of Object.entries(data)) {
-    if (!isObject(value) && !isArray(value)) {
+    if (
+      !isObject(value) &&
+      !isArray(value) &&
+      value.constructor?.name !== 'DocumentReference'
+    ) {
       continue
     }
 
@@ -63,7 +88,7 @@ export const traverseObjects = (data: any, callback: Function) => {
   }
 }
 
-export function parseAndConvertDates(data: object) {
+export const parseAndConvertDates = (data: object) => {
   traverseObjects(data, (value) => {
     const isTimeStamp =
       typeof value === 'object' &&

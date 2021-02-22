@@ -5,7 +5,8 @@ import {
   makeTime,
   traverseObjects,
   IImportOptions,
-  parseAndConvertDates
+  parseAndConvertDates,
+  makeGeoPoint,
 } from './helper'
 
 /**
@@ -28,10 +29,10 @@ export const restore = (
         .then(() => {
           resolve({
             status: true,
-            message: 'Collection successfully imported!'
+            message: 'Collection successfully imported!',
           })
         })
-        .catch(error => {
+        .catch((error) => {
           reject({ status: false, message: error.message })
         })
     } else {
@@ -48,15 +49,15 @@ export const restore = (
           .then(() => {
             resolve({
               status: true,
-              message: 'Collection successfully imported!'
+              message: 'Collection successfully imported!',
             })
           })
-          .catch(error => {
+          .catch((error) => {
             reject({ status: false, message: error.message })
           })
       })
     }
-  }).catch(error => console.error(error))
+  }).catch((error) => console.error(error))
 }
 
 /**
@@ -136,11 +137,11 @@ const startUpdating = (
 ) => {
   // Update date value
   if (options.dates && options.dates.length > 0) {
-    options.dates.forEach(date => {
+    options.dates.forEach((date) => {
       if (data.hasOwnProperty(date)) {
         // check type of the date
         if (Array.isArray(data[date])) {
-          data[date] = data[date].map(d => makeTime(d))
+          data[date] = data[date].map((d) => makeTime(d))
         } else {
           data[date] = makeTime(data[date])
         }
@@ -148,7 +149,7 @@ const startUpdating = (
 
       // Check for nested date
       if (date.indexOf('.') > -1) {
-        traverseObjects(data, value => {
+        traverseObjects(data, (value) => {
           if (!value.hasOwnProperty('_seconds')) {
             return null
           }
@@ -164,11 +165,11 @@ const startUpdating = (
 
   // reference key
   if (options.refs && options.refs.length > 0) {
-    options.refs.forEach(ref => {
+    options.refs.forEach((ref) => {
       if (data.hasOwnProperty(ref)) {
         // check type of the reference
         if (Array.isArray(data[ref])) {
-          data[ref] = data[ref].map(ref => db.doc(ref))
+          data[ref] = data[ref].map((ref) => db.doc(ref))
         } else {
           data[ref] = db.doc(data[ref])
         }
@@ -178,32 +179,18 @@ const startUpdating = (
 
   // Enter geo value
   if (options.geos && options.geos.length > 0) {
-    const makeGeoPoint = (geoValues: {
-      _latitude: number
-      _longitude: number
-    }) => {
-      if (!geoValues._latitude || !geoValues._longitude) {
-        return null
-      }
-
-      return new admin.firestore.GeoPoint(
-        geoValues._latitude,
-        geoValues._longitude
-      )
-    }
-
-    options.geos.forEach(geo => {
+    options.geos.forEach((geo) => {
       if (data.hasOwnProperty(geo)) {
         // array of geo locations
         if (Array.isArray(data[geo])) {
-          data[geo] = data[geo].map(geoValues => makeGeoPoint(geoValues))
+          data[geo] = data[geo].map((geoValues) => makeGeoPoint(geoValues))
         } else {
           data[geo] = makeGeoPoint(data[geo])
         }
       }
 
       if (geo.indexOf('.') > -1) {
-        traverseObjects(data, value => {
+        traverseObjects(data, (value) => {
           if (!value.hasOwnProperty('_latitude')) {
             return null
           }
@@ -221,14 +208,14 @@ const startUpdating = (
         console.log(`${docId} was successfully added to firestore!`)
         resolve({
           status: true,
-          message: `${docId} was successfully added to firestore!`
+          message: `${docId} was successfully added to firestore!`,
         })
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error)
         reject({
           status: false,
-          message: error.message
+          message: error.message,
         })
       })
   })

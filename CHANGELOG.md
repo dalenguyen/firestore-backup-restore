@@ -11,6 +11,12 @@
 
 ---
 
+## [0.10.0] - 2020-02-21
+
+#### - :rocket: [New Feature]
+
+- Added support for nested document ref when backing up
+
 ## [0.9.0] - 2020-12-06
 
 #### - :rocket: [New Feature]
