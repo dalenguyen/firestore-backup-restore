@@ -6,6 +6,7 @@ export interface IImportOptions {
   autoParseDates?: boolean
   geos?: string[]
   refs?: string[]
+  silenceLogs?: boolean
 }
 
 export interface IExportOptions {
