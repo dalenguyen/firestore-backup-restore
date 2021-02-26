@@ -26,4 +26,4 @@ if(options.geos&&options.geos.length>0){options.geos.forEach(function(geo){if(da
 else{data[geo]=helper_1.makeGeoPoint(data[geo]);}}
 if(geo.indexOf('.')>-1){helper_1.traverseObjects(data,function(value){if(!value.hasOwnProperty('_latitude')){return null;}
 return helper_1.makeGeoPoint(value);});}});}
-return new Promise(function(resolve,reject){db.collection(collectionName).doc(docId).set(data).then(function(){!options.silenceLogs&&console.log(docId+" was successfully added to firestore!");resolve({status:true,message:docId+" was successfully added to firestore!",});}).catch(function(error){console.log(error);reject({status:false,message:error.message,});});});};
+return new Promise(function(resolve,reject){db.collection(collectionName).doc(docId).set(data).then(function(){(options===null||options===void 0?void 0:options.silenceLogs)&&console.log(docId+" was successfully added to firestore!");resolve({status:true,message:docId+" was successfully added to firestore!",});}).catch(function(error){console.log(error);reject({status:false,message:error.message,});});});};
