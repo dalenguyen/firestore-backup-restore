@@ -1,4 +1,6 @@
 import * as admin from 'firebase-admin'
+import {firestore} from "firebase-admin/lib/firestore";
+
 export interface IImportOptions {
   dates?: string[]
   autoParseDates?: boolean
@@ -10,6 +12,9 @@ export interface IImportOptions {
 export interface IExportOptions {
   docsFromEachCollection?: number
   refs?: string[]
+  queryCollection?: <T>(
+    ref: firestore.CollectionReference<firestore.DocumentData>
+  ) => Promise<firestore.QuerySnapshot<T>>
 }
 
 export const makeGeoPoint = (geoValues: {
