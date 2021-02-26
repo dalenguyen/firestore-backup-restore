@@ -11,6 +11,12 @@
 
 ---
 
+## [0.12.1] - 2020-02-26
+
+#### - :bug: [Bug Fix]
+
+- Added validation for document reference #84
+
 ## [0.12.0] - 2020-02-26
 
 #### - :rocket: [New Feature]
