@@ -49,7 +49,7 @@ describe('initializeApp function test', () => {
 
   it('Backup with refernce key', async () => {
     const users = await backup('users', {
-      refs: ['ref', 'map.first-ref', 'path.invalid'],
+      refs: ['ref', 'map.first-ref', 'map.second-ref', 'path.invalid'],
     })
     // console.log(JSON.stringify(users))
     expect(JSON.stringify(users)).contains('test/first-key')
