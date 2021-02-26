@@ -1,17 +1,20 @@
+import { firestore } from "firebase-admin/lib/firestore";
 export interface IImportOptions {
     dates?: string[];
     autoParseDates?: boolean;
     geos?: string[];
     refs?: string[];
+    silenceLogs?: boolean;
 }
 export interface IExportOptions {
     docsFromEachCollection?: number;
     refs?: string[];
+    queryCollection?: <T>(ref: firestore.CollectionReference<firestore.DocumentData>) => Promise<firestore.QuerySnapshot<T>>;
 }
 export declare const makeGeoPoint: (geoValues: {
     _latitude: number;
     _longitude: number;
-}) => FirebaseFirestore.GeoPoint;
+}) => firestore.GeoPoint;
 /**
  * Convert time array in a Date object
  * @param firebaseTimestamp

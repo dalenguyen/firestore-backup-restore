@@ -38,7 +38,7 @@ Export options - OPTIONAL
 // Export options
 const options = {
   docsFromEachCollection: 10, // limit number of documents when exporting
-  refs: ['refKey'], // reference Path
+  refs: ['refKey', 'deep.level.key'], // reference Path
 }
 ```
 
@@ -75,6 +75,19 @@ backups(['collectionName1', 'collectionName2']) // Array of collection's name is
     // You can do whatever you want with collections
     console.log(JSON.stringify(collections))
   })
+```
+
+### Export data with query
+
+You are can back update based on query criteria. In this example, I am backing up all data from `users` collection, where name equals `Dale Nguyen`.
+
+```javascript
+const queryByName = (collectionRef) =>
+  collectionRef.where('name', '==', 'Dale Nguyen').get()
+
+const users = await backup('users', {
+  queryCollection: queryByName,
+})
 ```
 
 ### Import data to firestore (Predefined Document Id)

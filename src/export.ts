@@ -52,7 +52,11 @@ export const backup = async (
     let data = {}
     data[collectionName] = {}
 
-    const documents = await db.collection(collectionName).get()
+    const collectionRef = db.collection(collectionName)
+    const documents =
+      options?.queryCollection != null
+        ? await options.queryCollection(collectionRef)
+        : await collectionRef.get()
     const docs =
       options?.docsFromEachCollection > 0
         ? documents.docs.slice(0, options?.docsFromEachCollection)
