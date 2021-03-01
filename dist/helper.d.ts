@@ -9,7 +9,7 @@ export interface IImportOptions {
 export interface IExportOptions {
     docsFromEachCollection?: number;
     refs?: string[];
-    queryCollection?: <T>(ref: firestore.CollectionReference<firestore.DocumentData>) => Promise<firestore.QuerySnapshot<T>>;
+    queryCollection?: (ref: firestore.CollectionReference<firestore.DocumentData>) => Promise<firestore.QuerySnapshot<any>>;
 }
 export declare const makeGeoPoint: (geoValues: {
     _latitude: number;
