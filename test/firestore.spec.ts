@@ -36,9 +36,20 @@ describe('initializeApp function test', () => {
     expect(Object.keys(all).length).is.equal(2)
   })
 
+  it('Backup with query', async () => {
+    const queryByName = (collectionRef) =>
+      collectionRef.where('name', '==', 'Dale Nguyen').get()
+    const users = await backup('users', {
+      queryCollection: queryByName,
+      refs: ['ref', 'map.first-ref', 'path.invalid'],
+    })
+    // console.log(JSON.stringify(users))
+    expect(Object.keys(users).length).is.equal(1)
+  })
+
   it('Backup with refernce key', async () => {
     const users = await backup('users', {
-      refs: ['ref', 'map.first-ref', 'path.invalid'],
+      refs: ['ref', 'map.first-ref', 'map.second-ref', 'path.invalid'],
     })
     // console.log(JSON.stringify(users))
     expect(JSON.stringify(users)).contains('test/first-key')

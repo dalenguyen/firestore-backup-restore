@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin'
-import {firestore} from "firebase-admin/lib/firestore";
+import { firestore } from 'firebase-admin/lib/firestore'
 
 export interface IImportOptions {
   dates?: string[]
@@ -12,9 +12,9 @@ export interface IImportOptions {
 export interface IExportOptions {
   docsFromEachCollection?: number
   refs?: string[]
-  queryCollection?: <T>(
+  queryCollection?: (
     ref: firestore.CollectionReference<firestore.DocumentData>
-  ) => Promise<firestore.QuerySnapshot<T>>
+  ) => Promise<firestore.QuerySnapshot<any>>
 }
 
 export const makeGeoPoint = (geoValues: {
@@ -77,7 +77,7 @@ export const traverseObjects = (data: any, callback: Function) => {
     if (
       !isObject(value) &&
       !isArray(value) &&
-      value.constructor?.name !== 'DocumentReference'
+      value?.constructor?.name !== 'DocumentReference'
     ) {
       continue
     }
