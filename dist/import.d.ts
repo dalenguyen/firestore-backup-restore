@@ -5,4 +5,4 @@ import { IImportOptions } from './helper';
  * @param {string} fileName
  * @param {IImportOptions} options
  */
-export declare const restore: (fileName: string, options: IImportOptions) => Promise<any>;
+export declare const restore: (fileName: string | Object, options: IImportOptions) => Promise<any>;

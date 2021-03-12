@@ -16,7 +16,7 @@ import {
  * @param {IImportOptions} options
  */
 export const restore = (
-  fileName: string,
+  fileName: string | Object,
   options: IImportOptions
 ): Promise<any> => {
   const db = admin.firestore()
