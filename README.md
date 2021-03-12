@@ -77,6 +77,19 @@ backups(['collectionName1', 'collectionName2']) // Array of collection's name is
   })
 ```
 
+### Export data with query
+
+You are can back update based on query criteria. In this example, I am backing up all data from `users` collection, where name equals `Dale Nguyen`.
+
+```javascript
+const queryByName = (collectionRef) =>
+  collectionRef.where('name', '==', 'Dale Nguyen').get()
+
+const users = await backup('users', {
+  queryCollection: queryByName,
+})
+```
+
 ### Import data to firestore (Predefined Document Id)
 
 This code will help you to import data from a JSON file to firestore. You have two options:

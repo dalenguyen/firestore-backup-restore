@@ -1,4 +1,4 @@
-import { firestore } from "firebase-admin/lib/firestore";
+import { firestore } from 'firebase-admin/lib/firestore';
 export interface IImportOptions {
     dates?: string[];
     autoParseDates?: boolean;

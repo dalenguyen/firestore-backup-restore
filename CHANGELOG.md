@@ -11,6 +11,19 @@
 
 ---
 
+## [0.12.1] - 2020-02-26
+
+#### - :bug: [Bug Fix]
+
+- Added validation for document reference #84
+
+## [0.12.0] - 2020-02-26
+
+#### - :rocket: [New Feature]
+
+- Added ability to query collections before backup #90 (Thanks @jdepoix)
+- Added option to silence logs on import #89 (Thanks @Joebayld)
+
 ## [0.11.0] - 2020-02-21
 
 #### - :rocket: [New Feature]

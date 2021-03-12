@@ -54,7 +54,7 @@ export const backup = async (
 
     const collectionRef = db.collection(collectionName)
     const documents =
-      options.queryCollection != null
+      options?.queryCollection != null
         ? await options.queryCollection(collectionRef)
         : await collectionRef.get()
     const docs =
