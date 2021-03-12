@@ -44,7 +44,10 @@ export const backup = (collectionName: string, options?: IExportOptions) => {
  * @param fileName
  * @param options
  */
-export const restore = (fileName: string, options: IImportOptions = {}) => {
+export const restore = (
+  fileName: string | Object,
+  options: IImportOptions = {}
+) => {
   return restoreService.restore(fileName, options)
 }
 

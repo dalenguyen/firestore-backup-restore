@@ -21,7 +21,7 @@ export declare const backup: (collectionName: string, options?: IExportOptions) 
  * @param fileName
  * @param options
  */
-export declare const restore: (fileName: string, options?: IImportOptions) => Promise<any>;
+export declare const restore: (fileName: string | Object, options?: IImportOptions) => Promise<any>;
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray

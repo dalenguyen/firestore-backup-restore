@@ -11,6 +11,13 @@
 
 ---
 
+## [0.13.0] - 2021-03-12
+
+#### - :nail_care: [Polish]
+
+- Updated packages
+- Updated types for restore / backup options (Thanks @jdepoix)
+
 ## [0.12.1] - 2020-02-26
 
 #### - :bug: [Bug Fix]
