@@ -8,8 +8,13 @@ import { IExportOptions, IImportOptions } from './helper'
  *
  * @param {object} serviceAccount
  * @param {string} name
+ * @param {FirebaseFirestore.Settings} firestoreSettings
  */
-export const initializeApp = (serviceAccount: object, name = '[DEFAULT]') => {
+export const initializeApp = (
+  serviceAccount: object,
+  name = '[DEFAULT]',
+  firestoreSettings: FirebaseFirestore.Settings = {}
+) => {
   if (
     admin.apps.length === 0 ||
     (admin.apps.length > 0 && admin.app().name !== name)
@@ -21,7 +26,9 @@ export const initializeApp = (serviceAccount: object, name = '[DEFAULT]') => {
       },
       name
     )
-    admin.firestore().settings({ timestampsInSnapshots: true })
+    admin
+      .firestore()
+      .settings({ timestampsInSnapshots: true, ...firestoreSettings })
   }
   return true
 }

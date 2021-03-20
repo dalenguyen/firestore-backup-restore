@@ -5,8 +5,9 @@ import { IExportOptions, IImportOptions } from './helper';
  *
  * @param {object} serviceAccount
  * @param {string} name
+ * @param {FirebaseFirestore.Settings} firestoreSettings
  */
-export declare const initializeApp: (serviceAccount: object, name?: string) => boolean;
+export declare const initializeApp: (serviceAccount: object, name?: string, firestoreSettings?: FirebaseFirestore.Settings) => boolean;
 export { admin };
 /**
  * Backup data from firestore
