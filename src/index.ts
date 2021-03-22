@@ -3,17 +3,21 @@ import * as restoreService from './import'
 import * as backupService from './export'
 import { IExportOptions, IImportOptions } from './helper'
 
+interface IInitializeAppOptions {
+  firestore?: FirebaseFirestore.Settings
+}
+
 /**
  * Initialize Firebase App
  *
  * @param {object} serviceAccount
  * @param {string} name
- * @param {FirebaseFirestore.Settings} firestoreSettings
+ * @param {IInitializeAppOptions} options
  */
 export const initializeApp = (
   serviceAccount: object,
   name = '[DEFAULT]',
-  firestoreSettings: FirebaseFirestore.Settings = {}
+  options: IInitializeAppOptions = {}
 ) => {
   if (
     admin.apps.length === 0 ||
@@ -26,9 +30,7 @@ export const initializeApp = (
       },
       name
     )
-    admin
-      .firestore()
-      .settings({ timestampsInSnapshots: true, ...firestoreSettings })
+    admin.firestore().settings({ timestampsInSnapshots: true, ...options.firestore })
   }
   return true
 }

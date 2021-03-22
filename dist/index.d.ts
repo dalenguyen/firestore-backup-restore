@@ -1,13 +1,16 @@
 import * as admin from 'firebase-admin';
 import { IExportOptions, IImportOptions } from './helper';
+interface IInitializeAppOptions {
+    firestore?: FirebaseFirestore.Settings;
+}
 /**
  * Initialize Firebase App
  *
  * @param {object} serviceAccount
  * @param {string} name
- * @param {FirebaseFirestore.Settings} firestoreSettings
+ * @param {IInitializeAppOptions} options
  */
-export declare const initializeApp: (serviceAccount: object, name?: string, firestoreSettings?: FirebaseFirestore.Settings) => boolean;
+export declare const initializeApp: (serviceAccount: object, name?: string, options?: IInitializeAppOptions) => boolean;
 export { admin };
 /**
  * Backup data from firestore
