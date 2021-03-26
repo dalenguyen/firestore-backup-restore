@@ -3,6 +3,7 @@ import request from 'request-promise'
 import { parseAndConvertDates } from '../src/helper'
 import { serviceAccount } from './serviceAccount'
 import { backup, backups, initializeApp, restore } from '../dist'
+// import { backup, backups, initializeApp, restore } from '../package/dist'
 
 const app = initializeApp(serviceAccount)
 const backupAPI =

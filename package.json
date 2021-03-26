@@ -4,6 +4,11 @@
   "description": "NPM package for backup and restore Firebase Firestore",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "readme.md",
+    "dist/*.*.*",
+    "dist/*.*"
+  ],
   "scripts": {
     "watch": "tsc -w",
     "test": "mocha --timeout 60000 --exit -r ts-node/register test/**/*.spec.ts",
