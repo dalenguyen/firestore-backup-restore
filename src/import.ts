@@ -205,7 +205,7 @@ const startUpdating = (
       .doc(docId)
       .set(data)
       .then(() => {
-        options?.silenceLogs &&
+        options?.showLogs &&
           console.log(`${docId} was successfully added to firestore!`)
         resolve({
           status: true,

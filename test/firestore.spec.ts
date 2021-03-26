@@ -118,7 +118,9 @@ describe('initializeApp function test', () => {
   })
 
   it('Restore data as an array without document id', async () => {
-    let status = await restore('test/import-array-to-firestore.json')
+    let status = await restore('test/import-array-to-firestore.json', {
+      showLogs: true,
+    })
     expect(status.status).ok
   })
 

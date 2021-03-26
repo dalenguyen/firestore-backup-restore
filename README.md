@@ -28,6 +28,33 @@ After that you need to copy the **databaseURL** for initiating the App.
 
 You have to import this package in a JavaScript file and work from there.
 
+## Initialize Firebase App
+
+You have initialize the Firebase App in order to use Firestore service. It doesn't matter if you initialize it by using this plugin method or the offical way.
+
+```javascript
+const { initializeApp } = require('firestore-export-import')
+
+const serviceAccount = require('./serviceAccountKey.json')
+
+// If you want to pass settings for firestore, you can add to the options parameters
+const options = {
+  firestore: {
+    host: 'localhost:8080',
+    ssl: false,
+  },
+}
+
+// Initiate Firebase App
+// appName is optional, you can omit it.
+const appName = '[DEFAULT]'
+initializeApp(serviceAccount, appName, options)
+
+// the appName & options are OPTIONAL
+// you can initalize the app without them
+// initializeApp(serviceAccount)
+```
+
 ### Export data from firestore
 
 You can export collection and sub collection from your data. The sub collection is optional.
@@ -45,13 +72,7 @@ const options = {
 ```javascript
 // In your index.js
 
-const { backup, backups, initializeApp } = require('firestore-export-import')
-const serviceAccount = require('./serviceAccountKey.json')
-
-// Initiate Firebase App
-// appName is optional, you can omit it.
-const appName = '[DEFAULT]'
-initializeApp(serviceAccount, appName)
+const { backup } = require('firestore-export-import')
 
 // Start exporting your data
 backup('collection-name', options).then((data) =>
@@ -70,6 +91,8 @@ The ['collectionName1', 'collectionName2'] is OPTIONAL, you can remove this para
 The result is an object of collection's data.
 
 ```javascript
+const { backups } = require('firestore-export-import')
+
 backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
   .then((collections) => {
     // You can do whatever you want with collections

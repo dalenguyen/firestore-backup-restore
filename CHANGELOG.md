@@ -11,6 +11,20 @@
 
 ---
 
+## [0.14.0] - 2020-03-25
+
+#### - :rocket: [New Feature]
+
+- Added firestore settings (Thanks @raqso)
+
+#### - :nail_care: [Polish]
+
+- Updated packages
+
+#### - :boom: [Breaking Change]
+
+- use showLogs as options for showing console logs
+
 ## [0.13.0] - 2021-03-12
 
 #### - :nail_care: [Polish]
