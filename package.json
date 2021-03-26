@@ -1,6 +1,6 @@
 {
   "name": "firestore-export-import",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "NPM package for backup and restore Firebase Firestore",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,8 +30,8 @@
   "homepage": "https://github.com/dalenguyen/firestore-backup-restore#readme",
   "devDependencies": {
     "@types/chai": "^4.2.15",
-    "@types/mocha": "^8.2.1",
-    "@types/node": "^14.14.34",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^14.14.36",
     "chai": "^4.3.4",
     "jsmin": "^1.0.1",
     "minimist": "^1.2.5",
