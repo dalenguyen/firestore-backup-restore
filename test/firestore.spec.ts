@@ -1,8 +1,9 @@
 import { expect } from 'chai'
 import request from 'request-promise'
-import { parseAndConvertDates } from '../src/helper'
+import { parseAndConvertDates, parseAndConvertGeos } from '../src/helper'
 import { serviceAccount } from './serviceAccount'
 import { backup, backups, initializeApp, restore } from '../dist'
+import { firestore } from 'firebase-admin'
 // import { backup, backups, initializeApp, restore } from '../package/dist'
 
 const app = initializeApp(serviceAccount)
@@ -214,5 +215,75 @@ describe('initializeApp function test', () => {
     parseAndConvertDates(data)
     expect(data.arr[0].obj.date).to.be.an.instanceOf(Date)
     expect(data.arr[1].obj.date).to.be.an.instanceOf(Date)
+  })
+
+  it('Test auto parse geos option - simple', async () => {
+    const data = {
+      location: {
+        _latitude: 35.687498354666516,
+        _longitude: 139.44018328905466,
+      },
+    }
+    parseAndConvertGeos(data)
+    expect(data.location).to.be.an.instanceOf(firestore.GeoPoint)
+  })
+
+  it('Test auto parse geos option - nested', async () => {
+    const data = {
+      location: {
+        _latitude: 35.687498354666516,
+        _longitude: 139.44018328905466,
+      },
+      obj: {
+        anotherObj: {
+          location: {
+            _latitude: 35.687498354666516,
+            _longitude: 139.44018328905466,
+          },
+        },
+      },
+    }
+    parseAndConvertGeos(data)
+    expect(data.location).to.be.an.instanceOf(firestore.GeoPoint)
+    expect(data.obj.anotherObj.location).to.be.an.instanceOf(firestore.GeoPoint)
+  })
+
+  it('Test auto parse geos option - nested arrays', async () => {
+    const data = {
+      arr: [
+        {
+          _latitude: 35.687498354666516,
+          _longitude: 139.44018328905466,
+        },
+      ],
+    }
+    parseAndConvertGeos(data)
+    expect(data.arr[0]).to.be.an.instanceOf(firestore.GeoPoint)
+  })
+
+  it('Test auto parse geos option - nested array objects', async () => {
+    const data = {
+      arr: [
+        {
+          obj: {
+            location: {
+              _latitude: 35.687498354666516,
+              _longitude: 139.44018328905466,
+            },
+          },
+        },
+        {
+          obj: {
+            location: {
+              _latitude: 35.687498354666516,
+              _longitude: 139.44018328905466,
+            },
+          },
+        },
+      ],
+    }
+    parseAndConvertGeos(data)
+    expect(data.arr[0].obj.location).to.be.an.instanceOf(firestore.GeoPoint)
+    expect(data.arr[1].obj.location).to.be.an.instanceOf(firestore.GeoPoint)
   })
 })
