@@ -5,6 +5,7 @@ export interface IImportOptions {
   dates?: string[]
   autoParseDates?: boolean
   geos?: string[]
+  autoParseGeos?: boolean
   refs?: string[]
   showLogs?: boolean
 }
@@ -102,5 +103,18 @@ export const parseAndConvertDates = (data: object) => {
       return makeTime(value)
     }
     return null
+  })
+}
+
+export function parseAndConvertGeos(data: object) {
+  traverseObjects(data, value => {
+    const isGeoPoint =
+      typeof value === "object" &&
+      value.hasOwnProperty("_latitude") &&
+      value.hasOwnProperty("_longitude");
+    if (isGeoPoint) {
+      return makeGeoPoint(value);
+    }
+    return null;
   })
 }
