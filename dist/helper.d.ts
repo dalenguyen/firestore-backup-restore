@@ -3,6 +3,7 @@ export interface IImportOptions {
     dates?: string[];
     autoParseDates?: boolean;
     geos?: string[];
+    autoParseGeos?: boolean;
     refs?: string[];
     showLogs?: boolean;
 }
@@ -36,3 +37,4 @@ export declare const getPath: (obj?: {
  */
 export declare const traverseObjects: (data: any, callback: Function) => void;
 export declare const parseAndConvertDates: (data: object) => void;
+export declare function parseAndConvertGeos(data: object): void;
