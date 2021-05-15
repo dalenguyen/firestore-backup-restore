@@ -17,6 +17,10 @@
 
 - Added "autoParseGeos" option (Thanks @wata)
 
+#### - :nail_care: [Polish]
+
+- Updated packages
+
 ## [0.14.0] - 2020-03-25
 
 #### - :rocket: [New Feature]
