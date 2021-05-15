@@ -128,6 +128,21 @@ Remember that, this action doesn't remove the collection. It will override or ad
 firebase firestore:delete [options] <<path>>
 ```
 
+### Import / Restore Options
+
+This is the options for the restore function. All of them are optional.
+
+```javascript
+export interface IImportOptions {
+  dates?: string[]
+  autoParseDates?: boolean
+  geos?: string[]
+  autoParseGeos?: boolean
+  refs?: string[]
+  showLogs?: boolean
+}
+```
+
 #### For local JSON
 
 Usually the date, location & reference are not converted correctly when you backup the Firestore database. In order to import correctly, you have to pass to parameters for the options:

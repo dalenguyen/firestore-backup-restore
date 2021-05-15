@@ -7,6 +7,7 @@ import {
   IImportOptions,
   parseAndConvertDates,
   makeGeoPoint,
+  parseAndConvertGeos,
 } from './helper'
 
 /**
@@ -198,6 +199,10 @@ const startUpdating = (
         })
       }
     })
+  }
+
+  if (options.autoParseGeos) {
+    parseAndConvertGeos(data)
   }
 
   return new Promise((resolve, reject) => {
