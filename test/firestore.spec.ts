@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import request from 'request-promise'
 import { parseAndConvertDates, parseAndConvertGeos } from '../src/helper'
 import { serviceAccount } from './serviceAccount'
-import { backup, backups, initializeApp, restore } from '../dist'
+import { backup, backupFromDoc, backups, initializeApp, restore } from '../dist'
 import { firestore } from 'firebase-admin'
 // import { backup, backups, initializeApp, restore } from '../package/dist'
 
@@ -38,6 +38,16 @@ describe('initializeApp function test', () => {
     expect(Object.keys(all).length).is.equal(2)
   })
 
+  it('Backup from document', async () => {
+    const doc = await backupFromDoc('test', 'first-key')
+    // console.log(JSON.stringify(doc))
+
+    expect(JSON.stringify(doc)).contains('subCollection')
+    expect(JSON.stringify(doc)).contains('dungnq@itbox4vn.com')
+    expect(JSON.stringify(doc)).contains('test/first-key/details')
+    expect(JSON.stringify(doc)).contains('test/first-key/contacts')
+  })
+
   it('Backup with query', async () => {
     const queryByName = (collectionRef) =>
       collectionRef.where('name', '==', 'Dale Nguyen').get()
@@ -49,7 +59,7 @@ describe('initializeApp function test', () => {
     expect(Object.keys(users).length).is.equal(1)
   })
 
-  it('Backup with refernce key', async () => {
+  it('Backup with reference key', async () => {
     const users = await backup('users', {
       refs: ['ref', 'map.first-ref', 'map.second-ref', 'path.invalid'],
     })
@@ -69,21 +79,23 @@ describe('initializeApp function test', () => {
 
     const result = await backup('test')
 
-    expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com')
-    expect(result.test['first-key'].schedule.time._seconds).equals(1534046400)
-    expect(result.test['first-key'].three.level.time._seconds).equals(
+    expect(result['test']['first-key'].email).is.equal('dungnq@itbox4vn.com')
+    expect(result['test']['first-key'].schedule.time._seconds).equals(
       1534046400
     )
-    expect(typeof result.test['first-key'].secondRef).is.equal('object')
+    expect(result['test']['first-key'].three.level.time._seconds).equals(
+      1534046400
+    )
+    expect(typeof result['test']['first-key'].secondRef).is.equal('object')
     // locations
-    expect(result.test['first-key'].location._latitude).equal(49.290683)
-    expect(result.test['first-key'].locations[0]._latitude).equal(50.290683)
-    expect(result.test['first-key'].locations[1]._latitude).equal(51.290683)
-    expect(result.test['first-key'].locationNested.geopoint._latitude).equal(
+    expect(result['test']['first-key'].location._latitude).equal(49.290683)
+    expect(result['test']['first-key'].locations[0]._latitude).equal(50.290683)
+    expect(result['test']['first-key'].locations[1]._latitude).equal(51.290683)
+    expect(result['test']['first-key'].locationNested.geopoint._latitude).equal(
       49.290683
     )
     expect(
-      result.test['first-key'].subCollection['test/first-key/details'][
+      result['test']['first-key'].subCollection['test/first-key/details'][
         '33J2A10u5902CXagoBP6'
       ].dogName
     ).is.equal('hello')
@@ -99,21 +111,23 @@ describe('initializeApp function test', () => {
 
     const result = await backup('test')
 
-    expect(result.test['first-key'].email).is.equal('dungnq@itbox4vn.com')
-    expect(result.test['first-key'].schedule.time._seconds).equals(1534046400)
-    expect(result.test['first-key'].three.level.time._seconds).equals(
+    expect(result['test']['first-key'].email).is.equal('dungnq@itbox4vn.com')
+    expect(result['test']['first-key'].schedule.time._seconds).equals(
       1534046400
     )
-    expect(typeof result.test['first-key'].secondRef).is.equal('object')
+    expect(result['test']['first-key'].three.level.time._seconds).equals(
+      1534046400
+    )
+    expect(typeof result['test']['first-key'].secondRef).is.equal('object')
     // locations
-    expect(result.test['first-key'].location._latitude).equal(49.290683)
-    expect(result.test['first-key'].locations[0]._latitude).equal(50.290683)
-    expect(result.test['first-key'].locations[1]._latitude).equal(51.290683)
-    expect(result.test['first-key'].locationNested.geopoint._latitude).equal(
+    expect(result['test']['first-key'].location._latitude).equal(49.290683)
+    expect(result['test']['first-key'].locations[0]._latitude).equal(50.290683)
+    expect(result['test']['first-key'].locations[1]._latitude).equal(51.290683)
+    expect(result['test']['first-key'].locationNested.geopoint._latitude).equal(
       49.290683
     )
     expect(
-      result.test['first-key'].subCollection['test/first-key/details'][
+      result['test']['first-key'].subCollection['test/first-key/details'][
         '33J2A10u5902CXagoBP6'
       ].dogName
     ).is.equal('hello')
