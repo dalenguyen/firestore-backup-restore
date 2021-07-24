@@ -11,7 +11,18 @@
 
 ---
 
-## [0.15.0] - 2020-05-14
+## [0.16.0] - 2021-07-24
+
+#### - :rocket: [New Feature]
+
+- Adds backupFromDoc function to backup the document and subcollections (thank @davidbrenner)
+
+#### - :nail_care: [Polish]
+
+- Checked for empty subCollection
+- Applied generic type
+
+## [0.15.0] - 2021-05-14
 
 #### - :rocket: [New Feature]
 
@@ -21,7 +32,7 @@
 
 - Updated packages
 
-## [0.14.0] - 2020-03-25
+## [0.14.0] - 2021-03-25
 
 #### - :rocket: [New Feature]
 

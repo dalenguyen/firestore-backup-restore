@@ -6,10 +6,10 @@ import { getPath, IExportOptions, traverseObjects } from './helper'
  * Suggestion from jcummings2 and leningsv
  * @param {Array<string>} collectionNameArray
  */
-export const getAllCollections = async (
+export const getAllCollections = async <T>(
   collectionNameArray: string[],
   options?: IExportOptions
-): Promise<any> => {
+): Promise<T> => {
   const db = admin.firestore()
   // get all the root-level paths
   const snap = await db.listCollections()
@@ -21,7 +21,7 @@ export const getAllCollections = async (
   }
 
   // fetch in parallel
-  const promises: Promise<any>[] = []
+  const promises: Promise<unknown>[] = []
   paths.forEach((segment) => {
     const result = backup(segment, options)
     promises.push(result)
@@ -37,26 +37,21 @@ export const getAllCollections = async (
  *
  * @param {string} collectionName
  * @param {string} documentName
- * @returns {Promise<any>}
+ * @returns {Promise<T>}
  */
-export const backupFromDoc = async (
+export const backupFromDoc = async <T>(
   collectionName: string,
   documentName: string,
   options?: IExportOptions
-): Promise<any> => {
-  function addElement(ElementList: Object, element: Object) {
-    let newList = Object.assign(ElementList, element)
-    return newList
-  }
-
+): Promise<T> => {
   try {
     const db = admin.firestore()
     let data = {}
     data[collectionName] = {}
 
     const documentRef = db.collection(collectionName).doc(documentName)
-    const document = await documentRef.get();
-    const docs = [document];
+    const document = await documentRef.get()
+    const docs = [document]
 
     for (const doc of docs) {
       const subCollections = await doc.ref.listCollections()
@@ -89,21 +84,24 @@ export const backupFromDoc = async (
         }
       }
 
-      data[collectionName][doc.id]['subCollection'] = {}
+      if (subCollections.length > 0) {
+        data[collectionName][doc.id]['subCollection'] = {}
 
-      for (const subCol of subCollections) {
-        const subColData = await backup(
-          `${collectionName}/${documentName}/${subCol.id}`,
-          options
-        )
-        data[collectionName][doc.id]['subCollection'] = addElement(
-          data[collectionName][doc.id]['subCollection'],
-          subColData
-        )
+        for (const subCol of subCollections) {
+          const subColData = await backup<object>(
+            `${collectionName}/${documentName}/${subCol.id}`,
+            options
+          )
+
+          data[collectionName][doc.id]['subCollection'] = {
+            ...data[collectionName][doc.id]['subCollection'],
+            ...subColData,
+          }
+        }
       }
     }
 
-    return data
+    return data as T
   } catch (error) {
     console.error(error)
     throw new Error(error)
@@ -114,17 +112,12 @@ export const backupFromDoc = async (
  * Backup data from firestore
  *
  * @param {string} collectionName
- * @returns {Promise<any>}
+ * @returns {Promise<T>}
  */
-export const backup = async (
+export const backup = async <T>(
   collectionName: string,
   options?: IExportOptions
-): Promise<any> => {
-  function addElement(ElementList: Object, element: Object) {
-    let newList = Object.assign(ElementList, element)
-    return newList
-  }
-
+): Promise<T> => {
   try {
     const db = admin.firestore()
     let data = {}
@@ -171,21 +164,23 @@ export const backup = async (
         }
       }
 
-      data[collectionName][doc.id]['subCollection'] = {}
+      if (subCollections.length > 0) {
+        data[collectionName][doc.id]['subCollection'] = {}
+        for (const subCol of subCollections) {
+          const subColData = await backup<object>(
+            `${collectionName}/${doc.id}/${subCol.id}`,
+            options
+          )
 
-      for (const subCol of subCollections) {
-        const subColData = await backup(
-          `${collectionName}/${doc.id}/${subCol.id}`,
-          options
-        )
-        data[collectionName][doc.id]['subCollection'] = addElement(
-          data[collectionName][doc.id]['subCollection'],
-          subColData
-        )
+          data[collectionName][doc.id]['subCollection'] = {
+            ...data[collectionName][doc.id]['subCollection'],
+            ...subColData,
+          }
+        }
       }
     }
 
-    return data
+    return data as T
   } catch (error) {
     console.error(error)
     throw new Error(error)

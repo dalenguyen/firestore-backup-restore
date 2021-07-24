@@ -19,32 +19,13 @@ import {
 export const restore = (
   fileName: string | Object,
   options: IImportOptions
-): Promise<any> => {
+): Promise<{ status: boolean; message: string }> => {
   const db = admin.firestore()
 
-  return new Promise((resolve, reject) => {
-    if (typeof fileName === 'object') {
-      let dataObj = fileName
-
-      updateCollection(db, dataObj, options)
-        .then(() => {
-          resolve({
-            status: true,
-            message: 'Collection successfully imported!',
-          })
-        })
-        .catch((error) => {
-          reject({ status: false, message: error.message })
-        })
-    } else {
-      fs.readFile(fileName, 'utf8', function (err, data) {
-        if (err) {
-          console.log(err)
-          reject({ status: false, message: err.message })
-        }
-
-        // Turn string from file to an Array
-        let dataObj = JSON.parse(data)
+  return new Promise<{ status: boolean; message: string }>(
+    (resolve, reject) => {
+      if (typeof fileName === 'object') {
+        let dataObj = fileName
 
         updateCollection(db, dataObj, options)
           .then(() => {
@@ -56,9 +37,30 @@ export const restore = (
           .catch((error) => {
             reject({ status: false, message: error.message })
           })
-      })
+      } else {
+        fs.readFile(fileName, 'utf8', function (err, data) {
+          if (err) {
+            console.log(err)
+            reject({ status: false, message: err.message })
+          }
+
+          // Turn string from file to an Array
+          let dataObj = JSON.parse(data)
+
+          updateCollection(db, dataObj, options)
+            .then(() => {
+              resolve({
+                status: true,
+                message: 'Collection successfully imported!',
+              })
+            })
+            .catch((error) => {
+              reject({ status: false, message: error.message })
+            })
+        })
+      }
     }
-  }).catch((error) => console.error(error))
+  )
 }
 
 /**
@@ -77,7 +79,7 @@ const updateCollection = async (
     var collectionName = index
     for (var doc in dataObj[index]) {
       if (dataObj[index].hasOwnProperty(doc)) {
-        // asign document id for array type
+        // assign document id for array type
         let docId = Array.isArray(dataObj[index]) ? uuidv1() : doc
         if (!Array.isArray(dataObj[index])) {
           const subCollections = dataObj[index][docId]['subCollection']

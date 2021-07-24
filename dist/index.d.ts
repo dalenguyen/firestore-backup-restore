@@ -19,7 +19,7 @@ export { admin };
  * @param {IExportOptions} options
  * @return {json}
  */
-export declare const backup: (collectionName: string, options?: IExportOptions) => Promise<any>;
+export declare const backup: (collectionName: string, options?: IExportOptions) => Promise<unknown>;
 /**
  * Backup data from a specific firestore document specified by db.collection(collectionName).doc(documentName)
  *
@@ -28,16 +28,19 @@ export declare const backup: (collectionName: string, options?: IExportOptions) 
  * @param {IExportOptions} options
  * @return {json}
  */
-export declare const backupFromDoc: (collectionName: string, documentName: string, options?: IExportOptions) => Promise<any>;
+export declare const backupFromDoc: (collectionName: string, documentName: string, options?: IExportOptions) => Promise<unknown>;
 /**
  * Restore data to firestore
  * @param fileName
  * @param options
  */
-export declare const restore: (fileName: string | Object, options?: IImportOptions) => Promise<any>;
+export declare const restore: (fileName: string | Object, options?: IImportOptions) => Promise<{
+    status: boolean;
+    message: string;
+}>;
 /**
  * Get all collections data
  * @param {Array<string>} collectionNameArray
  * @param {IExportOptions} options
  */
-export declare const backups: (collectionNameArray?: Array<string>, options?: IExportOptions) => Promise<any>;
+export declare const backups: (collectionNameArray?: Array<string>, options?: IExportOptions) => Promise<unknown>;
