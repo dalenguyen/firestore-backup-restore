@@ -21,6 +21,7 @@
 
 - Checked for empty subCollection
 - Applied generic type
+- Updated packages
 
 ## [0.15.0] - 2021-05-14
 
