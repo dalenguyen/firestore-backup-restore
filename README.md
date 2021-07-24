@@ -80,6 +80,17 @@ backup('collection-name', options).then((data) =>
 )
 ```
 
+### Export data from document
+
+Backup a document with sub collections
+
+```javascript
+// you can pass options as a third option - optional
+backupFromDoc('collection-name', 'document-id').then((data) =>
+  console.log(JSON.stringify(data))
+)
+```
+
 Sub collections will be added under **'subCollection'** object.
 
 ### Get all collections data
