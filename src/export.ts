@@ -33,6 +33,84 @@ export const getAllCollections = async (
 }
 
 /**
+ * Backup data from a specific firestore document specified by db.collection(collectionName).doc(documentName)
+ *
+ * @param {string} collectionName
+ * @param {string} documentName
+ * @returns {Promise<any>}
+ */
+export const backupFromDoc = async (
+  collectionName: string,
+  documentName: string,
+  options?: IExportOptions
+): Promise<any> => {
+  function addElement(ElementList: Object, element: Object) {
+    let newList = Object.assign(ElementList, element)
+    return newList
+  }
+
+  try {
+    const db = admin.firestore()
+    let data = {}
+    data[collectionName] = {}
+
+    const documentRef = db.collection(collectionName).doc(documentName)
+    const document = await documentRef.get();
+    const docs = [document];
+
+    for (const doc of docs) {
+      const subCollections = await doc.ref.listCollections()
+
+      data[collectionName][doc.id] = doc.data()
+
+      if (options?.refs) {
+        for (const refKey of options?.refs) {
+          if (refKey.indexOf('.') > -1) {
+            traverseObjects(data, (value) => {
+              if (value.constructor?.name !== 'DocumentReference') {
+                return null
+              }
+              return getPath(value)
+            })
+          } else {
+            if (data[collectionName][doc.id][refKey]) {
+              if (Array.isArray(data[collectionName][doc.id][refKey])) {
+                for (let val of data[collectionName][doc.id][refKey]) {
+                  data[collectionName][doc.id][refKey] = getPath(val)
+                }
+              } else if (
+                typeof data[collectionName][doc.id][refKey].path === 'string'
+              ) {
+                data[collectionName][doc.id][refKey] =
+                  data[collectionName][doc.id][refKey].path
+              }
+            }
+          }
+        }
+      }
+
+      data[collectionName][doc.id]['subCollection'] = {}
+
+      for (const subCol of subCollections) {
+        const subColData = await backup(
+          `${collectionName}/${documentName}/${subCol.id}`,
+          options
+        )
+        data[collectionName][doc.id]['subCollection'] = addElement(
+          data[collectionName][doc.id]['subCollection'],
+          subColData
+        )
+      }
+    }
+
+    return data
+  } catch (error) {
+    console.error(error)
+    throw new Error(error)
+  }
+}
+
+/**
  * Backup data from firestore
  *
  * @param {string} collectionName

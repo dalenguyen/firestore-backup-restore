@@ -49,6 +49,18 @@ export const backup = (collectionName: string, options?: IExportOptions) => {
 }
 
 /**
+ * Backup data from a specific firestore document specified by db.collection(collectionName).doc(documentName)
+ *
+ * @param {string} collectionName
+ * @param {string} documentName
+ * @param {IExportOptions} options
+ * @return {json}
+ */
+export const backupFromDoc = (collectionName: string, documentName: string, options?: IExportOptions) => {
+  return backupService.backupFromDoc(collectionName, documentName, options)
+}
+
+/**
  * Restore data to firestore
  * @param fileName
  * @param options
