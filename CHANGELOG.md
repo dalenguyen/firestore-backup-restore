@@ -11,6 +11,14 @@
 
 ---
 
+## [0.17.0] - 2021-09-09
+
+#### - :rocket: [New Feature]
+
+#### - :nail_care: [Polish]
+
+- prevented runtime error when exported document has only sub-collections (#117 thank @asankha)
+
 ## [0.16.0] - 2021-07-24
 
 #### - :rocket: [New Feature]
