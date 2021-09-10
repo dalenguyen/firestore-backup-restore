@@ -56,7 +56,8 @@ export const backupFromDoc = async <T>(
     for (const doc of docs) {
       const subCollections = await doc.ref.listCollections()
 
-      data[collectionName][doc.id] = doc.data()
+      const d = doc.data()
+      data[collectionName][doc.id] = d ? d : {}
 
       if (options?.refs) {
         for (const refKey of options?.refs) {
