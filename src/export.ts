@@ -70,7 +70,7 @@ export const backupFromDoc = async <T>(
             if (data[collectionName][doc.id][refKey]) {
               if (Array.isArray(data[collectionName][doc.id][refKey])) {
                 for (let val of data[collectionName][doc.id][refKey]) {
-                  data[collectionName][doc.id][refKey] = getPath(val)
+                  data[collectionName][doc.id][refKey] = data[collectionName][doc.id][refKey].map((ref) => db.doc(ref));
                 }
               } else if (
                 typeof data[collectionName][doc.id][refKey].path === 'string'
