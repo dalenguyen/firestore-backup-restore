@@ -207,7 +207,7 @@ export const backup = async <T>(
     //}
     const promiseValues = await Promise.all(promises);
     promiseValues.forEach((dataMap) => {
-      data[collectionName] = Object.assign(data[collectionName], data)     
+      data[collectionName] = Object.assign(data[collectionName], dataMap)     
     })
 
     return data as T
