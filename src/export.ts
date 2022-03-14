@@ -109,7 +109,7 @@ export const backupFromDoc = async <T>(
 
 /**
  * backs up document with subcollections for parallelization
- * @param doc 
+ * @param doc
  * @param options
  * @param collectionPath
  */
@@ -119,55 +119,49 @@ export const backUpDocRef = async <T>(
   collectionPath: String,
   options?: IExportOptions
 ): Promise<T> => {
-      const subCollections = await doc.ref.listCollections()
-      let data = Object.assign({}, doc.data())
-      
+  const subCollections = await doc.ref.listCollections()
+  let data = Object.assign({}, doc.data())
 
-      if (options?.refs) {
-        for (const refKey of options?.refs) {
-          if (refKey.indexOf('.') > -1) {
-            traverseObjects(data, (value) => {
-              if (value.constructor?.name !== 'DocumentReference') {
-                return null
-              }
-              return getPath(value)
-            })
-          } else {
-            if (data[refKey]) {
-              if (Array.isArray(data[refKey])) {
-                for (let val of data[refKey]) {
-                  data[refKey] = getPath(val)
-                }
-              } else if (
-                typeof data[refKey].path === 'string'
-              ) {
-                data[refKey] =
-                  data[refKey].path
-              }
+  if (options?.refs) {
+    for (const refKey of options?.refs) {
+      if (refKey.indexOf('.') > -1) {
+        traverseObjects(data, (value) => {
+          if (value.constructor?.name !== 'DocumentReference') {
+            return null
+          }
+          return getPath(value)
+        })
+      } else {
+        if (data[refKey]) {
+          if (Array.isArray(data[refKey])) {
+            for (let val of data[refKey]) {
+              data[refKey] = getPath(val)
             }
+          } else if (typeof data[refKey].path === 'string') {
+            data[refKey] = data[refKey].path
           }
         }
       }
+    }
+  }
 
-      if (subCollections.length > 0) {
-        data['subCollection'] = {}
-        for (const subCol of subCollections) {
-          const subColData = await backup<object>(
-            `${collectionPath}/${doc.id}/${subCol.id}`,
-            options
-          )
+  if (subCollections.length > 0) {
+    data['subCollection'] = {}
+    for (const subCol of subCollections) {
+      const subColData = await backup<object>(
+        `${collectionPath}/${doc.id}/${subCol.id}`,
+        options
+      )
 
-          data['subCollection'] = {
-            ...data['subCollection'],
-            ...subColData,
-          }
-        }
+      data['subCollection'] = {
+        ...data['subCollection'],
+        ...subColData,
       }
-      let tR = {
-
-      }
-      tR[doc.id]=data;
-      return tR as T;
+    }
+  }
+  let tR = {}
+  tR[doc.id] = data
+  return tR as T
 }
 
 /**
@@ -187,7 +181,7 @@ export const backup = async <T>(
 
     const collectionRef = db.collection(collectionName)
     const documents: FirebaseFirestore.QuerySnapshot =
-      options?.queryCollection != null 
+      options?.queryCollection != null
         ? await options.queryCollection(collectionRef)
         : await collectionRef.get()
     const docs =
@@ -198,16 +192,16 @@ export const backup = async <T>(
     //fetch in parallel
     const promises: Promise<unknown>[] = []
     docs.forEach((doc) => {
-      const result = backUpDocRef(doc, collectionRef.path, options);
+      const result = backUpDocRef(doc, collectionRef.path, options)
       promises.push(result)
-    });
+    })
     //returns promises with structure
     //{
     //  $docID: $docData
     //}
-    const promiseValues = await Promise.all(promises);
+    const promiseValues = await Promise.all(promises)
     promiseValues.forEach((dataMap) => {
-      data[collectionName] = Object.assign(data[collectionName], dataMap)     
+      data[collectionName] = Object.assign(data[collectionName], dataMap)
     })
 
     return data as T

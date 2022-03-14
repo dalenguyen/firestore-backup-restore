@@ -11,6 +11,12 @@
 
 ---
 
+## [0.19.0] - 2021-03-13
+
+#### - :rocket: [New Feature]
+
+- Backup in parallel (Thanks, @CoachBenedetto)
+
 ## [0.18.0] - 2021-03-04
 
 #### - :nail_care: [Polish]
