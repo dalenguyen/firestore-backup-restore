@@ -14,8 +14,9 @@ export interface IExportOptions {
   docsFromEachCollection?: number
   refs?: string[]
   queryCollection?: (
-    ref: firestore.CollectionReference<firestore.DocumentData>
-  ) => Promise<firestore.QuerySnapshot<any>>
+    ref: FirebaseFirestore.CollectionReference
+  ) => Promise<FirebaseFirestore.QuerySnapshot>
+  
 }
 
 export const makeGeoPoint = (geoValues: {
