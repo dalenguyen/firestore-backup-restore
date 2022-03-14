@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin'
+import { getFirestore } from 'firebase-admin/firestore'
 import { getPath, IExportOptions, traverseObjects } from './helper'
 
 /**
@@ -10,7 +10,7 @@ export const getAllCollections = async <T>(
   collectionNameArray: string[],
   options?: IExportOptions
 ): Promise<T> => {
-  const db = admin.firestore()
+  const db = getFirestore()
   // get all the root-level paths
   const snap = await db.listCollections()
   let paths = collectionNameArray
@@ -45,7 +45,7 @@ export const backupFromDoc = async <T>(
   options?: IExportOptions
 ): Promise<T> => {
   try {
-    const db = admin.firestore()
+    const db = getFirestore()
     let data = {}
     data[collectionName] = {}
 
@@ -175,7 +175,7 @@ export const backup = async <T>(
   options?: IExportOptions
 ): Promise<T> => {
   try {
-    const db = admin.firestore()
+    const db = getFirestore()
     let data = {}
     data[collectionName] = {}
 

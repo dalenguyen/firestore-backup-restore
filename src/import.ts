@@ -1,6 +1,6 @@
+import { getFirestore } from 'firebase-admin/firestore';
 import * as fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
-import * as admin from 'firebase-admin'
 import {
   makeTime,
   traverseObjects,
@@ -20,7 +20,7 @@ export const restore = (
   fileName: string | Object,
   options: IImportOptions
 ): Promise<{ status: boolean; message: string }> => {
-  const db = admin.firestore()
+  const db = getFirestore()
 
   return new Promise<{ status: boolean; message: string }>(
     (resolve, reject) => {

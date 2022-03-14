@@ -1,5 +1,4 @@
-import { firestore } from 'firebase-admin'
-
+import { GeoPoint } from "firebase-admin/firestore"
 
 export interface IImportOptions {
   dates?: string[]
@@ -27,7 +26,7 @@ export const makeGeoPoint = (geoValues: {
     return null
   }
 
-  return new firestore.GeoPoint(geoValues._latitude, geoValues._longitude)
+  return new GeoPoint(geoValues._latitude, geoValues._longitude)
 }
 
 /**

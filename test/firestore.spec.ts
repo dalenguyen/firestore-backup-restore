@@ -2,11 +2,10 @@ import { expect } from 'chai'
 import request from 'request-promise'
 import { parseAndConvertDates, parseAndConvertGeos } from '../src/helper'
 import { serviceAccount } from './serviceAccount'
-import { backup, backupFromDoc, backups, initializeApp, restore } from '../dist'
+import { backup, backupFromDoc, backups, initializeFirebaseApp, restore } from '../dist'
 import { firestore } from 'firebase-admin'
-// import { backup, backups, initializeApp, restore } from '../package/dist'
 
-const app = initializeApp(serviceAccount)
+const app = initializeFirebaseApp(serviceAccount)
 const backupAPI =
   'https://firebasestorage.googleapis.com/v0/b/firbase-function-helper-qa.appspot.com/o/import-to-firestore.json?alt=media&token=a0530902-8983-45a4-90c2-72c345c7a3d5'
 

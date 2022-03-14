@@ -11,11 +11,19 @@
 
 ---
 
-## [0.19.0] - 2021-03-13
+## [1.0.0] - 2021-03-13
 
 #### - :rocket: [New Feature]
 
 - Backup in parallel (Thanks, @CoachBenedetto)
+
+#### - :nail_care: [Polish]
+
+- upgrade to new firebase-admin methods
+
+#### - :boom: [Breaking Change]
+
+- default initialize app to initializeFirebaseApp
 
 ## [0.18.0] - 2021-03-04
 
