@@ -11,6 +11,13 @@
 
 ---
 
+## [1.0.1] - 2021-03-20
+
+#### - :nail_care: [Polish]
+
+- update packages
+- potential fix for #128 (google-gax timeout error)
+
 ## [1.0.0] - 2021-03-13
 
 #### - :rocket: [New Feature]
