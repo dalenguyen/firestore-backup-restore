@@ -11,6 +11,14 @@
 
 ---
 
+## [1.1.0] - 2021-03-25
+
+#### - :nail_care: [Polish]
+
+- update readme (thanks, @h1r0mu)
+- refactor code
+- potential fix for #128
+
 ## [1.0.1] - 2021-03-20
 
 #### - :nail_care: [Polish]

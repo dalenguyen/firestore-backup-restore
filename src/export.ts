@@ -12,24 +12,19 @@ export const getAllCollections = async <T>(
 ): Promise<T> => {
   const db = getFirestore()
   // get all the root-level paths
-  const snap = await db.listCollections()
   let paths = collectionNameArray
 
   if (paths.length === 0) {
+    const snap = await db.listCollections()
     // get all collections
     snap.forEach((collection) => paths.push(collection.path))
   }
 
   // fetch in parallel
-  const promises: Promise<unknown>[] = []
-  paths.forEach((segment) => {
-    const result = backup(segment, options)
-    promises.push(result)
-  })
+  const promises: Promise<T>[] = paths.map((path) => backup<T>(path, options))
   // assemble the pieces into one object
   const value = await Promise.all(promises)
-  const all = Object.assign({}, ...value)
-  return all
+  return Object.assign({}, ...value)
 }
 
 /**
@@ -189,12 +184,10 @@ export const backup = async <T>(
         ? documents.docs.slice(0, options?.docsFromEachCollection)
         : documents.docs
 
-    //fetch in parallel
-    const promises: Promise<unknown>[] = []
-    docs.forEach((doc) => {
-      const result = backUpDocRef(doc, collectionRef.path, options)
-      promises.push(result)
-    })
+    // fetch in parallel
+    const promises = docs.map((doc) =>
+      backUpDocRef(doc, collectionRef.path, options)
+    )
     //returns promises with structure
     //{
     //  $docID: $docData
