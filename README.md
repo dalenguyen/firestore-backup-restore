@@ -33,7 +33,7 @@ You have to import this package in a JavaScript file and work from there.
 You have initialize the Firebase App in order to use Firestore service. It doesn't matter if you initialize it by using this plugin method or the offical way.
 
 ```javascript
-const { initializeApp } = require('firestore-export-import')
+const { initializeFirebaseApp } = require('firestore-export-import')
 
 const serviceAccount = require('./serviceAccountKey.json')
 
@@ -48,11 +48,11 @@ const options = {
 // Initiate Firebase App
 // appName is optional, you can omit it.
 const appName = '[DEFAULT]'
-initializeApp(serviceAccount, appName, options)
+initializeFirebaseApp(serviceAccount, appName, options)
 
 // the appName & options are OPTIONAL
 // you can initalize the app without them
-// initializeApp(serviceAccount)
+// initializeFirebaseApp(serviceAccount)
 ```
 
 ### Export data from firestore
@@ -182,13 +182,13 @@ After that, the data will be converted based on their types.
 
 ```javascript
 // In your index.js
-const { initializeApp, restore } = require('firestore-export-import')
+const { initializeFirebaseApp, restore } = require('firestore-export-import')
 const serviceAccount = require('./serviceAccountKey.json')
 
 // Initiate Firebase App
 // appName is optional, you can omit it.
 const appName = '[DEFAULT]'
-initializeApp(serviceAccount, databaseURL, appName)
+initializeFirebaseApp(serviceAccount, databaseURL, appName)
 
 // Start importing your data
 // The array of date, location and reference fields are optional
