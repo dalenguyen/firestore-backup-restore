@@ -88,6 +88,50 @@
         "_longitude": -123.133956
       },
       "email": "test@dalenguyen.me"
+    },
+    "third-key": {
+      "secondRef": "test/second-key",
+      "arrayRef": ["test/second-key", "test/second-key"],
+      "arrayNestedRef": [
+        {
+          "refs": "test/second-key"
+        },
+        {
+          "refs": "test/second-key",
+          "dogName": "popi"
+        },
+        { "dogName": "tata" },
+        {
+          "nestedRef": {
+            "refs": "test/second-key"
+          }
+        },
+        {
+          "nestedNestRef": {
+            "nestedRef": {
+              "refs": "test/second-key"
+            }
+          }
+        }
+      ],
+      "nestedRef": {
+        "secondRef": "test/second-key",
+        "array": ["test/first-key", "test/second-key"]
+      },
+      "nestedNestRef": {
+        "nestedRef": {
+          "array": ["test/first-key", "test/second-key"],
+
+          "secondRef": "test/second-key"
+        }
+      },
+      "nestedNestNestRef": {
+        "nestedNestRef": {
+          "nestedRef": {
+            "secondRef": "test/second-key"
+          }
+        }
+      }
     }
   }
 }

@@ -104,7 +104,18 @@ describe('initializeApp function test', () => {
     let status = await restore('test/import-to-firestore.json', {
       autoParseDates: true,
       geos: ['location', 'locations', 'locationNested.geopoints'],
-      refs: ['secondRef', 'arrayRef', 'nestedRef.secondRef'],
+      refs: [
+        'secondRef',
+        'arrayRef',
+        'arrayNestedRef.refs',
+        'arrayNestedRef.nestedRef.refs',
+        'arrayNestedRef.nestedNestRef.nestedRef.refs',
+        'nestedRef.secondRef',
+        'nestedRef.array',
+        'nestedNestRef.nestedRef.secondRef',
+        'nestedNestRef.nestedRef.array',
+        'nestedNestNestRef.nestedNestRef.nestedRef.secondRef',
+      ],
     })
     expect(status.status).ok
 
@@ -118,6 +129,10 @@ describe('initializeApp function test', () => {
       1534046400
     )
     expect(typeof result['test']['first-key'].secondRef).is.equal('object')
+    expect(typeof result['test']['third-key'].arrayNestedRef[0].refs).is.equal(
+      'object'
+    )
+
     // locations
     expect(result['test']['first-key'].location._latitude).equal(49.290683)
     expect(result['test']['first-key'].locations[0]._latitude).equal(50.290683)
