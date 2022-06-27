@@ -11,6 +11,45 @@
 
 ---
 
+## [1.2.0] - 2022-06-27
+
+#### - :rocket: [New Feature]
+
+- Add support for nested object & array, array of nested object (thanks, @Llolow)
+
+#### - :nail_care: [Polish]
+
+- update packages
+
+## [1.1.0] - 2021-03-25
+
+#### - :nail_care: [Polish]
+
+- update readme (thanks, @h1r0mu)
+- refactor code
+- potential fix for #128
+
+## [1.0.1] - 2021-03-20
+
+#### - :nail_care: [Polish]
+
+- update packages
+- potential fix for #128 (google-gax timeout error)
+
+## [1.0.0] - 2021-03-13
+
+#### - :rocket: [New Feature]
+
+- Backup in parallel (Thanks, @CoachBenedetto)
+
+#### - :nail_care: [Polish]
+
+- upgrade to new firebase-admin methods
+
+#### - :boom: [Breaking Change]
+
+- default initialize app to initializeFirebaseApp
+
 ## [0.18.0] - 2021-03-04
 
 #### - :nail_care: [Polish]

@@ -2,11 +2,10 @@ import { expect } from 'chai'
 import request from 'request-promise'
 import { parseAndConvertDates, parseAndConvertGeos } from '../src/helper'
 import { serviceAccount } from './serviceAccount'
-import { backup, backupFromDoc, backups, initializeApp, restore } from '../dist'
+import { backup, backupFromDoc, backups, initializeFirebaseApp, restore } from '../dist'
 import { firestore } from 'firebase-admin'
-// import { backup, backups, initializeApp, restore } from '../package/dist'
 
-const app = initializeApp(serviceAccount)
+const app = initializeFirebaseApp(serviceAccount)
 const backupAPI =
   'https://firebasestorage.googleapis.com/v0/b/firbase-function-helper-qa.appspot.com/o/import-to-firestore.json?alt=media&token=a0530902-8983-45a4-90c2-72c345c7a3d5'
 
@@ -105,7 +104,18 @@ describe('initializeApp function test', () => {
     let status = await restore('test/import-to-firestore.json', {
       autoParseDates: true,
       geos: ['location', 'locations', 'locationNested.geopoints'],
-      refs: ['secondRef', 'arrayRef', 'nestedRef.secondRef'],
+      refs: [
+        'secondRef',
+        'arrayRef',
+        'arrayNestedRef.refs',
+        'arrayNestedRef.nestedRef.refs',
+        'arrayNestedRef.nestedNestRef.nestedRef.refs',
+        'nestedRef.secondRef',
+        'nestedRef.array',
+        'nestedNestRef.nestedRef.secondRef',
+        'nestedNestRef.nestedRef.array',
+        'nestedNestNestRef.nestedNestRef.nestedRef.secondRef',
+      ],
     })
     expect(status.status).ok
 
@@ -119,6 +129,10 @@ describe('initializeApp function test', () => {
       1534046400
     )
     expect(typeof result['test']['first-key'].secondRef).is.equal('object')
+    expect(typeof result['test']['third-key'].arrayNestedRef[0].refs).is.equal(
+      'object'
+    )
+
     // locations
     expect(result['test']['first-key'].location._latitude).equal(49.290683)
     expect(result['test']['first-key'].locations[0]._latitude).equal(50.290683)

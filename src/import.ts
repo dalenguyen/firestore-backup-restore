@@ -1,6 +1,6 @@
+import { getFirestore } from 'firebase-admin/firestore'
 import * as fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
-import * as admin from 'firebase-admin'
 import {
   makeTime,
   traverseObjects,
@@ -20,7 +20,7 @@ export const restore = (
   fileName: string | Object,
   options: IImportOptions
 ): Promise<{ status: boolean; message: string }> => {
-  const db = admin.firestore()
+  const db = getFirestore()
 
   return new Promise<{ status: boolean; message: string }>(
     (resolve, reject) => {
@@ -84,13 +84,17 @@ const updateCollection = async (
         if (!Array.isArray(dataObj[index])) {
           const subCollections = dataObj[index][docId]['subCollection']
           delete dataObj[index][doc]['subCollection']
-          await startUpdating(
-            db,
-            collectionName,
-            docId,
-            dataObj[index][doc],
-            options
-          )
+          try {
+            await startUpdating(
+              db,
+              collectionName,
+              docId,
+              dataObj[index][doc],
+              options
+            )
+          } catch (error) {
+            console.log
+          }
 
           if (subCollections) {
             await updateCollection(db, subCollections, options)
@@ -176,6 +180,39 @@ const startUpdating = (
         } else {
           data[ref] = db.doc(data[ref])
         }
+      } else if (data.hasOwnProperty(ref.split('.')[0])) {
+        // Nested object ref let test each element
+        ref.split('.').reduce((prev, curr, index) => {
+          // check if the data is array of object
+          if (Array.isArray(prev)) {
+            // If we have array at root we test each element
+            return prev.reduce((acc, c) => {
+              if (typeof c[curr] === 'string') {
+                // if is string transform them in refs
+                c[curr] = db.doc(c[curr])
+              } else if (typeof c[curr] === 'object') {
+                // if is object return the object for next callback of reduce
+                return (acc = c[curr])
+              } else {
+                // if it's undefined beacause the properties not exist return the object
+                return acc
+              }
+            }, {})
+          } else {
+            if (
+              Array.isArray(prev[curr]) &&
+              ref.split('.').length === index + 1
+            ) {
+              // If we have array at seconds transform them in refs
+              prev[curr] = prev[curr].map((e) => db.doc(e))
+            } else if (ref.split('.').length === index + 1) {
+              // Transform in ref if we are at last ref
+              return (prev[curr] = db.doc(prev[curr]))
+            } else {
+              return (prev[curr] = prev[curr])
+            }
+          }
+        }, data)
       }
     })
   }
