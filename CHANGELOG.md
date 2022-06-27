@@ -11,6 +11,16 @@
 
 ---
 
+## [1.2.0] - 2022-06-27
+
+#### - :rocket: [New Feature]
+
+- Add support for nested object & array, array of nested object (thanks, @Llolow)
+
+#### - :nail_care: [Polish]
+
+- update packages
+
 ## [1.1.0] - 2021-03-25
 
 #### - :nail_care: [Polish]
