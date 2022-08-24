@@ -4,16 +4,47 @@ on:
     types: [created]
 jobs:
   build:
+    name: Deploy to NPM
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2.2.2
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
-      - run: yarn
-      - run: yarn build
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          version: 7
+
+      - name: node_modules cache
+        uses: actions/cache@v3
+        id: node_modules-cache
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: pnpm cache
+        if: steps.node_modules-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        id: pnpm-store
+        with:
+          path: ~/.pnpm-store/v3
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Publish
+        run: pnpm publish
+
+        
