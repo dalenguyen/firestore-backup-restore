@@ -11,6 +11,12 @@
 
 ---
 
+## [1.2.1] - 2022-08-24
+
+#### - :nail_care: [Polish]
+
+- utilize pnpm instead of yarn
+
 ## [1.2.0] - 2022-06-27
 
 #### - :rocket: [New Feature]
