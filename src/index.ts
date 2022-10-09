@@ -1,8 +1,8 @@
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import {getFirestore} from 'firebase-admin/firestore'
-import * as restoreService from './import'
-import * as backupService from './export'
+import { backupFromDocService, getAllCollectionsService, backupService } from './export';
 import { IExportOptions, IImportOptions } from './helper'
+import { restoreService } from './import';
 
 interface IInitializeAppOptions {
   firestore?: FirebaseFirestore.Settings
@@ -44,8 +44,8 @@ export const initializeFirebaseApp = (
  * @param {IExportOptions} options
  * @return {json}
  */
-export const backup = (collectionName: string, options?: IExportOptions) => {
-  return backupService.backup(collectionName, options)
+export const backup = <T>(collectionName: string, options?: IExportOptions) => {
+  return backupService<T>(collectionName, options)
 }
 
 /**
@@ -56,8 +56,8 @@ export const backup = (collectionName: string, options?: IExportOptions) => {
  * @param {IExportOptions} options
  * @return {json}
  */
-export const backupFromDoc = (collectionName: string, documentName: string, options?: IExportOptions) => {
-  return backupService.backupFromDoc(collectionName, documentName, options)
+export const backupFromDoc = <T>(collectionName: string, documentName: string, options?: IExportOptions) => {
+  return backupFromDocService<T>(collectionName, documentName, options)
 }
 
 /**
@@ -69,7 +69,7 @@ export const restore = (
   fileName: string | Object,
   options: IImportOptions = {}
 ) => {
-  return restoreService.restore(fileName, options)
+  return restoreService(fileName, options)
 }
 
 /**
@@ -77,9 +77,9 @@ export const restore = (
  * @param {Array<string>} collectionNameArray
  * @param {IExportOptions} options
  */
-export const backups = (
+export const backups = <T>(
   collectionNameArray: Array<string> = [],
   options?: IExportOptions
 ) => {
-  return backupService.getAllCollections(collectionNameArray, options)
+  return getAllCollectionsService<T>(collectionNameArray, options)
 }

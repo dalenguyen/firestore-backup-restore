@@ -11,6 +11,13 @@
 
 ---
 
+## [1.3.0] - 2022-10-09
+
+#### - :nail_care: [Polish]
+
+- turn the package to use es module
+- update packages
+
 ## [1.2.1] - 2022-08-24
 
 #### - :nail_care: [Polish]

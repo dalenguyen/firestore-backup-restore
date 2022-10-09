@@ -1,5 +1,5 @@
 import { getFirestore } from 'firebase-admin/firestore'
-import * as fs from 'fs'
+import fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
 import {
   makeTime,
@@ -16,7 +16,7 @@ import {
  * @param {string} fileName
  * @param {IImportOptions} options
  */
-export const restore = (
+export const restoreService = (
   fileName: string | Object,
   options: IImportOptions
 ): Promise<{ status: boolean; message: string }> => {
@@ -75,9 +75,9 @@ const updateCollection = async (
   dataObj: object,
   options: IImportOptions = {}
 ) => {
-  for (var index in dataObj) {
-    var collectionName = index
-    for (var doc in dataObj[index]) {
+  for (const index in dataObj) {
+    let collectionName = index
+    for (const doc in dataObj[index]) {
       if (dataObj[index].hasOwnProperty(doc)) {
         // assign document id for array type
         let docId = Array.isArray(dataObj[index]) ? uuidv1() : doc
@@ -93,7 +93,7 @@ const updateCollection = async (
               options
             )
           } catch (error) {
-            console.log
+            console.error(error)
           }
 
           if (subCollections) {
@@ -171,12 +171,12 @@ const startUpdating = (
   }
 
   // reference key
-  if (options.refs && options.refs.length > 0) {
+  if (options.refs?.length) {
     options.refs.forEach((ref) => {
       if (data.hasOwnProperty(ref)) {
         // check type of the reference
         if (Array.isArray(data[ref])) {
-          data[ref] = data[ref].map((ref) => db.doc(ref))
+          data[ref] = data[ref].map((dataRef) => db.doc(dataRef))
         } else {
           data[ref] = db.doc(data[ref])
         }
@@ -205,11 +205,12 @@ const startUpdating = (
             ) {
               // If we have array at seconds transform them in refs
               prev[curr] = prev[curr].map((e) => db.doc(e))
-            } else if (ref.split('.').length === index + 1) {
+            } else if (ref.split('.').length === index + 1 && prev[curr]) {
               // Transform in ref if we are at last ref
               return (prev[curr] = db.doc(prev[curr]))
             } else {
-              return (prev[curr] = prev[curr])
+              // If pre[curr] is undefined, set it to null
+              return (prev[curr] = prev[curr] || null)
             }
           }
         }, data)
