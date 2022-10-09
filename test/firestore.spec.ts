@@ -1,9 +1,9 @@
 import { expect } from 'chai'
+import { GeoPoint } from 'firebase-admin/firestore'
 import request from 'request-promise'
-import { parseAndConvertDates, parseAndConvertGeos } from '../src/helper'
-import { serviceAccount } from './serviceAccount'
 import { backup, backupFromDoc, backups, initializeFirebaseApp, restore } from '../dist'
-import { firestore } from 'firebase-admin'
+import { parseAndConvertDates, parseAndConvertGeos } from '../dist/helper'
+import { serviceAccount } from './serviceAccount'
 
 const app = initializeFirebaseApp(serviceAccount)
 const backupAPI =
@@ -253,7 +253,7 @@ describe('initializeApp function test', () => {
       },
     }
     parseAndConvertGeos(data)
-    expect(data.location).to.be.an.instanceOf(firestore.GeoPoint)
+    expect(data.location).to.be.an.instanceOf(GeoPoint)
   })
 
   it('Test auto parse geos option - nested', async () => {
@@ -272,8 +272,8 @@ describe('initializeApp function test', () => {
       },
     }
     parseAndConvertGeos(data)
-    expect(data.location).to.be.an.instanceOf(firestore.GeoPoint)
-    expect(data.obj.anotherObj.location).to.be.an.instanceOf(firestore.GeoPoint)
+    expect(data.location).to.be.an.instanceOf(GeoPoint)
+    expect(data.obj.anotherObj.location).to.be.an.instanceOf(GeoPoint)
   })
 
   it('Test auto parse geos option - nested arrays', async () => {
@@ -286,7 +286,7 @@ describe('initializeApp function test', () => {
       ],
     }
     parseAndConvertGeos(data)
-    expect(data.arr[0]).to.be.an.instanceOf(firestore.GeoPoint)
+    expect(data.arr[0]).to.be.an.instanceOf(GeoPoint)
   })
 
   it('Test auto parse geos option - nested array objects', async () => {
@@ -311,7 +311,7 @@ describe('initializeApp function test', () => {
       ],
     }
     parseAndConvertGeos(data)
-    expect(data.arr[0].obj.location).to.be.an.instanceOf(firestore.GeoPoint)
-    expect(data.arr[1].obj.location).to.be.an.instanceOf(firestore.GeoPoint)
+    expect(data.arr[0].obj.location).to.be.an.instanceOf(GeoPoint)
+    expect(data.arr[1].obj.location).to.be.an.instanceOf(GeoPoint)
   })
 })

@@ -6,7 +6,7 @@ import { getPath, IExportOptions, traverseObjects } from './helper'
  * Suggestion from jcummings2 and leningsv
  * @param {Array<string>} collectionNameArray
  */
-export const getAllCollections = async <T>(
+export const getAllCollectionsService = async <T>(
   collectionNameArray: string[],
   options?: IExportOptions
 ): Promise<T> => {
@@ -21,7 +21,7 @@ export const getAllCollections = async <T>(
   }
 
   // fetch in parallel
-  const promises: Promise<T>[] = paths.map((path) => backup<T>(path, options))
+  const promises: Promise<T>[] = paths.map((path) => backupService<T>(path, options))
   // assemble the pieces into one object
   const value = await Promise.all(promises)
   return Object.assign({}, ...value)
@@ -34,7 +34,7 @@ export const getAllCollections = async <T>(
  * @param {string} documentName
  * @returns {Promise<T>}
  */
-export const backupFromDoc = async <T>(
+export const backupFromDocService = async <T>(
   collectionName: string,
   documentName: string,
   options?: IExportOptions
@@ -82,7 +82,7 @@ export const backupFromDoc = async <T>(
         data[collectionName][doc.id]['subCollection'] = {}
 
         for (const subCol of subCollections) {
-          const subColData = await backup<object>(
+          const subColData = await backupService<object>(
             `${collectionName}/${documentName}/${subCol.id}`,
             options
           )
@@ -143,7 +143,7 @@ export const backUpDocRef = async <T>(
   if (subCollections.length > 0) {
     data['subCollection'] = {}
     for (const subCol of subCollections) {
-      const subColData = await backup<object>(
+      const subColData = await backupService<object>(
         `${collectionPath}/${doc.id}/${subCol.id}`,
         options
       )
@@ -165,7 +165,7 @@ export const backUpDocRef = async <T>(
  * @param {string} collectionName
  * @returns {Promise<T>}
  */
-export const backup = async <T>(
+export const backupService = async <T>(
   collectionName: string,
   options?: IExportOptions
 ): Promise<T> => {

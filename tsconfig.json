@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
     "lib": ["es2020"],
-    "module": "commonjs",
+    "module": "ESNext",
     "noImplicitReturns": true,    
     "esModuleInterop": true,
     "outDir": "dist",
     "sourceMap": true,
     "target": "es5",
     "declaration": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
     "types": [
       "mocha", "node"
     ]
