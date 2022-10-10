@@ -8,7 +8,7 @@ import {
   parseAndConvertDates,
   makeGeoPoint,
   parseAndConvertGeos,
-} from './helper'
+} from './helper.js'
 
 /**
  * Restore data to firestore

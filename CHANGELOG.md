@@ -11,6 +11,12 @@
 
 ---
 
+## [1.3.4] - 2022-10-09
+
+#### - :bug: [Bug Fix]
+
+- fix import link & use commonjs
+
 ## [1.3.0] - 2022-10-09
 
 #### - :nail_care: [Polish]
