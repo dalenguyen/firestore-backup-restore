@@ -1,5 +1,5 @@
 import { getFirestore } from 'firebase-admin/firestore'
-import { getPath, IExportOptions, traverseObjects } from './helper'
+import { getPath, IExportOptions, traverseObjects } from './helper.js'
 
 /**
  * Get data from all collections

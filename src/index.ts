@@ -1,8 +1,8 @@
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import {getFirestore} from 'firebase-admin/firestore'
-import { backupFromDocService, getAllCollectionsService, backupService } from './export';
-import { IExportOptions, IImportOptions } from './helper'
-import { restoreService } from './import';
+import { backupFromDocService, getAllCollectionsService, backupService } from './export.js';
+import { IExportOptions, IImportOptions } from './helper.js'
+import { restoreService } from './import.js';
 
 interface IInitializeAppOptions {
   firestore?: FirebaseFirestore.Settings
