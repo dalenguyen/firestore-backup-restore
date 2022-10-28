@@ -11,6 +11,12 @@
 
 ---
 
+## [1.3.5] - 2022-10-28
+
+#### - :bug: [Bug Fix]
+
+- fix unable to get subCollection data if setting queryCollection in export options (thank @leoleelf)
+
 ## [1.3.4] - 2022-10-09
 
 #### - :bug: [Bug Fix]
