@@ -142,10 +142,14 @@ export const backUpDocRef = async <T>(
 
   if (subCollections.length > 0) {
     data['subCollection'] = {}
+    const subColOptions = {...options};
+    if (subColOptions?.queryCollection) {
+      delete subColOptions.queryCollection;
+    }
     for (const subCol of subCollections) {
       const subColData = await backupService<object>(
         `${collectionPath}/${doc.id}/${subCol.id}`,
-        options
+        subColOptions
       )
 
       data['subCollection'] = {
