@@ -1,8 +1,12 @@
-import { cert, getApps, initializeApp } from 'firebase-admin/app';
-import {getFirestore} from 'firebase-admin/firestore'
-import { backupFromDocService, getAllCollectionsService, backupService } from './export.js';
+import { cert, getApps, initializeApp } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
+import {
+  backupFromDocService,
+  getAllCollectionsService,
+  backupService,
+} from './export.js'
 import { IExportOptions, IImportOptions } from './helper.js'
-import { restoreService } from './import.js';
+import { restoreService } from './import.js'
 
 interface IInitializeAppOptions {
   firestore?: FirebaseFirestore.Settings
@@ -21,10 +25,7 @@ export const initializeFirebaseApp = (
   options: IInitializeAppOptions = {}
 ) => {
   const apps = getApps()
-  if (
-    apps.length === 0 ||
-    (apps.length > 0 && apps[0].name !== name)
-  ) {
+  if (apps.length === 0 || (apps.length > 0 && apps[0].name !== name)) {
     initializeApp(
       {
         credential: cert(serviceAccount),
@@ -32,7 +33,10 @@ export const initializeFirebaseApp = (
       },
       name
     )
-    getFirestore().settings({ timestampsInSnapshots: true, ...options.firestore })
+    getFirestore().settings({
+      timestampsInSnapshots: true,
+      ...options.firestore,
+    })
   }
   return true
 }
@@ -56,7 +60,11 @@ export const backup = <T>(collectionName: string, options?: IExportOptions) => {
  * @param {IExportOptions} options
  * @return {json}
  */
-export const backupFromDoc = <T>(collectionName: string, documentName: string, options?: IExportOptions) => {
+export const backupFromDoc = <T>(
+  collectionName: string,
+  documentName: string,
+  options?: IExportOptions
+) => {
   return backupFromDocService<T>(collectionName, documentName, options)
 }
 
