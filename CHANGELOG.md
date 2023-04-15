@@ -11,6 +11,12 @@
 
 ---
 
+## [1.3.7] - 2023-04-15
+
+#### - :nail_care: [Polish]
+
+- update packages
+
 ## [1.3.5] - 2022-10-28
 
 #### - :bug: [Bug Fix]
