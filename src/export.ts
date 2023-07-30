@@ -1,4 +1,4 @@
-import { getFirestore } from 'firebase-admin/firestore'
+import { Firestore } from 'firebase-admin/firestore'
 import { getPath, IExportOptions, traverseObjects } from './helper.js'
 
 /**
@@ -7,10 +7,10 @@ import { getPath, IExportOptions, traverseObjects } from './helper.js'
  * @param {Array<string>} collectionNameArray
  */
 export const getAllCollectionsService = async <T>(
+  db: Firestore,
   collectionNameArray: string[],
   options?: IExportOptions
 ): Promise<T> => {
-  const db = getFirestore()
   // get all the root-level paths
   let paths = collectionNameArray
 
@@ -21,7 +21,9 @@ export const getAllCollectionsService = async <T>(
   }
 
   // fetch in parallel
-  const promises: Promise<T>[] = paths.map((path) => backupService<T>(path, options))
+  const promises: Promise<T>[] = paths.map((path) =>
+    backupService<T>(db, path, options)
+  )
   // assemble the pieces into one object
   const value = await Promise.all(promises)
   return Object.assign({}, ...value)
@@ -35,12 +37,12 @@ export const getAllCollectionsService = async <T>(
  * @returns {Promise<T>}
  */
 export const backupFromDocService = async <T>(
+  db: Firestore,
   collectionName: string,
   documentName: string,
   options?: IExportOptions
 ): Promise<T> => {
   try {
-    const db = getFirestore()
     let data = {}
     data[collectionName] = {}
 
@@ -83,6 +85,7 @@ export const backupFromDocService = async <T>(
 
         for (const subCol of subCollections) {
           const subColData = await backupService<object>(
+            db,
             `${collectionName}/${documentName}/${subCol.id}`,
             options
           )
@@ -110,6 +113,7 @@ export const backupFromDocService = async <T>(
  */
 
 export const backUpDocRef = async <T>(
+  db: Firestore,
   doc: FirebaseFirestore.QueryDocumentSnapshot,
   collectionPath: String,
   options?: IExportOptions
@@ -142,12 +146,13 @@ export const backUpDocRef = async <T>(
 
   if (subCollections.length > 0) {
     data['subCollection'] = {}
-    const subColOptions = {...options};
+    const subColOptions = { ...options }
     if (subColOptions?.queryCollection) {
-      delete subColOptions.queryCollection;
+      delete subColOptions.queryCollection
     }
     for (const subCol of subCollections) {
       const subColData = await backupService<object>(
+        db,
         `${collectionPath}/${doc.id}/${subCol.id}`,
         subColOptions
       )
@@ -170,11 +175,11 @@ export const backUpDocRef = async <T>(
  * @returns {Promise<T>}
  */
 export const backupService = async <T>(
+  db: Firestore,
   collectionName: string,
   options?: IExportOptions
 ): Promise<T> => {
   try {
-    const db = getFirestore()
     let data = {}
     data[collectionName] = {}
 
@@ -190,7 +195,7 @@ export const backupService = async <T>(
 
     // fetch in parallel
     const promises = docs.map((doc) =>
-      backUpDocRef(doc, collectionRef.path, options)
+      backUpDocRef(db, doc, collectionRef.path, options)
     )
     //returns promises with structure
     //{
