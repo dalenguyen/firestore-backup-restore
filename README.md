@@ -47,11 +47,11 @@ const options = {
 // Initiate Firebase App
 // appName is optional, you can omit it.
 const appName = '[DEFAULT]'
-initializeFirebaseApp(serviceAccount, appName, options)
+const firestore = initializeFirebaseApp(serviceAccount, appName, options)
 
 // the appName & options are OPTIONAL
-// you can initalize the app without them
-// initializeFirebaseApp(serviceAccount)
+// you can initialize the app without them
+// const firestore = initializeFirebaseApp(serviceAccount)
 ```
 
 ### Export data from firestore
@@ -74,7 +74,7 @@ const options = {
 const { backup } = require('firestore-export-import')
 
 // Start exporting your data
-backup('collection-name', options).then((data) =>
+backup(firestore, 'collection-name', options).then((data) =>
   console.log(JSON.stringify(data))
 )
 ```
@@ -85,7 +85,7 @@ Backup a document with sub collections
 
 ```javascript
 // you can pass options as a third option - optional
-backupFromDoc('collection-name', 'document-id').then((data) =>
+backupFromDoc(firestore, 'collection-name', 'document-id').then((data) =>
   console.log(JSON.stringify(data))
 )
 ```
@@ -103,7 +103,7 @@ The result is an object of collection's data.
 ```javascript
 const { backups } = require('firestore-export-import')
 
-backups(['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
+backups(firestore, ['collectionName1', 'collectionName2']) // Array of collection's name is OPTIONAL
   .then((collections) => {
     // You can do whatever you want with collections
     console.log(JSON.stringify(collections))
@@ -118,7 +118,7 @@ You are can back update based on query criteria. In this example, I am backing u
 const queryByName = (collectionRef) =>
   collectionRef.where('name', '==', 'Dale Nguyen').get()
 
-const users = await backup('users', {
+const users = await backup(firestore, 'users', {
   queryCollection: queryByName,
 })
 ```
@@ -187,11 +187,11 @@ const serviceAccount = require('./serviceAccountKey.json')
 // Initiate Firebase App
 // appName is optional, you can omit it.
 const appName = '[DEFAULT]'
-initializeFirebaseApp(serviceAccount, databaseURL, appName)
+const firestore = initializeFirebaseApp(serviceAccount, databaseURL, appName)
 
 // Start importing your data
 // The array of date, location and reference fields are optional
-restore('your-file-path.json', {
+restore(firestore, 'your-file-path.json', {
   dates: ['date1', 'date1.date2', 'date1.date2.date3'],
   geos: ['location', 'locations'],
   refs: ['refKey', 'arrayRef'],
@@ -204,13 +204,13 @@ restore('your-file-path.json', {
 import request from 'request-promise';
 ...
 const backupData = await request('JSON-URL');
-const status = await restore(JSON.parse(backupData), {
+const status = await restore(firestore, JSON.parse(backupData), {
   dates: ['date'],
   geos: ['location']
 });
 ```
 
-The JSON is formated as below. The collection name is **test**. **first-key** and **second-key** are document ids.
+The JSON is formatted as below. The collection name is **test**. **first-key** and **second-key** are document ids.
 
 ```json
 {
