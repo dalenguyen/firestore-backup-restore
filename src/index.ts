@@ -1,5 +1,11 @@
-import { cert, getApps, initializeApp } from 'firebase-admin/app'
-import { getFirestore } from 'firebase-admin/firestore'
+import {
+  cert,
+  getApps,
+  initializeApp,
+  AppOptions,
+  App,
+} from 'firebase-admin/app'
+import { Firestore, getFirestore } from 'firebase-admin/firestore'
 import {
   backupFromDocService,
   getAllCollectionsService,
@@ -18,27 +24,41 @@ interface IInitializeAppOptions {
  * @param {object} serviceAccount
  * @param {string} name
  * @param {IInitializeAppOptions} options
+ *
+ * @return Firestore
  */
 export const initializeFirebaseApp = (
-  serviceAccount: object,
+  serviceAccount?: AppOptions | null,
   name = '[DEFAULT]',
   options: IInitializeAppOptions = {}
-) => {
+): Firestore => {
   const apps = getApps()
   if (apps.length === 0 || (apps.length > 0 && apps[0].name !== name)) {
-    initializeApp(
-      {
-        credential: cert(serviceAccount),
-        databaseURL: serviceAccount['databaseURL'],
-      },
-      name
-    )
-    getFirestore().settings({
+    // if serviceAccount is passed, initialize app with serviceAccount
+    let app: App
+    if (serviceAccount) {
+      app = initializeApp(
+        {
+          credential: cert(serviceAccount),
+          databaseURL: serviceAccount['databaseURL'],
+        },
+        name
+      )
+    } else {
+      app = initializeApp(undefined, name)
+    }
+
+    const firestore = getFirestore(app)
+
+    firestore.settings({
       timestampsInSnapshots: true,
       ...options.firestore,
     })
+  } else {
+    console.warn(`Firebase App exist. Return default firestore instance`)
   }
-  return true
+
+  return getFirestore(apps[0])
 }
 
 /**
@@ -48,8 +68,12 @@ export const initializeFirebaseApp = (
  * @param {IExportOptions} options
  * @return {json}
  */
-export const backup = <T>(collectionName: string, options?: IExportOptions) => {
-  return backupService<T>(collectionName, options)
+export const backup = <T>(
+  db: Firestore,
+  collectionName: string,
+  options?: IExportOptions
+) => {
+  return backupService<T>(db, collectionName, options)
 }
 
 /**
@@ -61,11 +85,12 @@ export const backup = <T>(collectionName: string, options?: IExportOptions) => {
  * @return {json}
  */
 export const backupFromDoc = <T>(
+  db: Firestore,
   collectionName: string,
   documentName: string,
   options?: IExportOptions
 ) => {
-  return backupFromDocService<T>(collectionName, documentName, options)
+  return backupFromDocService<T>(db, collectionName, documentName, options)
 }
 
 /**
@@ -74,10 +99,11 @@ export const backupFromDoc = <T>(
  * @param options
  */
 export const restore = (
+  db: Firestore,
   fileName: string | Object,
   options: IImportOptions = {}
 ) => {
-  return restoreService(fileName, options)
+  return restoreService(db, fileName, options)
 }
 
 /**
@@ -86,8 +112,9 @@ export const restore = (
  * @param {IExportOptions} options
  */
 export const backups = <T>(
+  db: Firestore,
   collectionNameArray: Array<string> = [],
   options?: IExportOptions
 ) => {
-  return getAllCollectionsService<T>(collectionNameArray, options)
+  return getAllCollectionsService<T>(db, collectionNameArray, options)
 }

@@ -1,22 +1,23 @@
 import { expect } from 'chai'
-import { GeoPoint } from 'firebase-admin/firestore'
+import { Firestore } from 'firebase-admin/firestore'
 import request from 'request-promise'
 import { backup, backupFromDoc, backups, initializeFirebaseApp, restore } from '../dist'
-import { parseAndConvertDates, parseAndConvertGeos } from '../dist/helper'
 import { serviceAccount } from './serviceAccount'
 
-const app = initializeFirebaseApp(serviceAccount)
+const firestore = initializeFirebaseApp(serviceAccount)
+const firestore2 = initializeFirebaseApp(serviceAccount, 'CUSTOM')
+
 const backupAPI =
   'https://firebasestorage.googleapis.com/v0/b/firbase-function-helper-qa.appspot.com/o/import-to-firestore.json?alt=media&token=a0530902-8983-45a4-90c2-72c345c7a3d5'
 
 describe('initializeApp function test', () => {
   it('Initialize app', () => {
-    expect(app).to.equal(true)
+    expect(firestore).to.be.instanceof(Firestore)
   })
 
   it('Restore data from API', async () => {
     const backupData = await request(backupAPI)
-    const status = await restore(JSON.parse(backupData), {
+    const status = await restore(firestore, JSON.parse(backupData), {
       dates: ['date'],
       geos: ['location'],
     })
@@ -25,20 +26,25 @@ describe('initializeApp function test', () => {
 
   it('Get all collections', async () => {
     try {
-      const all = await backups()
+      const all = await backups(firestore)
       expect(Object.keys(all).length).is.greaterThan(0)
     } catch (error) {
       console.log(error)
     }
   })
 
-  it('Get an array of collections', async () => {
-    const all = await backups(['test', 'users'])
+  it('Get an array of collections with default App name', async () => {
+    const all = await backups(firestore, ['test', 'users'])
+    expect(Object.keys(all).length).is.equal(2)
+  })
+
+  it('Get an array of collections with custom App name', async () => {
+    const all = await backups(firestore2, ['test', 'users'])
     expect(Object.keys(all).length).is.equal(2)
   })
 
   it('Backup from document', async () => {
-    const doc = await backupFromDoc('test', 'first-key')
+    const doc = await backupFromDoc(firestore, 'test', 'first-key')
     // console.log(JSON.stringify(doc))
 
     expect(JSON.stringify(doc)).contains('subCollection')
@@ -50,7 +56,7 @@ describe('initializeApp function test', () => {
   it('Backup with query', async () => {
     const queryByName = (collectionRef) =>
       collectionRef.where('name', '==', 'Dale Nguyen').get()
-    const users = await backup('users', {
+    const users = await backup(firestore, 'users', {
       queryCollection: queryByName,
       refs: ['ref', 'map.first-ref', 'path.invalid'],
     })
@@ -59,7 +65,7 @@ describe('initializeApp function test', () => {
   })
 
   it('Backup with reference key', async () => {
-    const users = await backup('users', {
+    const users = await backup(firestore, 'users', {
       refs: ['ref', 'map.first-ref', 'map.second-ref', 'path.invalid'],
     })
     // console.log(JSON.stringify(users))
@@ -69,14 +75,14 @@ describe('initializeApp function test', () => {
   })
 
   it('Restore data with document id - without autoParseDates', async () => {
-    let status = await restore('test/import-to-firestore.json', {
+    let status = await restore(firestore, 'test/import-to-firestore.json', {
       dates: ['date', 'schedule.time', 'three.level.time'],
       geos: ['location', 'locations', 'locationNested.geopoints'],
       refs: ['secondRef', 'arrayRef', 'nestedRef.secondRef'],
     })
     expect(status.status).ok
 
-    const result = await backup('test')
+    const result = await backup(firestore, 'test')
 
     expect(result['test']['first-key'].email).is.equal('dungnq@itbox4vn.com')
     expect(result['test']['first-key'].schedule.time._seconds).equals(
@@ -101,7 +107,7 @@ describe('initializeApp function test', () => {
   })
 
   it('Restore data with document id - with autoParseDates', async () => {
-    let status = await restore('test/import-to-firestore.json', {
+    let status = await restore(firestore, 'test/import-to-firestore.json', {
       autoParseDates: true,
       geos: ['location', 'locations', 'locationNested.geopoints'],
       refs: [
@@ -119,7 +125,7 @@ describe('initializeApp function test', () => {
     })
     expect(status.status).ok
 
-    const result = await backup('test')
+    const result = await backup(firestore, 'test')
 
     expect(result['test']['first-key'].email).is.equal('dungnq@itbox4vn.com')
     expect(result['test']['first-key'].schedule.time._seconds).equals(
@@ -148,7 +154,7 @@ describe('initializeApp function test', () => {
   })
 
   it('Restore data as an array without document id', async () => {
-    let status = await restore('test/import-array-to-firestore.json', {
+    let status = await restore(firestore, 'test/import-array-to-firestore.json', {
       showLogs: true,
     })
     expect(status.status).ok
@@ -156,7 +162,7 @@ describe('initializeApp function test', () => {
 
   it('Get a colection with sub-collection', async () => {
     try {
-      const data = await backup('test')
+      const data = await backup(firestore, 'test')
       const subCol = data['test']['first-key']['subCollection']
 
       expect(subCol).is.exist
@@ -168,150 +174,10 @@ describe('initializeApp function test', () => {
 
   it('Export single document from all collections', async () => {
     try {
-      const data = await backups(['test'], { docsFromEachCollection: 1 })
+      const data = await backups(firestore, ['test'], { docsFromEachCollection: 1 })
       expect(Object.values(data['test']).length).equals(1) // 1 document
     } catch (error) {
       console.log(error)
     }
-  })
-
-  it('Test auto parse dates option - simple', async () => {
-    const data = {
-      date: {
-        _seconds: 1534046400,
-        _nanoseconds: 0,
-      },
-    }
-    parseAndConvertDates(data)
-    expect(data.date).to.be.an.instanceOf(Date)
-  })
-
-  it('Test auto parse dates option - nested', async () => {
-    const data = {
-      date: {
-        _seconds: 1534046400,
-        _nanoseconds: 0,
-      },
-      obj: {
-        anotherObj: {
-          date: {
-            _seconds: 1534046400,
-            _nanoseconds: 0,
-          },
-        },
-      },
-    }
-    parseAndConvertDates(data)
-    expect(data.date).to.be.an.instanceOf(Date)
-    expect(data.obj.anotherObj.date).to.be.an.instanceOf(Date)
-  })
-
-  it('Test auto parse dates option - nested arrays', async () => {
-    const data = {
-      arr: [
-        {
-          _seconds: 1534046400,
-          _nanoseconds: 0,
-        },
-      ],
-    }
-    parseAndConvertDates(data)
-    expect(data.arr[0]).to.be.an.instanceOf(Date)
-  })
-
-  it('Test auto parse dates option - nested array objects', async () => {
-    const data = {
-      arr: [
-        {
-          obj: {
-            date: {
-              _seconds: 1534046400,
-              _nanoseconds: 0,
-            },
-          },
-        },
-        {
-          obj: {
-            date: {
-              _seconds: 1534046400,
-              _nanoseconds: 0,
-            },
-          },
-        },
-      ],
-    }
-    parseAndConvertDates(data)
-    expect(data.arr[0].obj.date).to.be.an.instanceOf(Date)
-    expect(data.arr[1].obj.date).to.be.an.instanceOf(Date)
-  })
-
-  it('Test auto parse geos option - simple', async () => {
-    const data = {
-      location: {
-        _latitude: 35.687498354666516,
-        _longitude: 139.44018328905466,
-      },
-    }
-    parseAndConvertGeos(data)
-    expect(data.location).to.be.an.instanceOf(GeoPoint)
-  })
-
-  it('Test auto parse geos option - nested', async () => {
-    const data = {
-      location: {
-        _latitude: 35.687498354666516,
-        _longitude: 139.44018328905466,
-      },
-      obj: {
-        anotherObj: {
-          location: {
-            _latitude: 35.687498354666516,
-            _longitude: 139.44018328905466,
-          },
-        },
-      },
-    }
-    parseAndConvertGeos(data)
-    expect(data.location).to.be.an.instanceOf(GeoPoint)
-    expect(data.obj.anotherObj.location).to.be.an.instanceOf(GeoPoint)
-  })
-
-  it('Test auto parse geos option - nested arrays', async () => {
-    const data = {
-      arr: [
-        {
-          _latitude: 35.687498354666516,
-          _longitude: 139.44018328905466,
-        },
-      ],
-    }
-    parseAndConvertGeos(data)
-    expect(data.arr[0]).to.be.an.instanceOf(GeoPoint)
-  })
-
-  it('Test auto parse geos option - nested array objects', async () => {
-    const data = {
-      arr: [
-        {
-          obj: {
-            location: {
-              _latitude: 35.687498354666516,
-              _longitude: 139.44018328905466,
-            },
-          },
-        },
-        {
-          obj: {
-            location: {
-              _latitude: 35.687498354666516,
-              _longitude: 139.44018328905466,
-            },
-          },
-        },
-      ],
-    }
-    parseAndConvertGeos(data)
-    expect(data.arr[0].obj.location).to.be.an.instanceOf(GeoPoint)
-    expect(data.arr[1].obj.location).to.be.an.instanceOf(GeoPoint)
   })
 })

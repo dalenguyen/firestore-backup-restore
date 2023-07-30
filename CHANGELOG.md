@@ -10,6 +10,15 @@
 > - :nail_care: [Polish]
 
 ---
+## [1.4.0] - 2023-07-30
+
+#### - :boom: [Breaking Change]
+
+- passing firestore as a parameter (#153)
+
+#### - :nail_care: [Polish]
+
+- update packages
 
 ## [1.3.7] - 2023-04-15
 
