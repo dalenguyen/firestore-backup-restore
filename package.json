@@ -34,23 +34,23 @@
   },
   "homepage": "https://github.com/dalenguyen/firestore-backup-restore#readme",
   "devDependencies": {
-    "@types/chai": "^4.3.5",
+    "@types/chai": "^4.3.11",
     "@types/expect": "^24.3.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^20.4.5",
-    "chai": "^4.3.7",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.5",
+    "chai": "^4.3.10",
     "jsmin": "^1.0.1",
     "minimist": "1.2.8",
     "mocha": "^10.2.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
-    "firebase-admin": "^11.10.1",
-    "google-gax": "^4.0.3",
-    "uuid": "^9.0.0"
+    "firebase-admin": "^12.0.0",
+    "google-gax": "^4.3.0",
+    "uuid": "^9.0.1"
   },
   "resolutions": {
     "minimist": "1.2.8"
