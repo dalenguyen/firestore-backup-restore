@@ -1,7 +1,13 @@
-import { expect } from 'chai'
+// import { describe, it, expect } from 'vitest'
 import { Firestore } from 'firebase-admin/firestore'
 import request from 'request-promise'
-import { backup, backupFromDoc, backups, initializeFirebaseApp, restore } from '../dist'
+import {
+  backup,
+  backupFromDoc,
+  backups,
+  initializeFirebaseApp,
+  restore,
+} from '../dist'
 import { serviceAccount } from './serviceAccount'
 
 const firestore = initializeFirebaseApp(serviceAccount)
@@ -154,9 +160,13 @@ describe('initializeApp function test', () => {
   })
 
   it('Restore data as an array without document id', async () => {
-    let status = await restore(firestore, 'test/import-array-to-firestore.json', {
-      showLogs: true,
-    })
+    let status = await restore(
+      firestore,
+      'test/import-array-to-firestore.json',
+      {
+        showLogs: true,
+      }
+    )
     expect(status.status).ok
   })
 
@@ -174,7 +184,9 @@ describe('initializeApp function test', () => {
 
   it('Export single document from all collections', async () => {
     try {
-      const data = await backups(firestore, ['test'], { docsFromEachCollection: 1 })
+      const data = await backups(firestore, ['test'], {
+        docsFromEachCollection: 1,
+      })
       expect(Object.values(data['test']).length).equals(1) // 1 document
     } catch (error) {
       console.log(error)
