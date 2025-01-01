@@ -16,7 +16,7 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: pnpm/action-setup@v4
         with:
-          version: 7
+          version: 8
 
       - name: node_modules cache
         uses: actions/cache@v4
