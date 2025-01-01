@@ -27,7 +27,7 @@ jobs:
 
       - name: pnpm cache
         if: steps.node_modules-cache.outputs.cache-hit != 'true'
-        uses: actions/cache@4
+        uses: actions/cache@v4
         id: pnpm-store
         with:
           path: ~/.pnpm-store/v4
