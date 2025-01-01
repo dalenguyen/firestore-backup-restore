@@ -1,4 +1,4 @@
-import { Firestore } from 'firebase-admin/firestore'
+import type { Firestore } from 'firebase-admin/firestore'
 import fs from 'fs'
 import { v1 as uuidv1 } from 'uuid'
 import {
@@ -70,7 +70,7 @@ export const restoreService = (
  * @param {IImportOptions} options
  */
 const updateCollection = async (
-  db,
+  db: Firestore,
   dataObj: object,
   options: IImportOptions = {}
 ) => {
@@ -135,7 +135,7 @@ const updateCollection = async (
  */
 
 const startUpdating = (
-  db,
+  db: Firestore,
   collectionName: string,
   docId: string,
   data: object,

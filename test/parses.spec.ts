@@ -1,9 +1,8 @@
-import { expect } from 'chai'
 import { parseAndConvertDates, parseAndConvertGeos } from '../dist/helper'
 import { GeoPoint } from 'firebase-admin/firestore'
 
 describe('parse helpers', () => {
- it('Test auto parse dates option - simple', async () => {
+  it('Test auto parse dates option - simple', async () => {
     const data = {
       date: {
         _seconds: 1534046400,

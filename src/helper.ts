@@ -1,4 +1,4 @@
-import { GeoPoint } from "firebase-admin/firestore"
+import { GeoPoint } from 'firebase-admin/firestore'
 
 export interface IImportOptions {
   dates?: string[]
@@ -15,7 +15,6 @@ export interface IExportOptions {
   queryCollection?: (
     ref: FirebaseFirestore.CollectionReference
   ) => Promise<FirebaseFirestore.QuerySnapshot>
-  
 }
 
 export const makeGeoPoint = (geoValues: {
@@ -37,7 +36,7 @@ export const makeGeoPoint = (geoValues: {
 export const makeTime = (firebaseTimestamp: {
   _seconds: number
   _nanoseconds: number
-}): Date => {
+}): Date | null => {
   if (!firebaseTimestamp || !firebaseTimestamp._seconds) {
     return null
   }
@@ -94,7 +93,7 @@ export const traverseObjects = (data: any, callback: Function) => {
 }
 
 export const parseAndConvertDates = (data: object) => {
-  traverseObjects(data, (value) => {
+  traverseObjects(data, (value: { _seconds: number; _nanoseconds: number }) => {
     const isTimeStamp =
       typeof value === 'object' &&
       value.hasOwnProperty('_seconds') &&
@@ -107,14 +106,14 @@ export const parseAndConvertDates = (data: object) => {
 }
 
 export function parseAndConvertGeos(data: object) {
-  traverseObjects(data, value => {
+  traverseObjects(data, (value: { _latitude: number; _longitude: number }) => {
     const isGeoPoint =
-      typeof value === "object" &&
-      value.hasOwnProperty("_latitude") &&
-      value.hasOwnProperty("_longitude");
+      typeof value === 'object' &&
+      value.hasOwnProperty('_latitude') &&
+      value.hasOwnProperty('_longitude')
     if (isGeoPoint) {
-      return makeGeoPoint(value);
+      return makeGeoPoint(value)
     }
-    return null;
+    return null
   })
 }

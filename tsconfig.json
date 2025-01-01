@@ -1,21 +1,18 @@
 {
   "compilerOptions": {
-    "lib": ["es2020"],
-    "module": "CommonJS",
-    "noImplicitReturns": true,    
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "esModuleInterop": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "target": "es5",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "skipLibCheck": true,
     "declaration": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "types": [
-      "mocha", "node"
-    ]
+    "sourceMap": true,
+    "types": ["node", "vitest/globals"],
+    "lib": ["ES2022"]
   },
-  "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }
