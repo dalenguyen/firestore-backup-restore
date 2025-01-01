@@ -43,7 +43,7 @@ export const backupFromDocService = async <T>(
   options?: IExportOptions
 ): Promise<T> => {
   try {
-    let data = {}
+    let data: { [key: string]: any } = {}
     data[collectionName] = {}
 
     const documentRef = db.collection(collectionName).doc(documentName)
@@ -57,7 +57,7 @@ export const backupFromDocService = async <T>(
       if (options?.refs) {
         for (const refKey of options?.refs) {
           if (refKey.indexOf('.') > -1) {
-            traverseObjects(data, (value) => {
+            traverseObjects(data, (value: any) => {
               if (value.constructor?.name !== 'DocumentReference') {
                 return null
               }
@@ -124,7 +124,7 @@ export const backUpDocRef = async <T>(
   if (options?.refs) {
     for (const refKey of options?.refs) {
       if (refKey.indexOf('.') > -1) {
-        traverseObjects(data, (value) => {
+        traverseObjects(data, (value: any) => {
           if (value.constructor?.name !== 'DocumentReference') {
             return null
           }
@@ -163,7 +163,7 @@ export const backUpDocRef = async <T>(
       }
     }
   }
-  let tR = {}
+  let tR: { [key: string]: any } = {}
   tR[doc.id] = data
   return tR as T
 }
@@ -180,7 +180,7 @@ export const backupService = async <T>(
   options?: IExportOptions
 ): Promise<T> => {
   try {
-    let data = {}
+    let data: { [key: string]: any } = {}
     data[collectionName] = {}
 
     const collectionRef = db.collection(collectionName)

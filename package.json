@@ -1,7 +1,8 @@
 {
   "name": "firestore-export-import",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "NPM package for backup and restore Firebase Firestore",
+  "type": "module",
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -10,53 +11,30 @@
     "dist/*.*"
   ],
   "scripts": {
-    "watch": "tsc -w",
-    "test": "mocha",
-    "build": "tsc --skipLibCheck && npm run minify",
+    "build": "tsc --skipLibCheck --noCheck && pnpm run minify",
+    "build:vite": "vite build",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
     "minify": "jsmin -o dist/index.js dist/index.js && jsmin -o dist/import.js dist/import.js && jsmin -o dist/export.js dist/export.js && jsmin -o dist/helper.js dist/helper.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dalenguyen/firestore-backup-restore.git"
-  },
-  "keywords": [
-    "firebase",
-    "firestore",
-    "backup",
-    "restore",
-    "import",
-    "export"
-  ],
-  "author": "Dale Nguyen <dale@dalenguyen.me> (http://dalenguyen.me)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dalenguyen/firestore-backup-restore/issues"
-  },
-  "homepage": "https://github.com/dalenguyen/firestore-backup-restore#readme",
   "devDependencies": {
-    "@types/chai": "^4.3.5",
-    "@types/expect": "^24.3.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^20.4.5",
-    "chai": "^4.3.7",
+    "@types/node": "^20.11.5",
+    "@vitest/coverage-v8": "^1.2.1",
     "jsmin": "^1.0.1",
-    "minimist": "1.2.8",
-    "mocha": "^10.2.0",
-    "request": "^2.88.2",
     "request-promise": "^4.2.6",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12",
+    "vite-plugin-dts": "^3.7.1",
+    "vitest": "^1.2.1"
   },
   "dependencies": {
-    "firebase-admin": "^11.10.1",
-    "google-gax": "^4.0.3",
-    "uuid": "^9.0.0"
-  },
-  "resolutions": {
-    "minimist": "1.2.8"
+    "firebase-admin": "^13.0.2",
+    "google-gax": "^4.1.1",
+    "uuid": "^9.0.1"
   },
   "engines": {
-    "node": ">=16.0.0",
-    "pnpm": ">=7"
+    "node": ">=18.0.0",
+    "pnpm": ">=8"
   }
 }
