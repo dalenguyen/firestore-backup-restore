@@ -10,6 +10,13 @@
 > - :nail_care: [Polish]
 
 ---
+## [1.5.0] - 2025-01-01
+
+#### - :nail_care: [Polish]
+
+- update packages & github actions
+- migrate from mocha to vitest
+
 ## [1.4.0] - 2023-07-30
 
 #### - :boom: [Breaking Change]
