@@ -80,3 +80,4 @@ test/serviceAccountKey.json
 .idea
 .DS_Store
 dist
+qa

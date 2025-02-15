@@ -1,4 +1,4 @@
-// import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { Firestore } from 'firebase-admin/firestore'
 import request from 'request-promise'
 import {

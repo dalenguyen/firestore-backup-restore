@@ -1,22 +1,20 @@
 {
   "name": "firestore-export-import",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "NPM package for backup and restore Firebase Firestore",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "readme.md",
-    "dist/*.*.*",
-    "dist/*.*"
+    "dist/**/*"
   ],
   "scripts": {
-    "build": "tsc --skipLibCheck --noCheck && pnpm run minify",
-    "build:vite": "vite build",
+    "build": "vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
-    "minify": "jsmin -o dist/index.js dist/index.js && jsmin -o dist/import.js dist/import.js && jsmin -o dist/export.js dist/export.js && jsmin -o dist/helper.js dist/helper.js"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
@@ -26,7 +24,8 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-plugin-dts": "^3.7.1",
-    "vitest": "^1.2.1"
+    "vitest": "^1.2.1",
+    "terser": "^5.27.2"
   },
   "dependencies": {
     "firebase-admin": "^13.0.2",

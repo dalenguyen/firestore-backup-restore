@@ -101,7 +101,7 @@ export const backupFromDocService = async <T>(
     return data as T
   } catch (error) {
     console.error(error)
-    throw new Error(error)
+    throw new Error((error as Error).message)
   }
 }
 
@@ -189,7 +189,7 @@ export const backupService = async <T>(
         ? await options.queryCollection(collectionRef)
         : await collectionRef.get()
     const docs =
-      options?.docsFromEachCollection > 0
+      (options?.docsFromEachCollection ?? 0) > 0
         ? documents.docs.slice(0, options?.docsFromEachCollection)
         : documents.docs
 
@@ -209,6 +209,6 @@ export const backupService = async <T>(
     return data as T
   } catch (error) {
     console.error(error)
-    throw new Error(error)
+    throw new Error((error as Error).message)
   }
 }
