@@ -10,6 +10,15 @@
 > - :nail_care: [Polish]
 
 ---
+## [1.6.0] - 2025-02-14
+
+#### - :nail_care: [Polish]
+
+- Migrated build system to Vite
+- Added dual ESM/CJS module support
+- Improved minification using esbuild
+- Removed manual minification process
+
 ## [1.5.0] - 2025-01-01
 
 #### - :nail_care: [Polish]
