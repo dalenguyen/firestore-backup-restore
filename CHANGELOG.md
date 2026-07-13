@@ -29,6 +29,8 @@
 - Restore now uses Firestore batch writes (500 docs/batch) — dramatically faster on large collections (#18)
 - Simplified import internals: replaced recursive sequential writes with `collectWrites` + batched commit
 - `restoreService` modernized to use `fs.promises` (async/await instead of callbacks)
+- `initializeFirebaseApp` now correctly handles multiple named apps — previously always returned the first initialized app regardless of the `name` parameter (#153)
+- `showLogs` option is now supported during export (`backup`, `backupFromDoc`, `backups`) in addition to restore (#121)
 
 ---
 
