@@ -1,4 +1,4 @@
-import { GeoPoint } from 'firebase-admin/firestore'
+import { GeoPoint, Timestamp } from 'firebase-admin/firestore'
 
 export interface IImportOptions {
   dates?: string[]
@@ -7,11 +7,14 @@ export interface IImportOptions {
   autoParseGeos?: boolean
   refs?: string[]
   showLogs?: boolean
+  clearCollection?: boolean
 }
 
 export interface IExportOptions {
   docsFromEachCollection?: number
   refs?: string[]
+  includeSubcollections?: boolean
+  showLogs?: boolean
   queryCollection?: (
     ref: FirebaseFirestore.CollectionReference
   ) => Promise<FirebaseFirestore.QuerySnapshot>
@@ -21,26 +24,20 @@ export const makeGeoPoint = (geoValues: {
   _latitude: number
   _longitude: number
 }) => {
-  if (!geoValues._latitude || !geoValues._longitude) {
+  if (geoValues?._latitude == null || geoValues?._longitude == null) {
     return null
   }
-
   return new GeoPoint(geoValues._latitude, geoValues._longitude)
 }
-
-/**
- * Convert time array in a Date object
- * @param firebaseTimestamp
- */
 
 export const makeTime = (firebaseTimestamp: {
   _seconds: number
   _nanoseconds: number
-}): Date | null => {
-  if (!firebaseTimestamp || !firebaseTimestamp._seconds) {
+}): Timestamp | null => {
+  if (!firebaseTimestamp || firebaseTimestamp._seconds == null) {
     return null
   }
-  return new Date(firebaseTimestamp._seconds * 1000)
+  return new Timestamp(firebaseTimestamp._seconds, firebaseTimestamp._nanoseconds ?? 0)
 }
 
 export const getPath = (obj?: { path?: string }) => {
@@ -116,4 +113,34 @@ export function parseAndConvertGeos(data: object) {
     }
     return null
   })
+}
+
+/**
+ * Traverse a nested object/array following a dot-split key path,
+ * applying fn at the leaf. Arrays at any level are iterated automatically.
+ */
+export const applyToPath = (
+  data: any,
+  keys: string[],
+  fn: (val: any) => any
+): void => {
+  if (!keys.length) return
+
+  if (Array.isArray(data)) {
+    data.forEach((item) => applyToPath(item, keys, fn))
+    return
+  }
+
+  if (
+    data == null ||
+    data.constructor !== Object ||
+    !Object.prototype.hasOwnProperty.call(data, keys[0])
+  )
+    return
+
+  if (keys.length === 1) {
+    data[keys[0]] = fn(data[keys[0]])
+  } else {
+    applyToPath(data[keys[0]], keys.slice(1), fn)
+  }
 }
