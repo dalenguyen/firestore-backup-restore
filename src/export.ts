@@ -20,6 +20,10 @@ export const getAllCollectionsService = async <T>(
     snap.forEach((collection) => paths.push(collection.path))
   }
 
+  if (options?.showLogs) {
+    console.log(`Starting backup of ${paths.length} collection(s): ${paths.join(', ')}`)
+  }
+
   // fetch in parallel
   const promises: Promise<T>[] = paths.map((path) =>
     backupService<T>(db, path, options)
@@ -80,7 +84,7 @@ export const backupFromDocService = async <T>(
         }
       }
 
-      if (subCollections.length > 0) {
+      if (subCollections.length > 0 && options?.includeSubcollections !== false) {
         data[collectionName][doc.id]['subCollection'] = {}
 
         for (const subCol of subCollections) {
@@ -96,6 +100,10 @@ export const backupFromDocService = async <T>(
           }
         }
       }
+    }
+
+    if (options?.showLogs) {
+      console.log(`Backed up document "${documentName}" from "${collectionName}"`)
     }
 
     return data as T
@@ -144,7 +152,7 @@ export const backUpDocRef = async <T>(
     }
   }
 
-  if (subCollections.length > 0) {
+  if (subCollections.length > 0 && options?.includeSubcollections !== false) {
     data['subCollection'] = {}
     const subColOptions = { ...options }
     if (subColOptions?.queryCollection) {
@@ -205,6 +213,10 @@ export const backupService = async <T>(
     promiseValues.forEach((dataMap) => {
       data[collectionName] = Object.assign(data[collectionName], dataMap)
     })
+
+    if (options?.showLogs) {
+      console.log(`Backed up ${docs.length} document(s) from "${collectionName}"`)
+    }
 
     return data as T
   } catch (error) {
