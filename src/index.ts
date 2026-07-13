@@ -32,33 +32,33 @@ export const initializeFirebaseApp = (
   name = '[DEFAULT]',
   options: IInitializeAppOptions = {}
 ): Firestore => {
-  const apps = getApps()
-  if (apps.length === 0 || (apps.length > 0 && apps[0].name !== name)) {
-    // if serviceAccount is passed, initialize app with serviceAccount
-    let app: App
-    if (serviceAccount) {
-      app = initializeApp(
-        {
-          credential: cert(serviceAccount),
-          databaseURL: serviceAccount['databaseURL'],
-        },
-        name
-      )
-    } else {
-      app = initializeApp(undefined, name)
-    }
+  const existingApp = getApps().find((a) => a.name === name)
 
-    const firestore = getFirestore(app)
-
-    firestore.settings({
-      timestampsInSnapshots: true,
-      ...options.firestore,
-    })
-  } else {
-    console.warn(`Firebase App exist. Return default firestore instance`)
+  if (existingApp) {
+    console.warn(`Firebase App "${name}" already exists. Returning existing Firestore instance.`)
+    return getFirestore(existingApp)
   }
 
-  return getFirestore(apps[0])
+  let app: App
+  if (serviceAccount) {
+    app = initializeApp(
+      {
+        credential: cert(serviceAccount),
+        databaseURL: serviceAccount['databaseURL'],
+      },
+      name
+    )
+  } else {
+    app = initializeApp(undefined, name)
+  }
+
+  const firestore = getFirestore(app)
+  firestore.settings({
+    timestampsInSnapshots: true,
+    ...options.firestore,
+  })
+
+  return firestore
 }
 
 /**
