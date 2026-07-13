@@ -1,5 +1,5 @@
 import { parseAndConvertDates, parseAndConvertGeos } from '../dist/helper'
-import { GeoPoint } from 'firebase-admin/firestore'
+import { GeoPoint, Timestamp } from 'firebase-admin/firestore'
 
 describe('parse helpers', () => {
   it('Test auto parse dates option - simple', async () => {
@@ -10,7 +10,7 @@ describe('parse helpers', () => {
       },
     }
     parseAndConvertDates(data)
-    expect(data.date).to.be.an.instanceOf(Date)
+    expect(data.date).to.be.an.instanceOf(Timestamp)
   })
 
   it('Test auto parse dates option - nested', async () => {
@@ -29,8 +29,8 @@ describe('parse helpers', () => {
       },
     }
     parseAndConvertDates(data)
-    expect(data.date).to.be.an.instanceOf(Date)
-    expect(data.obj.anotherObj.date).to.be.an.instanceOf(Date)
+    expect(data.date).to.be.an.instanceOf(Timestamp)
+    expect(data.obj.anotherObj.date).to.be.an.instanceOf(Timestamp)
   })
 
   it('Test auto parse dates option - nested arrays', async () => {
@@ -43,7 +43,7 @@ describe('parse helpers', () => {
       ],
     }
     parseAndConvertDates(data)
-    expect(data.arr[0]).to.be.an.instanceOf(Date)
+    expect(data.arr[0]).to.be.an.instanceOf(Timestamp)
   })
 
   it('Test auto parse dates option - nested array objects', async () => {
@@ -68,8 +68,8 @@ describe('parse helpers', () => {
       ],
     }
     parseAndConvertDates(data)
-    expect(data.arr[0].obj.date).to.be.an.instanceOf(Date)
-    expect(data.arr[1].obj.date).to.be.an.instanceOf(Date)
+    expect(data.arr[0].obj.date).to.be.an.instanceOf(Timestamp)
+    expect(data.arr[1].obj.date).to.be.an.instanceOf(Timestamp)
   })
 
   it('Test auto parse geos option - simple', async () => {

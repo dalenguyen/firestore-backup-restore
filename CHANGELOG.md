@@ -10,6 +10,28 @@
 > - :nail_care: [Polish]
 
 ---
+## [1.7.0] - 2026-07-13
+
+#### - :bug: [Bug Fix]
+
+- Timestamps now preserve nanosecond precision on restore — `makeTime` returns `Firestore.Timestamp` instead of `Date` (#136)
+- Fixed `makeGeoPoint` incorrectly returning `null` for coordinates equal to `0`
+- Dates and GeoPoints nested inside arrays of objects are now correctly converted during restore (#50, #83)
+- Refs nested inside arrays of objects are now correctly resolved during restore
+
+#### - :rocket: [New Feature]
+
+- `clearCollection` import option: deletes the target collection(s) before restoring, enabling clean full restores (#19)
+- `includeSubcollections` export option: set to `false` to skip subcollection traversal, reducing export time on large datasets (#103)
+
+#### - :nail_care: [Polish]
+
+- Restore now uses Firestore batch writes (500 docs/batch) — dramatically faster on large collections (#18)
+- Simplified import internals: replaced recursive sequential writes with `collectWrites` + batched commit
+- `restoreService` modernized to use `fs.promises` (async/await instead of callbacks)
+
+---
+
 ## [1.6.0] - 2025-02-14
 
 #### - :nail_care: [Polish]

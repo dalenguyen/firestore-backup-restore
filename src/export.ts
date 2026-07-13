@@ -80,7 +80,7 @@ export const backupFromDocService = async <T>(
         }
       }
 
-      if (subCollections.length > 0) {
+      if (subCollections.length > 0 && options?.includeSubcollections !== false) {
         data[collectionName][doc.id]['subCollection'] = {}
 
         for (const subCol of subCollections) {
@@ -144,7 +144,7 @@ export const backUpDocRef = async <T>(
     }
   }
 
-  if (subCollections.length > 0) {
+  if (subCollections.length > 0 && options?.includeSubcollections !== false) {
     data['subCollection'] = {}
     const subColOptions = { ...options }
     if (subColOptions?.queryCollection) {
