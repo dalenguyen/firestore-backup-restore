@@ -1,4 +1,4 @@
-import { parseAndConvertDates, parseAndConvertGeos } from '../dist/helper'
+import { applyToPath, parseAndConvertDates, parseAndConvertGeos } from '../dist/helper'
 import { GeoPoint, Timestamp } from 'firebase-admin/firestore'
 
 describe('parse helpers', () => {
@@ -140,5 +140,59 @@ describe('parse helpers', () => {
     parseAndConvertGeos(data)
     expect(data.arr[0].obj.location).to.be.an.instanceOf(GeoPoint)
     expect(data.arr[1].obj.location).to.be.an.instanceOf(GeoPoint)
+  })
+
+  it('applies path conversion through nested objects', async () => {
+    const data = {
+      profile: {
+        createdAt: '2026-07-13',
+      },
+    }
+
+    applyToPath(data, ['profile', 'createdAt'], (value) => `${value}T00:00:00.000Z`)
+
+    expect(data.profile.createdAt).to.equal('2026-07-13T00:00:00.000Z')
+  })
+
+  it('applies path conversion through arrays of objects', async () => {
+    const data = {
+      users: [
+        { profile: { createdAt: '2026-07-13' } },
+        { profile: { createdAt: '2026-07-14' } },
+      ],
+    }
+
+    applyToPath(data, ['users', 'profile', 'createdAt'], (value) => `${value}T00:00:00.000Z`)
+
+    expect(data.users[0].profile.createdAt).to.equal('2026-07-13T00:00:00.000Z')
+    expect(data.users[1].profile.createdAt).to.equal('2026-07-14T00:00:00.000Z')
+  })
+
+  it('applies path conversion through arrays containing primitives', async () => {
+    const data = {
+      users: [
+        { profile: { createdAt: '2026-07-13' } },
+        'not-an-object',
+        { profile: { createdAt: '2026-07-14' } },
+      ],
+    }
+
+    applyToPath(data, ['users', 'profile', 'createdAt'], (value) => `${value}T00:00:00.000Z`)
+
+    expect(data.users[0].profile.createdAt).to.equal('2026-07-13T00:00:00.000Z')
+    expect(data.users[1]).to.equal('not-an-object')
+    expect(data.users[2].profile.createdAt).to.equal('2026-07-14T00:00:00.000Z')
+  })
+
+  it('leaves data unchanged when path does not exist', async () => {
+    const data = {
+      profile: {
+        createdAt: '2026-07-13',
+      },
+    }
+
+    applyToPath(data, ['profile', 'missing'], (value) => `${value}T00:00:00.000Z`)
+
+    expect(data.profile.createdAt).to.equal('2026-07-13')
   })
 })
