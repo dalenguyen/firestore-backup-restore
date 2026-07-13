@@ -55,7 +55,6 @@ export const backupFromDocService = async <T>(
     const docs = [document]
 
     for (const doc of docs) {
-      const subCollections = await doc.ref.listCollections()
       data[collectionName][doc.id] = doc.data() || {}
 
       if (options?.refs) {
@@ -84,19 +83,22 @@ export const backupFromDocService = async <T>(
         }
       }
 
-      if (subCollections.length > 0 && options?.includeSubcollections !== false) {
-        data[collectionName][doc.id]['subCollection'] = {}
+      if (options?.includeSubcollections !== false) {
+        const subCollections = await doc.ref.listCollections()
+        if (subCollections.length > 0) {
+          data[collectionName][doc.id]['subCollection'] = {}
 
-        for (const subCol of subCollections) {
-          const subColData = await backupService<object>(
-            db,
-            `${collectionName}/${documentName}/${subCol.id}`,
-            options
-          )
+          for (const subCol of subCollections) {
+            const subColData = await backupService<object>(
+              db,
+              `${collectionName}/${documentName}/${subCol.id}`,
+              options
+            )
 
-          data[collectionName][doc.id]['subCollection'] = {
-            ...data[collectionName][doc.id]['subCollection'],
-            ...subColData,
+            data[collectionName][doc.id]['subCollection'] = {
+              ...data[collectionName][doc.id]['subCollection'],
+              ...subColData,
+            }
           }
         }
       }
@@ -126,7 +128,6 @@ export const backUpDocRef = async <T>(
   collectionPath: String,
   options?: IExportOptions
 ): Promise<T> => {
-  const subCollections = await doc.ref.listCollections()
   let data = Object.assign({}, doc.data())
 
   if (options?.refs) {
@@ -152,25 +153,29 @@ export const backUpDocRef = async <T>(
     }
   }
 
-  if (subCollections.length > 0 && options?.includeSubcollections !== false) {
-    data['subCollection'] = {}
-    const subColOptions = { ...options }
-    if (subColOptions?.queryCollection) {
-      delete subColOptions.queryCollection
-    }
-    for (const subCol of subCollections) {
-      const subColData = await backupService<object>(
-        db,
-        `${collectionPath}/${doc.id}/${subCol.id}`,
-        subColOptions
-      )
+  if (options?.includeSubcollections !== false) {
+    const subCollections = await doc.ref.listCollections()
+    if (subCollections.length > 0) {
+      data['subCollection'] = {}
+      const subColOptions = { ...options }
+      if (subColOptions?.queryCollection) {
+        delete subColOptions.queryCollection
+      }
+      for (const subCol of subCollections) {
+        const subColData = await backupService<object>(
+          db,
+          `${collectionPath}/${doc.id}/${subCol.id}`,
+          subColOptions
+        )
 
-      data['subCollection'] = {
-        ...data['subCollection'],
-        ...subColData,
+        data['subCollection'] = {
+          ...data['subCollection'],
+          ...subColData,
+        }
       }
     }
   }
+
   let tR: { [key: string]: any } = {}
   tR[doc.id] = data
   return tR as T
