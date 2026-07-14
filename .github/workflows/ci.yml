@@ -45,5 +45,7 @@ jobs:
         run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # pnpm v10 reads NPM_TOKEN in addition to NODE_AUTH_TOKEN; provide both for safety.
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
         
