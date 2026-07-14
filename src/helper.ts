@@ -12,6 +12,8 @@ export interface IImportOptions {
 export interface IExportOptions {
   docsFromEachCollection?: number
   refs?: string[]
+  includeSubcollections?: boolean
+  showLogs?: boolean
   queryCollection?: (
     ref: FirebaseFirestore.CollectionReference
   ) => Promise<FirebaseFirestore.QuerySnapshot>
