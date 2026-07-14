@@ -8,6 +8,7 @@ export interface IImportOptions {
   refs?: string[]
   showLogs?: boolean
   clearCollection?: boolean
+  dryRun?: boolean
 }
 
 export interface IExportOptions {

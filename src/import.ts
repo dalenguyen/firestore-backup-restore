@@ -132,10 +132,29 @@ const updateCollection = async (
   dataObj: Record<string, any>,
   options: IImportOptions
 ): Promise<void> => {
-  if (options.clearCollection) {
-    for (const collectionName of Object.keys(dataObj)) {
-      await db.recursiveDelete(db.collection(collectionName))
+  const collectionNames = Object.keys(dataObj)
+
+  if (options.dryRun) {
+    if (options.clearCollection) {
+      collectionNames.forEach((collectionName) => {
+        console.log(`[dryRun] Would delete collection: ${collectionName}`)
+      })
     }
+
+    collectionNames.forEach((collectionName) => {
+      const collectionData = dataObj[collectionName]
+      const documentCount = Array.isArray(collectionData)
+        ? collectionData.length
+        : Object.keys(collectionData).length
+      console.log(`[dryRun] Would import ${documentCount} documents into collection: ${collectionName}`)
+    })
+    return
+  }
+
+  if (options.clearCollection) {
+    await Promise.all(
+      collectionNames.map((collectionName) => db.recursiveDelete(db.collection(collectionName)))
+    )
   }
 
   const writer = createBatchWriter(db, options)
