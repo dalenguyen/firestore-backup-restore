@@ -68,6 +68,34 @@ const options = {
 }
 ```
 
+All export options are optional. Full interface:
+
+```javascript
+export interface IExportOptions {
+  docsFromEachCollection?: number
+  refs?: string[]
+  includeSubcollections?: boolean // default: true
+  showLogs?: boolean               // default: false
+  queryCollection?: (ref: FirebaseFirestore.CollectionReference) => Promise<FirebaseFirestore.QuerySnapshot>
+}
+```
+
+Set `includeSubcollections: false` to skip subcollection traversal during export — useful for large collections where subcollection data isn't needed:
+
+```javascript
+const { backup } = require('firestore-export-import')
+
+backup(firestore, 'collection-name', {
+  includeSubcollections: false,
+})
+```
+
+Set `showLogs: true` to log export progress (`Starting backup of N collection(s)`, `Backed up M document(s) from "..."`):
+
+```javascript
+backup(firestore, 'collection-name', { showLogs: true })
+```
+
 ```javascript
 // In your index.js
 
