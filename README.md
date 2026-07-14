@@ -68,6 +68,34 @@ const options = {
 }
 ```
 
+All export options are optional. Full interface:
+
+```javascript
+export interface IExportOptions {
+  docsFromEachCollection?: number
+  refs?: string[]
+  includeSubcollections?: boolean // default: true
+  showLogs?: boolean               // default: false
+  queryCollection?: (ref: FirebaseFirestore.CollectionReference) => Promise<FirebaseFirestore.QuerySnapshot>
+}
+```
+
+Set `includeSubcollections: false` to skip subcollection traversal during export — useful for large collections where subcollection data isn't needed:
+
+```javascript
+const { backup } = require('firestore-export-import')
+
+backup(firestore, 'collection-name', {
+  includeSubcollections: false,
+})
+```
+
+Set `showLogs: true` to log export progress (`Starting backup of N collection(s)`, `Backed up M document(s) from "..."`):
+
+```javascript
+backup(firestore, 'collection-name', { showLogs: true })
+```
+
 ```javascript
 // In your index.js
 
@@ -150,7 +178,24 @@ export interface IImportOptions {
   autoParseGeos?: boolean
   refs?: string[]
   showLogs?: boolean
+  clearCollection?: boolean
+  dryRun?: boolean
 }
+```
+
+#### Clear collections before restore
+
+Set `clearCollection: true` to delete each top-level collection present in the import data before writing the restored documents.
+
+**Warning:** `clearCollection: true` is destructive and irreversible. Collections are deleted before the restore writes begin, and the operation is not atomic. If the restore fails after deletion, Firestore will not roll back the deleted data and the database can be left partially restored. Always keep a verified backup before using this option.
+
+Use `dryRun: true` to preview the affected top-level collections and document counts without deleting or writing anything:
+
+```javascript
+restore(firestore, 'your-file-path.json', {
+  clearCollection: true,
+  dryRun: true,
+})
 ```
 
 #### For local JSON
