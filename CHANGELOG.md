@@ -10,6 +10,13 @@
 > - :nail_care: [Polish]
 
 ---
+## [1.7.0] - TBD
+
+#### - :bug: [Bug Fix]
+
+- `initializeFirebaseApp` now returns the matching existing Firebase app by name when it has already been initialized.
+- Firestore settings are only applied when a new app is initialized; repeated calls with the same app name return the existing Firestore instance without reapplying settings.
+
 ## [1.6.0] - 2025-02-14
 
 #### - :nail_care: [Polish]

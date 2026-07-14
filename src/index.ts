@@ -18,6 +18,8 @@ interface IInitializeAppOptions {
   firestore?: FirebaseFirestore.Settings
 }
 
+const warnedExistingAppNames = new Set<string>()
+
 /**
  * Initialize Firebase App
  *
@@ -35,7 +37,10 @@ export const initializeFirebaseApp = (
   const existingApp = getApps().find((a) => a.name === name)
 
   if (existingApp) {
-    console.warn(`Firebase App "${name}" already exists. Returning existing Firestore instance.`)
+    if (!warnedExistingAppNames.has(name)) {
+      console.warn(`Firebase App "${name}" already exists. Returning existing Firestore instance.`)
+      warnedExistingAppNames.add(name)
+    }
     return getFirestore(existingApp)
   }
 
